@@ -46,7 +46,7 @@ public class TPBitFlip {
         }
         ArrayList<BitSet> bitVector = new ArrayList<BitSet>();
         for (int i = 0; i < 10; i++) {
-            BigInteger aRowBits = new BigInteger("01", 2); //base 2 for binary
+            BigInteger aRowBits = new BigInteger("1101", 2); //base 2 for binary
             BitSet aRow = BitSet.valueOf(aRowBits.toByteArray());
             bitVector.add(i, aRow);
         }

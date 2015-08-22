@@ -94,7 +94,7 @@ public class subtree {
         //printTree(t1);
         //printTree(t2);
         //printTree(t3);
-        System.out.println(isSubtree(t3,t6));
+        System.out.println(isSubtree(t2,t5));
     }
 
 }
