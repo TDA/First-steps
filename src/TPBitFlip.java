@@ -46,7 +46,7 @@ public class TPBitFlip {
         }
         ArrayList<BitSet> bitVector = new ArrayList<BitSet>();
         for (int i = 0; i < 10; i++) {
-            BigInteger aRowBits = new BigInteger("0", 2); //base 2 for binary
+            BigInteger aRowBits = new BigInteger("01", 2); //base 2 for binary
             BitSet aRow = BitSet.valueOf(aRowBits.toByteArray());
             bitVector.add(i, aRow);
         }
@@ -73,9 +73,9 @@ public class TPBitFlip {
         bitVector.get(7).flip(0, 10);
         printVector(bitVector, 10);
 
-        int max = 1;
+        int max = 0;
         for (int i = 1; i < 10; i++) {
-            int count = 1;
+            int count = 0;
             if (shouldFlipRow(bitVector, i, 0)) {
                 BitSet row = bitVector.get(i);
                 row.flip(0, 10);
@@ -85,9 +85,12 @@ public class TPBitFlip {
                     }
                 }
                 max = Integer.max(max, count);
-                System.out.println("Iteration " + i);
+                System.out.println("Flipped row " + (i + 1));
                 System.out.println("No of same columns" + max);
                 printVector(bitVector, 10);
+                if(max == 10) {
+                    break;
+                }
             }
         }
         //isColumnSame(bitVector, 3);
@@ -101,7 +104,7 @@ public class TPBitFlip {
         boolean trues_or_falses = bitVector.get(0).get(j);
         int count = 0;
         if (i > 1) {
-            for (int k = 1; k < i; k++) {
+            for (int k = 1; k <= i; k++) {
                 BitSet row = bitVector.get(k);
                 if (row.get(j) == trues_or_falses) {
                     count++;
@@ -115,7 +118,7 @@ public class TPBitFlip {
                 return true;
             }
         }
-        if (count == i - 1) {
+        if (count == i) {
             bool = false;
         } else {
             bool = true;
