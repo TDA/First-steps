@@ -24,6 +24,23 @@ public class Node {
         return "";
     }
 
+    public static String postOrderTraversal(Node root) {
+        if(root != null) {
+            return postOrderTraversal(root.left) + " " + postOrderTraversal(root.right) + " " + root.data;
+        }
+        return "";
+    }
+
+    public static String preOrderTraversal(Node root) {
+        if(root != null) {
+            return root.data + " " + preOrderTraversal(root.left) + " " + preOrderTraversal(root.right);
+        }
+        return "";
+    }
+
+    public static void print(String s) {
+        System.out.println(s);
+    }
     public static void main (String [] args) {
         // Create a tree
         Node root = new Node("A");
@@ -31,13 +48,24 @@ public class Node {
         root.right = new Node("C");
         root.right.left = new Node("D");
         root.right.right = new Node("E");
+        root.right.right.right = new Node("F");
         displayTree(root);
         String inOrder = inOrderTraversal(root);
+        String postOrder = postOrderTraversal(root);
+        String preOrder = preOrderTraversal(root);
+        print("In: " + inOrder + " Post: " + postOrder + " Pre: " + preOrder);
         Node c = new Node("C");
-        c.right = new Node("E");
+        c.left = new Node("D");
+        //c.right = new Node("");
         String inOrderC = inOrderTraversal(c);
-        if(inOrder.contains(inOrderC)) {
-            System.out.println("Subtree");
+        String postOrderC = postOrderTraversal(c);
+        String preOrderC = preOrderTraversal(c);
+        print("In: " + inOrderC + " Post: " + postOrderC + " Pre: " + preOrderC);
+        if(inOrder.contains(inOrderC) && postOrder.contains(postOrderC) ||
+                inOrder.contains(inOrderC) && preOrder.contains(preOrderC)) {
+            System.out.println("The tree " + inOrderC);
+            System.out.println("is a Subtree of ");
+            System.out.println(inOrder);
         }
 
     }
