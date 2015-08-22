@@ -1,3 +1,5 @@
+import sun.misc.Regexp;
+
 /**
  * Created by schandramouli on 8/22/15.
  */
@@ -38,31 +40,67 @@ public class Node {
         return "";
     }
 
+    public static String removeSpaces(String s) {
+        s = s.replaceAll("\\s+", " ");
+        return s;
+    }
+
     public static void print(String s) {
         System.out.println(s);
+    }
+
+    public static boolean isSubSequence(String s, String t) {
+        if (s.length() == 0) {
+            return false;
+        }
+        if (t.length() == 0) {
+            return true;
+        }
+        int count = 0;
+        s = s.replaceAll("\\s", "");
+        t = t.replaceAll("\\s", "");
+        for (int i = 0; i < s.length(); ) {
+            for (int j = 0; j < t.length(); ) {
+                if(i < s.length()) {
+                    if (s.charAt(i) == t.charAt(j)) {
+                        i++;
+                        j++;
+                        count++;
+                    } else {
+                        i++;
+                    }
+                    if(count == t.length()) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
     public static void main (String [] args) {
         // Create a tree
         Node root = new Node("A");
         root.left = new Node("B");
         root.right = new Node("C");
+        root.left.left = new Node("G");
+        root.left.right = new Node("H");
         root.right.left = new Node("D");
         root.right.right = new Node("E");
         root.right.right.right = new Node("F");
         displayTree(root);
-        String inOrder = inOrderTraversal(root);
-        String postOrder = postOrderTraversal(root);
-        String preOrder = preOrderTraversal(root);
+        String inOrder = removeSpaces(inOrderTraversal(root));
+        String postOrder = removeSpaces(postOrderTraversal(root));
+        String preOrder = removeSpaces(preOrderTraversal(root));
         print("In: " + inOrder + " Post: " + postOrder + " Pre: " + preOrder);
-        Node c = new Node("C");
-        c.left = new Node("D");
-        //c.right = new Node("");
-        String inOrderC = inOrderTraversal(c);
-        String postOrderC = postOrderTraversal(c);
-        String preOrderC = preOrderTraversal(c);
+        Node c = new Node("A");
+        c.left = new Node("B");
+        c.right = new Node("C");
+        c.left.left = new Node("G");
+        String inOrderC = removeSpaces(inOrderTraversal(c));
+        String postOrderC = removeSpaces(postOrderTraversal(c));
+        String preOrderC = removeSpaces(preOrderTraversal(c));
         print("In: " + inOrderC + " Post: " + postOrderC + " Pre: " + preOrderC);
-        if(inOrder.contains(inOrderC) && postOrder.contains(postOrderC) ||
-                inOrder.contains(inOrderC) && preOrder.contains(preOrderC)) {
+        if(isSubSequence(inOrder, inOrderC) && (isSubSequence(postOrder, postOrderC) || isSubSequence(preOrder, preOrderC))) {
             System.out.println("The tree " + inOrderC);
             System.out.println("is a Subtree of ");
             System.out.println(inOrder);
