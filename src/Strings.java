@@ -11,6 +11,6 @@ public class Strings {
 
         System.out.println(b.toString());
         System.out.println(b.indexOf("7"));
-        System.out.println("sdf".matches("sdf"));
+        System.out.println("sdf".matches("s.f"));
     }
 }
