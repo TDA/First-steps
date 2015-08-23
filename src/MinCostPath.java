@@ -6,9 +6,9 @@ import java.util.Stack;
 public class MinCostPath {
     public static void main(String [] args) {
         int [][] cost = {
-                            {1, 2, 3},
-                            {4, 8, 2},
-                            {1, 5, 3}
+                            {1, 2, 3, 11},
+                            {4, 8, 2, 12},
+                            {1, 5, 3, 13}
                         };
         int rows = cost.length;
         int cols = cost[0].length;
@@ -42,7 +42,8 @@ public class MinCostPath {
             }
             System.out.println("\n");
         }
-        System.out.println(minCostPath(DynCost, 0, 0, 2, 2));
+        System.out.println(minCostPath(DynCost, 0, 0, 1, 1));
+        System.out.println("The minimum cost from 0,0 to 2,2 is " + findMinLength(DynCost, 1, 1));
 
     }
     public static String minCostPath(int [][] DynCost, int x, int y, int m, int n) {
@@ -54,7 +55,27 @@ public class MinCostPath {
         stack.push(s);
         int i = m;
         int j = n;
-        while (i > x && j > y) {
+        while (i >= x && j >= y) {
+            // edge cases, when you are horizontally or vertically
+            // on the same row/column as source. Now traverse only
+            // in that direction.
+
+            if (i == x && j == y) {
+                break;
+            }
+            if (i == x) {
+                s = (i) + "," + (j - 1);
+                stack.push(s);
+                j--;
+                continue;
+            }
+            if (j == y) {
+                s = (i - 1) + "," + (j);
+                stack.push(s);
+                i--;
+                continue;
+            }
+
             if (DynCost[i - 1][j] < DynCost[i][j - 1]) {
                 if (DynCost[i - 1][j] < DynCost[i - 1][j - 1]) {
                     s = (i - 1) + "," + (j);
@@ -79,11 +100,14 @@ public class MinCostPath {
                 }
             }
         }
-        stack.push((x) + "," + (y));
         s = "";
         while(! stack.isEmpty()) {
             s = s + " -> " + stack.pop();
         }
         return s;
+    }
+
+    public static int findMinLength(int [][] DynCost, int x, int y) {
+        return DynCost[x][y];
     }
 }
