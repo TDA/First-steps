@@ -25,6 +25,9 @@ public class MinCostPath {
 
         for (i = 1; i < rows; i++) {
             for (j = 1; j < cols; j++) {
+                // dynamic programming, use the pre-computed values of
+                // previous levels to compute this level
+                // better than recursion
                 DynCost[i][j] = Integer.min(DynCost[i - 1][j - 1] + cost[i][j],
                                             Integer.min(DynCost[i - 1][j] + cost[i][j],
                                                         DynCost[i][j - 1] + cost[i][j]
@@ -45,6 +48,7 @@ public class MinCostPath {
     public static String minCostPath(int [][] DynCost, int x, int y, int m, int n) {
         // calc the min path from (i,j) to (m,n) given
         // a shortest path matrix from i,j to every other point
+        // dont create a string for every push, just reuse this
         String s = (m) + "," + (n);
         Stack<String> stack = new Stack<>();
         stack.push(s);
