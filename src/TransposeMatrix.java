@@ -95,4 +95,15 @@ public class TransposeMatrix {
         }
         return transpose;
     }
+
+    public static int[][] topdownMatrix( int [][] matrix) {
+        int [][] reverse = new int[matrix.length][matrix[0].length];
+
+        for (int i = 0; i < matrix.length; i++) {
+            int[] ints = matrix[i];
+            ints = reverseArray(ints);
+            reverse[i] = ints;
+        }
+        return reverse;
+    }
 }
