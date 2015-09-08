@@ -50,10 +50,24 @@ public class FlamesGame {
     // aha, now all we need to do is find a use for this xor :D may be a greatly useful thingy :D
     public void xorHashMapWithNewCharacters (HashMap<Character, Integer> hm, String s2) {
         for (char c: s2.toCharArray()) {
-            if (hm.get(c) != null && hm.get(c) > 0) {
+            // need to change this check > 0 for removing the bug that occurs
+            // when names are interchanged.
+            if (hm.get(c) != null) {
                 hm.put(c, hm.get(c) - 1);
             } else {
+                // theres a bug here, right here. If the second name has more than 2 copies of a single letter,
+                // say `i`, and the first name didnt have it even once, the count would get screwed. Need to
+                // change this. eg: sai and saippp, actual count should be 3, but will be 1 (abs of -1).
                 hm.put(c, 1);
+            }
+        }
+    }
+
+    public void absoluteValuesHashMap (HashMap<Character, Integer> hm) {
+        for (Character c : hm.keySet()) {
+            if (hm.get(c) < 0) {
+                // absolute value
+                hm.put(c, -hm.get(c));
             }
         }
     }
@@ -79,13 +93,14 @@ public class FlamesGame {
         FlamesGame flames = new FlamesGame();
         // lets not oops this, cuz then we would have to type flames.hm EVERY frigging time :(
         // or not pass the hm at all, and use it straight in the methods, sounds ok.
-        // Nah, not really. Lets leave as is prusse.
+        // Nah, not really. Lets leave it `as is` prusse.
         HashMap<Character, Integer> hm = new HashMap<>();
 
         flames.populateHashMapWithCharacters(hm, s1);
 
         flames.prettyPrintHashMap(hm);
         flames.xorHashMapWithNewCharacters(hm, s2);
+        flames.absoluteValuesHashMap(hm);
         flames.prettyPrintHashMap(hm);
 
         int matches = flames.count(hm);
