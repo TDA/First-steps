@@ -58,7 +58,9 @@ public class FlamesGame {
                 // theres a bug here, right here. If the second name has more than 2 copies of a single letter,
                 // say `i`, and the first name didnt have it even once, the count would get screwed. Need to
                 // change this. eg: sai and saippp, actual count should be 3, but will be 1 (abs of -1).
-                hm.put(c, 1);
+
+                // Fixed by setting to -1, told you the abs value was gonna help :D
+                hm.put(c, -1);
             }
         }
     }
