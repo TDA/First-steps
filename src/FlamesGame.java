@@ -8,6 +8,7 @@ public class FlamesGame {
     public static final HashMap<Character, String> DICTIONARY;
     static
     {
+        // Lets initialize the Dictionary here, not like its gonna change
         DICTIONARY = new HashMap<Character, String>();
         DICTIONARY.put('f', "Friendship");
         DICTIONARY.put('l', "Love");
@@ -15,10 +16,12 @@ public class FlamesGame {
         DICTIONARY.put('m', "Marriage");
         DICTIONARY.put('e', "Enemity");
         DICTIONARY.put('s', "Sister");
+
+        // Message for Sujata, everyone else, kindly disregard.
         System.out.println("And this is how you do it Sujata ;)");
     }
 
-
+    // Have to make this generic someday, as in, any HashMap key, but integer value.
     public int count (HashMap<Character, Integer> hm) {
         int n = 0;
         for(int value : hm.values()) {
@@ -31,6 +34,9 @@ public class FlamesGame {
       return s.toLowerCase().replaceAll("\\s", "");
     }
 
+    // This is one hella useful function, good going prusse :) Basically can be
+    // reused with anything that requires a HashMap based solution including Phonebook,
+    // finding repeated/unrepeated chars, unique chars etc
     public void populateHashMapWithCharacters (HashMap<Character, Integer> hm, String s) {
         for (char c: s.toCharArray()) {
             if (hm.get(c) != null) {
@@ -41,6 +47,7 @@ public class FlamesGame {
         }
     }
 
+    // aha, now all we need to do is find a use for this xor :D may be a greatly useful thingy :D
     public void xorHashMapWithNewCharacters (HashMap<Character, Integer> hm, String s2) {
         for (char c: s2.toCharArray()) {
             if (hm.get(c) != null && hm.get(c) > 0) {
@@ -51,6 +58,7 @@ public class FlamesGame {
         }
     }
 
+    // not really useful, but, but.. i wrote it :O :'(
     public void prettyPrintHashMap (HashMap<Character, Integer> hm) {
         System.out.println("{");
         for (Character c : hm.keySet()) {
@@ -67,7 +75,11 @@ public class FlamesGame {
         s1 = cleanseString(scanner.nextLine());
         s2 = cleanseString(scanner.nextLine());
 
+        // lets get some OOPS
         FlamesGame flames = new FlamesGame();
+        // lets not oops this, cuz then we would have to type flames.hm EVERY frigging time :(
+        // or not pass the hm at all, and use it straight in the methods, sounds ok.
+        // Nah, not really. Lets leave as is prusse.
         HashMap<Character, Integer> hm = new HashMap<>();
 
         flames.populateHashMapWithCharacters(hm, s1);
@@ -77,9 +89,13 @@ public class FlamesGame {
         flames.prettyPrintHashMap(hm);
 
         int matches = flames.count(hm);
-        //System.out.println(matches);
+        System.out.println(matches);
 
         StringBuilder sb1 = new StringBuilder();
+
+        // lets keep the flames thing in the DICTIONARY and reuse that here
+        // ergo less readable, but easier to change if i choose to have `flamemasterdragonkiller` or something
+        // nvm, hashmaps dont return keys in order, lets just use a literal.
         sb1.append("flames");
         int i = 0;
         while (sb1.length() > 1) {
