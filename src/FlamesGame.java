@@ -5,6 +5,20 @@ import java.util.Scanner;
  * Created by schandramouli on 9/7/15.
  */
 public class FlamesGame {
+    public static final HashMap<Character, String> DICTIONARY;
+    static
+    {
+        DICTIONARY = new HashMap<Character, String>();
+        DICTIONARY.put('f', "Friendship");
+        DICTIONARY.put('l', "Love");
+        DICTIONARY.put('a', "Affection");
+        DICTIONARY.put('m', "Marriage");
+        DICTIONARY.put('e', "Enemity");
+        DICTIONARY.put('s', "Sister");
+        System.out.println("And this is how you do it Sujata ;)");
+    }
+
+
     public int count (HashMap<Character, Integer> hm) {
         int n = 0;
         for(int value : hm.values()) {
@@ -12,28 +26,22 @@ public class FlamesGame {
         }
         return n;
     }
-    public static void main(String[] args) {
-        String s1 = "";
-        String s2 = "";
-        Scanner scanner = new Scanner(System.in);
-        //s1 = scanner.nextLine().toLowerCase().replaceAll("\\s", "");
-        //s2 = scanner.nextLine().toLowerCase().replaceAll("\\s", "");
-        s1 = args[0].toLowerCase().replaceAll("\\s", "") + args[1].toLowerCase().replaceAll("\\s", "");
-        s2 = args[2].toLowerCase().replaceAll("\\s", "");
-        // disregard duplicates --> One s removes all s and so on.
-        // need to change that to take into account dupes in the same name,
-        // as well as the second name :)
-        HashMap<Character, Integer> hm = new HashMap<>();
-        for (char c: s1.toCharArray()) {
+
+    public static String cleanseString (String s) {
+      return s.toLowerCase().replaceAll("\\s", "");
+    }
+
+    public void populateHashMapWithCharacters (HashMap<Character, Integer> hm, String s) {
+        for (char c: s.toCharArray()) {
             if (hm.get(c) != null) {
                 hm.put(c, hm.get(c) + 1);
             } else {
                 hm.put(c, 1);
             }
         }
-        System.out.println(hm);
+    }
 
-        //HashMap<Character, Integer> hm2 = new HashMap<>();
+    public void xorHashMapWithNewCharacters (HashMap<Character, Integer> hm, String s2) {
         for (char c: s2.toCharArray()) {
             if (hm.get(c) != null && hm.get(c) > 0) {
                 hm.put(c, hm.get(c) - 1);
@@ -41,10 +49,35 @@ public class FlamesGame {
                 hm.put(c, 1);
             }
         }
+    }
 
-        int matches = new FlamesGame().count(hm);
-        System.out.println(hm);
-        System.out.println(matches);
+    public void prettyPrintHashMap (HashMap<Character, Integer> hm) {
+        System.out.println("{");
+        for (Character c : hm.keySet()) {
+            System.out.println("\t" + c + " : " + hm.get(c));
+        }
+        System.out.println("}");
+    }
+
+    public static void main(String[] args) {
+
+        String s1 = "";
+        String s2 = "";
+        Scanner scanner = new Scanner(System.in);
+        s1 = cleanseString(scanner.nextLine());
+        s2 = cleanseString(scanner.nextLine());
+
+        FlamesGame flames = new FlamesGame();
+        HashMap<Character, Integer> hm = new HashMap<>();
+
+        flames.populateHashMapWithCharacters(hm, s1);
+
+        flames.prettyPrintHashMap(hm);
+        flames.xorHashMapWithNewCharacters(hm, s2);
+        flames.prettyPrintHashMap(hm);
+
+        int matches = flames.count(hm);
+        //System.out.println(matches);
 
         StringBuilder sb1 = new StringBuilder();
         sb1.append("flames");
@@ -59,6 +92,6 @@ public class FlamesGame {
             sb1.deleteCharAt(i);
         }
 
-        System.out.println(sb1);
+        System.out.println(DICTIONARY.get(sb1.charAt(0)));
     }
 }
