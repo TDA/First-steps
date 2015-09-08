@@ -5,13 +5,21 @@ import java.util.Scanner;
  * Created by schandramouli on 9/7/15.
  */
 public class FlamesGame {
+    public int count (HashMap<Character, Integer> hm) {
+        int n = 0;
+        for(int value : hm.values()) {
+            n = n + value;
+        }
+        return n;
+    }
     public static void main(String[] args) {
         String s1 = "";
         String s2 = "";
         Scanner scanner = new Scanner(System.in);
-        s1 = scanner.nextLine().toLowerCase().replaceAll("\\s", "");
-        s2 = scanner.nextLine().toLowerCase().replaceAll("\\s", "");
-
+        //s1 = scanner.nextLine().toLowerCase().replaceAll("\\s", "");
+        //s2 = scanner.nextLine().toLowerCase().replaceAll("\\s", "");
+        s1 = args[0].toLowerCase().replaceAll("\\s", "") + args[1].toLowerCase().replaceAll("\\s", "");
+        s2 = args[2].toLowerCase().replaceAll("\\s", "");
         // disregard duplicates --> One s removes all s and so on.
         // need to change that to take into account dupes in the same name,
         // as well as the second name :)
@@ -23,14 +31,21 @@ public class FlamesGame {
                 hm.put(c, 1);
             }
         }
+        System.out.println(hm);
 
+        //HashMap<Character, Integer> hm2 = new HashMap<>();
         for (char c: s2.toCharArray()) {
             if (hm.get(c) != null && hm.get(c) > 0) {
                 hm.put(c, hm.get(c) - 1);
+            } else {
+                hm.put(c, 1);
             }
         }
-        int matches = hm.size();
+
+        int matches = new FlamesGame().count(hm);
+        System.out.println(hm);
         System.out.println(matches);
+
         StringBuilder sb1 = new StringBuilder();
         sb1.append("flames");
         int i = 0;
