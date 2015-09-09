@@ -11,7 +11,9 @@ public class Hearts {
         System.out.println(s2);
     }
 
-    public static String centerLine(String s, int len) {
+    public static String centerLine (String s, int len) {
+        // utility to center a line while adding padding of spaces at both ends
+        // will be useful some other time prusse
         int spacing = (len - s.length()) / 2;
         String new_s = "";
         for (int i = 0; i < spacing; i++) {
@@ -21,19 +23,47 @@ public class Hearts {
         return new_s;
     }
 
+    public static String cleaveLine (String s, int len) {
+        int spacing = len - s.length();
+        int space_start = s.length() / 2;
+        String new_s = "";
+        new_s += s.substring(0, space_start);
+        for (int i = 0; i < spacing; i++) {
+            new_s += " ";
+        }
+        new_s += s.substring(space_start, s.length());
+        return new_s;
+    }
+
     public String generateheart() {
         String s = "";
         int length = 21;
         int height = 12;
-        for (int i = 0; i < (height / 2) - 2; i++){
-            for (int j = 0; j < length; j++) {
-                s +=  "\u2665";
+        // generate the first line, clumsy
+        s += " \u2665\u2665 ";
+        s += "             ";
+        s += " \u2665\u2665 ";
+        s += "\n";
+
+        // man, never thought generating a simple heart would be so difficult :\
+        for (int i = 1; i < (height / 2); i++){
+            String line = "";
+            int j = length - (i + 1) * 4;
+            if (j <= 0) {
+                break;
             }
+            for (; j < length; j = j + 1) {
+                line = line + "\u2665";
+            }
+            s += cleaveLine(line, length);
             s +=  "\n";
         }
 
-        for (int i = 0; i < height / 2; i++){
+        for (int i = 0; i < (height / 2); i++){
             int j = length - (i * 4);
+            if (j <= 0) {
+                break;
+            }
             String line = "";
             for (;j > 0; j--) {
                 line = line + "\u2665";
