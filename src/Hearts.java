@@ -7,12 +7,12 @@ public class Hearts {
 
     public void drawHeart(String s1, String s2) {
         System.out.println(s1);
-        System.out.println(this.generateheart());
+        System.out.println(this.generateHeart());
         System.out.println(s2);
     }
 
     public static String centerLine (String s, int len) {
-        // utility to center a line while adding padding of spaces at both ends
+        // utility to center a line while adding padding of spaces at both ends (not really, but yeah)
         // will be useful some other time prusse
         int spacing = (len - s.length()) / 2;
         String new_s = "";
@@ -24,6 +24,7 @@ public class Hearts {
     }
 
     public static String cleaveLine (String s, int len) {
+        // pad spaces *between* a line, like from saipc to sai   pc.
         int spacing = len - s.length();
         int space_start = s.length() / 2;
         String new_s = "";
@@ -35,7 +36,7 @@ public class Hearts {
         return new_s;
     }
 
-    public String generateheart() {
+    public String generateHeart() {
         String s = "";
         int length = 21;
         int height = 12;
@@ -59,6 +60,7 @@ public class Hearts {
             s +=  "\n";
         }
 
+        // this is just an inverted triangle, easy right? :|
         for (int i = 0; i < (height / 2); i++){
             int j = length - (i * 4);
             if (j <= 0) {
