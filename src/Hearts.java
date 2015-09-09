@@ -41,9 +41,12 @@ public class Hearts {
         int length = 21;
         int height = 12;
         // generate the first line, clumsy
-        s += " \u2665\u2665 ";
-        s += "             ";
-        s += " \u2665\u2665 ";
+        s += " \u2665\u2665\u2665 ";
+        // add (length - 8) spaces
+        for (int i = 0; i < length - 8; i++) {
+            s += " ";
+        }
+        s += " \u2665\u2665\u2665 ";
         s += "\n";
 
         // man, never thought generating a simple heart would be so difficult :\
@@ -56,17 +59,28 @@ public class Hearts {
             for (; j < length; j = j + 1) {
                 line = line + "\u2665";
             }
+            switch (i) {
+                case 1: line += "\u2665\u2665"; length = 23; break;
+                case 2: line += "\u2665\u2665"; length = 23; break;
+                case 3: line += "\u2665\u2665"; length = 23; break;
+                case 4: line += ""; length = 23; break;
+                default: length = 21;
+            }
             s += cleaveLine(line, length);
             s +=  "\n";
         }
 
         // this is just an inverted triangle, easy right? :|
+        length = 21;
         for (int i = 0; i < (height / 2); i++){
             int j = length - (i * 4);
             if (j <= 0) {
                 break;
             }
-            String line = "";
+            String line = "  ";
+            if (i == 0) {
+                line = " ";
+            }
             for (;j > 0; j--) {
                 line = line + "\u2665";
             }
