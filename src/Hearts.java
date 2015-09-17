@@ -97,10 +97,10 @@ public class Hearts {
         String s1 = "";
         String s2 = "";
         Scanner scanner = new Scanner(System.in);
-        //s1 = scanner.nextLine();
-        //s2 = scanner.nextLine();
-        s1 = args[0];
-        s2 = args[1];
+        s1 = scanner.nextLine();
+        s2 = scanner.nextLine();
+        // s1 = args[0];
+        // s2 = args[1];
 
         new Hearts().drawHeart(s1, s2);
 

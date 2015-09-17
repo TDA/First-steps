@@ -48,6 +48,7 @@ public class LLNode {
             position--;
         }
 
+        // Use a stack to hold the reverse parts
         Stack<LLNode> nodeStack = new Stack<>();
         while (reversePart.next != null) {
             nodeStack.push(reversePart);
@@ -72,6 +73,25 @@ public class LLNode {
         System.out.println();
     }
 
+    int findKthFromLast (int k) {
+        int len = this.findLengthofList();
+        int pos = len - k;
+        LLNode n = this;
+        n = n.moveTo(pos);
+        return n.data;
+    }
+
+    int findLengthofList() {
+        // needed so that we can also extract last element
+        int len = 1;
+        LLNode n = this;
+        while (n.next != null) {
+            n = n.next;
+            len++;
+        }
+        return len;
+    }
+
     public static void main(String[] args) {
         LLNode node = new LLNode(1);
         node.appendTail(2);
@@ -90,6 +110,12 @@ public class LLNode {
 
         System.out.print("Half reversed: ");
         revList.printLLNode();
+
+        node.printLLNode();
+        System.out.println("3rd from last is " + node.findKthFromLast(3));
+        System.out.println("2nd from last is " + node.findKthFromLast(2));
+        System.out.println("5th from last is " + node.findKthFromLast(5));
+
     }
 
 
