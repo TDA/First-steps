@@ -92,6 +92,34 @@ public class LLNode {
         return len;
     }
 
+    LLNode deleteAt (int pos) {
+        LLNode n = this;
+        LLNode x = new LLNode(n.data);
+        int count = 1;
+        while (n.next != null && count != pos - 1) {
+            n = n.next;
+            x.appendTail(n.data);
+            count++;
+        }
+        // now skip an element
+        n = n.next;
+        // now copy the rest
+        while (n.next != null) {
+            n = n.next;
+            x.appendTail(n.data);
+        }
+        // n.next = n.next.next;
+        return x;
+    }
+
+    LLNode copyFromTo (int x, int y) {
+        LLNode n = this;
+        LLNode copy;
+
+        copy = new LLNode(1);
+        return copy;
+    }
+
     public static void main(String[] args) {
         LLNode node = new LLNode(1);
         node.appendTail(2);
@@ -116,6 +144,9 @@ public class LLNode {
         System.out.println("2nd from last is " + node.findKthFromLast(2));
         System.out.println("5th from last is " + node.findKthFromLast(5));
 
+        System.out.println("Deleted node at ");
+        LLNode x = node.deleteAt(3);
+        x.printLLNode();
     }
 
 
