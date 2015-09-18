@@ -5,6 +5,15 @@ import java.util.HashMap;
  */
 public class LLCircular extends LLNode {
     HashMap<Integer, Integer> hm;
+
+    public LLCircular() {
+        super();
+    }
+
+    public LLCircular(int data) {
+        super(data);
+    }
+
     boolean isCircularList () {
         boolean b = false;
         LLNode n = this;
@@ -30,14 +39,6 @@ public class LLCircular extends LLNode {
         }
         // not found
         return -1;
-    }
-
-    public LLCircular() {
-        super();
-    }
-
-    public LLCircular(int data) {
-        super(data);
     }
 
     public static void main(String[] args) {
