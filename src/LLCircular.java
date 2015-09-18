@@ -9,10 +9,11 @@ public class LLCircular extends LLNode {
         boolean b = false;
         LLNode n = this;
         hm = new HashMap<>();
-        while (n.next != null) {
+        while (n != null) {
             if (hm.get(n.data) == null) {
                 hm.put(n.data, 1);
             } else if (hm.get(n.data) == 1){
+                hm.put(n.data, 2);
                 b = true;
                 break;
             }
@@ -22,8 +23,13 @@ public class LLCircular extends LLNode {
     }
 
     int findCircularElement() {
-        int x = -1;
-        return x;
+        for (Integer key : hm.keySet()){
+            if (hm.get(key) == 2) {
+                return key;
+            }
+        }
+        // not found
+        return -1;
     }
 
     public LLCircular() {
@@ -40,10 +46,10 @@ public class LLCircular extends LLNode {
         circ.appendTail('C');
         circ.appendTail('D');
         circ.appendTail('E');
-        circ.appendTail('F');
+        circ.appendTail('C');
         boolean b = circ.isCircularList();
         if (b) {
-            int c = circ.data;
+            int c = circ.findCircularElement();
             System.out.println("The list is circular ");
             System.out.println("The repeated elt is " + c);
         } else {
