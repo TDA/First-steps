@@ -115,8 +115,15 @@ public class LLNode {
     LLNode copyFromTo (int x, int y) {
         LLNode n = this;
         LLNode copy;
+        int count = x;
+        n = n.moveTo(x);
+        copy = new LLNode(n.data);
+        while (count < y && n.next != null) {
+            n = n.next;
+            copy.appendTail(n.data);
+            count++;
+        }
 
-        copy = new LLNode(1);
         return copy;
     }
 
@@ -144,9 +151,14 @@ public class LLNode {
         System.out.println("2nd from last is " + node.findKthFromLast(2));
         System.out.println("5th from last is " + node.findKthFromLast(5));
 
-        System.out.println("Deleted node at ");
+        System.out.println("Deleted node at 3");
         LLNode x = node.deleteAt(3);
         x.printLLNode();
+
+        System.out.println("Copied from 2 to 4");
+        LLNode copy = node.copyFromTo(1, 3);
+        copy.printLLNode();
+
     }
 
 
