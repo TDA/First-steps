@@ -7,9 +7,13 @@ public class LLNode {
     LLNode next;
     int data;
 
+    public LLNode() {
+        data = -11111;
+    }
     public LLNode(int data) {
         this.data = data;
     }
+
 
     void appendTail(LLNode end) {
         LLNode n = this;
@@ -17,6 +21,22 @@ public class LLNode {
             n = n.next;
         }
         n.next = end;
+    }
+
+    LLNode reverseList() {
+        LLNode n = this;
+        Stack<LLNode> nodeStack = new Stack<>();
+        while (n.next != null) {
+            nodeStack.push(n);
+            n = n.next;
+        }
+        nodeStack.push(n);
+        LLNode reverse = new LLNode(nodeStack.pop().data);
+        while (! nodeStack.empty()) {
+            int data = nodeStack.pop().data;
+            reverse.appendTail(data);
+        }
+        return reverse;
     }
 
     void appendTail(int data) {
@@ -40,7 +60,9 @@ public class LLNode {
         LLNode n = this;
         LLNode reversePart = n.moveTo(position);
         //n = this;
-        LLNode newList = new LLNode(n.data);
+        LLNode newList;
+        newList = new LLNode(n.data);
+
         while(position > 1) {
             // copy elements till position
             n = n.next;
@@ -56,8 +78,8 @@ public class LLNode {
         }
         nodeStack.push(reversePart);
         while (! nodeStack.empty()) {
-            newList.appendTail(nodeStack.pop().data);
-
+            int data = nodeStack.pop().data;
+            newList.appendTail(data);
         }
         return newList;
     }
@@ -93,10 +115,11 @@ public class LLNode {
     }
 
     LLNode deleteAt (int pos) {
+        // cannot delete first element
         LLNode n = this;
         LLNode x = new LLNode(n.data);
         int count = 1;
-        while (n.next != null && count != pos - 1) {
+        while (n.next != null && count < pos - 1) {
             n = n.next;
             x.appendTail(n.data);
             count++;
@@ -158,6 +181,9 @@ public class LLNode {
         System.out.println("Copied from 2 to 4");
         LLNode copy = node.copyFromTo(1, 3);
         copy.printLLNode();
+
+        LLNode reversed = node.reverseList();
+        reversed.printLLNode();
 
     }
 
