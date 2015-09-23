@@ -11,25 +11,23 @@ public class AndXORor {
         int b = 3;
         int c  = ((a&b)^(a|b))&(a^b);
         int d = a^b;
-        System.out.println(c);
-        System.out.println(d);
+        //System.out.println(c);
+        //System.out.println(d);
         int currentMax = 0;
-        Stack<Integer> stack = new Stack<>();
-        for (int i : array) {
-            stack.push(i);
-        }
-
-        while (! stack.isEmpty()) {
-            int x = stack.pop();
-            if((currentMax^x) > currentMax) {
-                currentMax = currentMax ^ x;
-            } else {
-                // do nothing
-            }
+        int [] smallers = findSmallest(array, 0, 5);
+        for (int smaller : smallers) {
+            System.out.println(smaller);
         }
     }
 
-    public int findSmallest (int L, int R) {
-
+    public static int[] findSmallest (int [] array, int L, int R) {
+        int smallest = array[L], smallest2 = array[L];
+        for (int i = L + 1; i < R; i++) {
+            if (array[i] < smallest) {
+                smallest2 = smallest;
+                smallest = array[i];
+            }
+        }
+        return new int[]{smallest, smallest2};
     }
 }
