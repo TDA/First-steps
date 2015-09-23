@@ -16,30 +16,40 @@ public class Stack<T extends Comparable<T>> {
     }
 
     public void push(T data) {
+        // O(1) for push
+        // if there is at least one element in the stack
         if (top >= 0) {
             min = (data.compareTo(min) > 0) ? min : data;
         } else {
+            // no elements, so assign the element to be min
             min = data;
         }
+        // update top AND THEN insert element
         stack.add(++top, data);
     }
 
     public T pop() {
+        // O(1) for pop
+        // if there is at least one element in the stack
         if (top > -1) {
+            // can we combine these somehow?
             T x = stack.get(top);
             stack.remove(top);
             top--;
             return x;
         } else {
+            // no elements, cant pop, choosing to not throw an exception
             return null;
         }
     }
 
     public T getMin() {
+        // O(1) for getting min
         return min;
     }
 
     public T peek() {
+        // O(1) for getting top element
         return stack.get(top);
     }
 
