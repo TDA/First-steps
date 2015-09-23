@@ -5,22 +5,31 @@ import java.util.ArrayList;
  */
 public class Stack<T extends Comparable<T>> {
     private T data;
-    private int top = 0;
+    // top points to the current top, NOT the next insertable position
+    private int top = -1;
+
     private ArrayList<T> stack;
     private T min;
 
+    public Stack() {
+        stack = new ArrayList<>();
+    }
+
     public void push(T data) {
-        stack.add(top++, data);
-        min = (min.compareTo(data) > 0) ? min : data;
+        if (top >= 0) {
+            min = (data.compareTo(min) > 0) ? min : data;
+        } else {
+            min = data;
+        }
+        stack.add(++top, data);
     }
 
     public T pop() {
-        if (top != 0) {
+        if (top > -1) {
             T x = stack.get(top);
             stack.remove(top);
             top--;
             return x;
-
         } else {
             return null;
         }
@@ -35,7 +44,12 @@ public class Stack<T extends Comparable<T>> {
     }
 
     public boolean isEmpty() {
-        return (top == 0);
+        return (top == -1);
+    }
+
+    public int getLength() {
+        // top is one less than length
+        return top + 1;
     }
 
 }
