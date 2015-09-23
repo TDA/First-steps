@@ -14,7 +14,7 @@ public class intStack {
         System.out.println(s1.getMin());
         System.out.println(s1.pop());
         System.out.println(s1.getMin());
-        System.out.println(s1.search(11));
+        System.out.println(s1.search(13));
         System.out.println(s1);
         System.out.println(s1.isEmpty());
 

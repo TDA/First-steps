@@ -55,7 +55,7 @@ public class Stack<T extends Comparable<T>> {
     }
 
     public T getMin() {
-        // O(1) for getting min
+        // O(1) for getting min if not null
         if (min == null) {
             min = stack.get(0);
             for (int x = top; x > 0; x--) {
@@ -86,4 +86,8 @@ public class Stack<T extends Comparable<T>> {
         return stack.indexOf(data);
     }
 
+    @Override
+    public String toString() {
+        return stack.toString();
+    }
 }
