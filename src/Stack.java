@@ -19,7 +19,13 @@ public class Stack<T extends Comparable<T>> {
         // O(1) for push
         // if there is at least one element in the stack
         if (top >= 0) {
-            min = (data.compareTo(min) > 0) ? min : data;
+            if (data.compareTo(min) < 0) {
+                // data is smaller, so update min
+                min = data;
+            } else {
+                // data is larger, do nothing
+            }
+
         } else {
             // no elements, so assign the element to be min
             min = data;
@@ -34,6 +40,11 @@ public class Stack<T extends Comparable<T>> {
         if (top > -1) {
             // can we combine these somehow?
             T x = stack.get(top);
+            // check if min needs to be updated
+            if(x.compareTo(min) == 0) {
+                // if x is min, reset min, we can calculate min when someone actually calls getMin()
+                min = null;
+            }
             stack.remove(top);
             top--;
             return x;
@@ -45,6 +56,15 @@ public class Stack<T extends Comparable<T>> {
 
     public T getMin() {
         // O(1) for getting min
+        if (min == null) {
+            min = stack.get(0);
+            for (int x = top; x > 0; x--) {
+                 if (stack.get(x).compareTo(min) < 0) {
+                     // element is lesser than min, so reassign
+                     min = stack.get(x);
+                 }
+            }
+        }
         return min;
     }
 
@@ -60,6 +80,10 @@ public class Stack<T extends Comparable<T>> {
     public int getLength() {
         // top is one less than length
         return top + 1;
+    }
+
+    public int search(T data) {
+        return stack.indexOf(data);
     }
 
 }
