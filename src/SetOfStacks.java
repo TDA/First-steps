@@ -46,13 +46,14 @@ public class SetOfStacks {
         if (! setOfStacks.isEmpty()) {
             data = setOfStacks.get(setOfStacks.size() - 1)
                     .pop();
+            // update the current capacity, only if we popped something
+            currentCapacity--;
         } else {
             // the stacks are empty, do nothing
+            // choosing not to throw an exception
             System.out.println("\nError: The stack is empty, no way to pop.");
             data = -10000;
         }
-        // update the current capacity
-        currentCapacity--;
         return data;
     }
 
@@ -88,6 +89,14 @@ public class SetOfStacks {
             System.out.print(" " + SOS.pop());
             i--;
         }
+
+        // check if pushing after last pop
+        // (resulting in empty stacks) works
+        SOS.push(1);
+        SOS.push(2);
+        SOS.pop();
+        SOS.pop();
+        SOS.pop();
 
         System.out.println(SOS);
     }
