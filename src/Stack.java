@@ -15,6 +15,10 @@ public class Stack<T extends Comparable<T>> {
         stack = new ArrayList<>();
     }
 
+    public Stack(int i) {
+        stack = new ArrayList<>(i);
+    }
+
     public void push(T data) {
         // O(1) for push
         // if there is at least one element in the stack
