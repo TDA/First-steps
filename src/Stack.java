@@ -44,11 +44,12 @@ public class Stack<T extends Comparable<T>> {
         if (top > -1) {
             // can we combine these somehow?
             T x = stack.get(top);
-            System.out.println(min);
             // check if min needs to be updated
-            if(x.compareTo(min) == 0) {
-                // if x is min, reset min, we can calculate min when someone actually calls getMin()
-                min = null;
+            if(min != null) {
+                if (x.compareTo(min) == 0) {
+                    // if x is min, reset min, we can calculate min when someone actually calls getMin()
+                    min = null;
+                }
             }
             stack.remove(top);
             top--;
@@ -62,7 +63,6 @@ public class Stack<T extends Comparable<T>> {
     public T getMin() {
         // O(1) for getting min if not null
         if (min == null) {
-            System.out.println("Was null");
             min = stack.get(0);
             for (int x = top; x > 0; x--) {
                  if (stack.get(x).compareTo(min) < 0) {
