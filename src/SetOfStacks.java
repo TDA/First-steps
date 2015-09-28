@@ -57,16 +57,21 @@ public class SetOfStacks {
         // driver program
         SetOfStacks SOS = new SetOfStacks();
         int i = 0;
+        // check if pushing is done properly across stacks
         while (i < 21) {
             SOS.push(i);
             i++;
         }
         System.out.println(SOS);
 
+        // check if popping across stacks is ok
         while (i > 9) {
             System.out.print(" " + SOS.pop());
             i--;
         }
+
+        // check if pushing after popping a stack with only one element
+        // (resulting in removal of a stack) works as intended
         SOS.push(10);
         SOS.push(11);
 
