@@ -1,0 +1,138 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: SetOfStacksTest</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">&lt;empty package name&gt;</a> ]
+</div>
+
+<h1>Coverage Summary for Class: SetOfStacksTest (&lt;empty package name&gt;)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">SetOfStacksTest</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/ 6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (23/ 23)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;import org.junit.After;
+<i>2</i>&nbsp;import org.junit.Before;
+<i>3</i>&nbsp;import org.junit.Test;
+<i>4</i>&nbsp;
+<i>5</i>&nbsp;import static org.junit.Assert.*;
+<i>6</i>&nbsp;
+<i>7</i>&nbsp;/**
+<i>8</i>&nbsp; * Created by schandramouli on 9/28/15.
+<i>9</i>&nbsp; */
+<b class="fc"><i>10</i>&nbsp;public class SetOfStacksTest {</b>
+<i>11</i>&nbsp;    SetOfStacks SOS;
+<i>12</i>&nbsp;    @Before
+<i>13</i>&nbsp;    public void setUp() throws Exception {
+<b class="fc"><i>14</i>&nbsp;        SOS = new SetOfStacks();</b>
+<b class="fc"><i>15</i>&nbsp;        int i = 0;</b>
+<i>16</i>&nbsp;        // check if pushing is done properly across stacks
+<b class="fc"><i>17</i>&nbsp;        while (i &lt; 21) {</b>
+<b class="fc"><i>18</i>&nbsp;            SOS.push(i);</b>
+<b class="fc"><i>19</i>&nbsp;            i++;</b>
+<i>20</i>&nbsp;        }
+<b class="fc"><i>21</i>&nbsp;    }</b>
+<i>22</i>&nbsp;    @Test
+<i>23</i>&nbsp;    public void testPush() throws Exception {
+<i>24</i>&nbsp;        // assert that pushing 21 elements results in 3 mini stacks
+<b class="fc"><i>25</i>&nbsp;        assertEquals(3, SOS.setOfStacks.size());</b>
+<b class="fc"><i>26</i>&nbsp;    }</b>
+<i>27</i>&nbsp;
+<i>28</i>&nbsp;    @Test
+<i>29</i>&nbsp;    public void testPop() throws Exception {
+<i>30</i>&nbsp;        // assert that popping one element reduces stack size by 1
+<b class="fc"><i>31</i>&nbsp;        SOS.pop();</b>
+<b class="fc"><i>32</i>&nbsp;        assertEquals(2, SOS.setOfStacks.size());</b>
+<b class="fc"><i>33</i>&nbsp;        int i = 0;</b>
+<b class="fc"><i>34</i>&nbsp;        while (i &lt; 20) {</b>
+<b class="fc"><i>35</i>&nbsp;            SOS.pop();</b>
+<b class="fc"><i>36</i>&nbsp;            i++;</b>
+<i>37</i>&nbsp;        }
+<i>38</i>&nbsp;        // assert that popping 20 more elements results in empty stack
+<b class="fc"><i>39</i>&nbsp;        assertEquals(0, SOS.setOfStacks.size());</b>
+<i>40</i>&nbsp;
+<i>41</i>&nbsp;        // assert that popping an element from empty stack returns -10000
+<b class="fc"><i>42</i>&nbsp;        assertEquals(-10000, SOS.pop());</b>
+<b class="fc"><i>43</i>&nbsp;    }</b>
+<i>44</i>&nbsp;
+<i>45</i>&nbsp;    @Test
+<i>46</i>&nbsp;    public void testToString() throws Exception {
+<b class="fc"><i>47</i>&nbsp;        String s = &quot;&quot;;</b>
+<b class="fc"><i>48</i>&nbsp;        assertEquals(s.getClass(), SOS.toString().getClass());</b>
+<b class="fc"><i>49</i>&nbsp;    }</b>
+<i>50</i>&nbsp;
+<i>51</i>&nbsp;    @After
+<i>52</i>&nbsp;    public void tearDown() throws Exception {
+<b class="fc"><i>53</i>&nbsp;        SetOfStacks.main(new String[]{});</b>
+<b class="fc"><i>54</i>&nbsp;    }</b>
+<i>55</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2015-09-28 01:50</div>
+</div>
+</body>
+</html>

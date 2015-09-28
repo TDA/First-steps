@@ -30,16 +30,6 @@ public class SetOfStacks {
 
     public int pop() {
         int data;
-        if(currentCapacity <= 0) {
-            // remove the current stack
-            if(! setOfStacks.isEmpty()){
-                setOfStacks.remove(setOfStacks.size() - 1);
-            } else {
-                return -10000;
-            }
-            // reset the current capacity to capacity of previous stack - 2 ~ 8
-            currentCapacity = capacity;
-        }
         // pop the right stack
         // I know im repeating a condition here, will
         // have to figure another way
@@ -53,6 +43,14 @@ public class SetOfStacks {
             // choosing not to throw an exception
             System.out.println("\nError: The stack is empty, no way to pop.");
             data = -10000;
+        }
+        if(currentCapacity <= 0) {
+            // remove the current stack
+            if(! setOfStacks.isEmpty()){
+                setOfStacks.remove(setOfStacks.size() - 1);
+            }
+            // reset the current capacity to capacity of previous stack - 2 ~ 8
+            currentCapacity = capacity;
         }
         return data;
     }
