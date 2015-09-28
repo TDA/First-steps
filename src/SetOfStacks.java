@@ -35,14 +35,22 @@ public class SetOfStacks {
             if(! setOfStacks.isEmpty()){
                 setOfStacks.remove(setOfStacks.size() - 1);
             } else {
-                return -1;
+                return -10000;
             }
             // reset the current capacity to capacity of previous stack - 2 ~ 8
             currentCapacity = capacity;
         }
         // pop the right stack
-        data = setOfStacks.get(setOfStacks.size() - 1)
-                .pop();
+        // I know im repeating a condition here, will
+        // have to figure another way
+        if (! setOfStacks.isEmpty()) {
+            data = setOfStacks.get(setOfStacks.size() - 1)
+                    .pop();
+        } else {
+            // the stacks are empty, do nothing
+            System.out.println("\nError: The stack is empty, no way to pop.");
+            data = -10000;
+        }
         // update the current capacity
         currentCapacity--;
         return data;
@@ -74,6 +82,12 @@ public class SetOfStacks {
         // (resulting in removal of a stack) works as intended
         SOS.push(10);
         SOS.push(11);
+
+        // check if extra popping happens
+        while (i > -3) {
+            System.out.print(" " + SOS.pop());
+            i--;
+        }
 
         System.out.println(SOS);
     }
