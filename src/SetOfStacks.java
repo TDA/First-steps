@@ -9,14 +9,13 @@ public class SetOfStacks {
     // Will eventually make it a Generic one
     int capacity = 10; // hold only ten items in any stack
     int currentCapacity = 0;
-    ArrayList<Stack> setOfStacks = new ArrayList<>();
+    ArrayList<Stack<Integer>> setOfStacks = new ArrayList<Stack<Integer>>();
 
     public SetOfStacks() {
         setOfStacks.add(0, new Stack<Integer>(capacity));
     }
 
     public void push(int data) {
-        currentCapacity++;
         if (currentCapacity >= capacity) {
             // we need to create a new stack and push onto it
             setOfStacks.add(new Stack<Integer>(capacity));
@@ -25,6 +24,28 @@ public class SetOfStacks {
         }
         setOfStacks.get(setOfStacks.size() - 1)
                     .push(data);
+        // update the current capacity
+        currentCapacity++;
+    }
+
+    public int pop() {
+        int data;
+        if(currentCapacity <= 0) {
+            // remove the current stack
+            if(! setOfStacks.isEmpty()){
+                setOfStacks.remove(setOfStacks.size() - 1);
+            } else {
+                return -1;
+            }
+            // reset the current capacity to capacity of previous stack - 2 ~ 8
+            currentCapacity = capacity;
+        }
+        // pop the right stack
+        data = setOfStacks.get(setOfStacks.size() - 1)
+                .pop();
+        // update the current capacity
+        currentCapacity--;
+        return data;
     }
 
     @Override
@@ -33,12 +54,22 @@ public class SetOfStacks {
     }
 
     public static void main(String[] args) {
+        // driver program
         SetOfStacks SOS = new SetOfStacks();
         int i = 0;
         while (i < 21) {
-            SOS.push(21);
+            SOS.push(i);
             i++;
         }
+        System.out.println(SOS);
+
+        while (i > 9) {
+            System.out.print(" " + SOS.pop());
+            i--;
+        }
+        SOS.push(10);
+        SOS.push(11);
+
         System.out.println(SOS);
     }
 }
