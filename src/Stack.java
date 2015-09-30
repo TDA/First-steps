@@ -23,7 +23,7 @@ public class Stack<T extends Comparable<T>> {
         // O(1) for push
         // if there is at least one element in the stack
         if (top >= 0) {
-            if (data.compareTo(min) < 0) {
+            if (min != null && data.compareTo(min) < 0) {
                 // data is smaller, so update min
                 min = data;
             } else {

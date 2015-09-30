@@ -40,6 +40,14 @@ public class Node {
         return "";
     }
 
+    public static String levelOrderTraversal(Node root) {
+        if(root != null) {
+            System.out.println(root.data);
+            return levelOrderTraversal(root.left) + " " + levelOrderTraversal(root.right);
+        }
+        return "";
+    }
+
     public static String removeSpaces(String s) {
         s = s.replaceAll("\\s+", " ");
         return s;
@@ -106,5 +114,10 @@ public class Node {
             System.out.println(inOrder);
         }
 
+    }
+
+    @Override
+    public String toString() {
+        return this.data;
     }
 }

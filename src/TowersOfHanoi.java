@@ -26,9 +26,20 @@ public class TowersOfHanoi {
         if (t.isEmpty()) {
             return true;
         }
-        int a = s.peek();
-        int b = t.peek();
+        Integer a = s.peek();
+        Integer b = t.peek();
+        if (a.equals(null)) {
+            return false;
+        }
         return (a < b);
+    }
+
+    public static void makeLegalMove(Stack<Integer> s, Stack<Integer> t) {
+        if (isLegalMove(s, t)) {
+            moveDisk(s, t);
+        } else if (isLegalMove(t, s)){
+            moveDisk(t, s);
+        }
     }
     public static void main(String[] args) {
         // 3 stacks for holding items
@@ -40,40 +51,28 @@ public class TowersOfHanoi {
         //System.out.println(stack1.getMin());
         // System.out.println(stack1);
         // if stack 3 isnt full
-        int x = 0;
-        /*while (x < 5) {
+        double x = Math.pow(2, DISKS);
+        for (int i = 0; i < x; i++) {
             if(DISKS % 2 != 0) {
                 // if disks are odd, first move is from 1 to 3, always
-                if (! stack1.isEmpty() && isLegalMove(stack1, stack3)) {
-                    moveDisk(stack1, stack3);
-                }
-                printStacks();
 
-                // then move from 1 to the stack which has no elements
-                if (! stack1.isEmpty() && isLegalMove(stack1, stack2)) {
-                    moveDisk(stack1, stack2);
-                }
-                printStacks();
-                // Now the stacks are all at least holding 1 element
-                // Move from the stack which has smallest to second smallest
-                if (! stack3.isEmpty() && isLegalMove(stack3, stack2)) {
-                    moveDisk(stack3, stack2);
-                }
-                printStacks();
-                // Move larger elt to the empty stack
-                moveDisk(stack1, stack3);
-                //
-                moveDisk(stack2, stack1);
-                printStacks();
-                moveDisk(stack2, stack3);
-                printStacks();
-                moveDisk(stack1, stack3);
-                printStacks();
 
+                // find the legal move between the two stacks,
+                // and make that move
+                switch (i%3) {
+                    case 0: if (!stack1.isEmpty()) {
+                        makeLegalMove(stack1, stack3);
+                    }
+                        break;
+                    case 1: makeLegalMove(stack1, stack2);
+                        break;
+                    case 2: makeLegalMove(stack3, stack2);
+                        break;
+                }
+
+                printStacks();
             }
-            x++;
-
-        }*/
+        }
         //solve(3, "1", "2", "3");
     }
 
