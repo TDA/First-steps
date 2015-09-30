@@ -2,7 +2,7 @@
  * Created by schandramouli on 9/28/15.
  */
 public class TowersOfHanoi {
-    public static final int DISKS = 3;
+    public static final int DISKS = 5;
     public static Stack<Integer> stack1= new Stack<>();
     public static Stack<Integer> stack2= new Stack<>();
     public static Stack<Integer> stack3= new Stack<>();
@@ -16,6 +16,7 @@ public class TowersOfHanoi {
         System.out.println(stack1);
         System.out.println(stack2);
         System.out.println(stack3);
+        System.out.println("------------");
     }
 
     public static void func() {
@@ -28,7 +29,9 @@ public class TowersOfHanoi {
         }
         Integer a = s.peek();
         Integer b = t.peek();
-        if (a.equals(null)) {
+        System.out.println(a);
+        System.out.println(b);
+        if (a == null) {
             return false;
         }
         return (a < b);
@@ -59,6 +62,7 @@ public class TowersOfHanoi {
 
                 // find the legal move between the two stacks,
                 // and make that move
+                System.out.println("i = " + i);
                 switch (i%3) {
                     case 0: if (!stack1.isEmpty()) {
                         makeLegalMove(stack1, stack3);
