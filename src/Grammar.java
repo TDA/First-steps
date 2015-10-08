@@ -5,6 +5,6 @@ import jdk.nashorn.internal.ir.Symbol;
  */
 public class Grammar {
     Symbol[] Symbols;
-    Production[] productions;
+    //Production[] productions;
     Symbol start;
 }
