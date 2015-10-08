@@ -57,7 +57,13 @@ public class PalindromicAnagrams {
             str += "," + noOfPals;
             // System.out.println(map);
             System.out.println(str);
-
+            Integer[] array = new Integer[map.size()];
+            int x = 0;
+            for(Integer i :map.values()) {
+                array[x] = i;
+                x++;
+            }
+            //System.
 
             buff2.write(str + "\n");
         }
