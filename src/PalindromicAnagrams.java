@@ -34,10 +34,20 @@ public class PalindromicAnagrams {
             int noOfOddChars = 0;
             int noOfEvenChars = 0;
             int noOfPals = 0;
+            // n = a + b + c where a b c are repeated letters
+            int n = 0;
+            int[] pairArray = new int[map.size()];
+            int iterator = 0;
+
             for (Character character : map.keySet()) {
                 if (!(map.get(character) % 2 == 0)) {
                     // check how many chars are odd occurences
                     noOfOddChars++;
+                    // add all the pairs
+                    int noOfPairs = map.get(character) / 2;
+                    n = n + noOfPairs;
+                    pairArray[iterator] = noOfPairs;
+                    iterator++;
                 } else {
                     // this contains the no of characters that occur even no of times and can be permuted
                     noOfEvenChars++;
@@ -52,19 +62,15 @@ public class PalindromicAnagrams {
                 str += "0";
             }
             // calc the permutations
-
-            noOfPals = findFactorial(noOfEvenChars);
+            // app the formula is (a+b+c)!/(a!*b!*c!) where a,b,c are pairs in the hashmap
+            noOfPals = findFactorial(n);
+            // now lets divide this by the individual kids
+            for (int i = 0; i < pairArray.length; i++) {
+                noOfPals = noOfPals / findFactorial(pairArray[i]);
+            }
             str += "," + noOfPals;
             // System.out.println(map);
             System.out.println(str);
-            Integer[] array = new Integer[map.size()];
-            int x = 0;
-            for(Integer i :map.values()) {
-                array[x] = i;
-                x++;
-            }
-            //System.
-
             buff2.write(str + "\n");
         }
         buff.close();

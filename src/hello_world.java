@@ -1,3 +1,5 @@
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -10,5 +12,6 @@ public class hello_world {
         System.out.println(s + " " + s1.length());
         Random gen = new Random(1);
         System.out.println(gen.nextInt(1888));
+
     }
 }
