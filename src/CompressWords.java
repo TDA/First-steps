@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Scanner;
 
@@ -49,7 +47,7 @@ public class CompressWords {
                 hm.put(s.charAt(i), 1);
             }
         }
-        System.out.println(hm);
+        //System.out.println(hm);
         for (Character character : hm.keySet()) {
             finalString += character;
             if(hm.get(character) > 1) {
