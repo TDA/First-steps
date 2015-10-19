@@ -1,5 +1,3 @@
-import java.util.*;
-
 /**
  * Created by schandramouli on 9/23/15.
  */
@@ -19,7 +17,7 @@ public class intStack {
         System.out.println(s1.isEmpty());
 
 
-        java.util.Stack<Integer> stack = new java.util.Stack<>();
+        Stack<Integer> stack = new Stack<>();
         stack.push(11);
         stack.push(12);
         stack.push(134);
