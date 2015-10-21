@@ -23,14 +23,14 @@ public class DateLibraryFine {
         int month2 = Integer.parseInt(t.split(" ")[1]);
         int year2 = Integer.parseInt(t.split(" ")[2]);
 
-        if (year < year2 || (year == year2 && month < month2) || (year == year2 && month == month2 && day <= day2)) {
-            return 0;
-        }
-        if (year != year2) {
+        if (year > year2) {
             return 10000;
         }
-        if (month != month2) {
+        if (month > month2) {
             return Math.abs(month - month2) * 500;
+        }
+        if ((month < month2) || (month == month2 && day <= day2)) {
+            return 0;
         }
 
         return Math.abs(day - day2) * 15;
