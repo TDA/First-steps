@@ -15,8 +15,10 @@ public class FindDigits {
             int[] digits = new int[Integer.toString(no).length()];
             int j = 0;
             for (String c: Integer.toString(no).split("")) {
-                digits[j] = Integer.parseInt(c);
-                j++;
+                if (! "".equals(c)) {
+                    digits[j] = Integer.parseInt(c);
+                    j++;
+                }
             }
             for (int k = 0; k < digits.length; k++) {
                 int digit = digits[k];
