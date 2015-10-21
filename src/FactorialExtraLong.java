@@ -16,6 +16,6 @@ public class FactorialExtraLong {
         if (n <= 1) {
             return new BigInteger("1");
         }
-        return factorial(n - 1).multiply(new BigInteger("" + n));
+        return factorial(n - 1).multiply(BigInteger.valueOf(n));
     }
 }
