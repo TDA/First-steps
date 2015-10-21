@@ -26,10 +26,19 @@ public class TimeConversionAMPM {
         if (m.find( )) {
             switch (m.group(4)) {
                 case "AM":
-                    System.out.println(m.group(1) + ":" + m.group(2) + ":" + m.group(3));
+                    if (! m.group(1).equals("12")) {
+                        System.out.println(m.group(1) + ":" + m.group(2) + ":" + m.group(3));
+                    } else {
+                        System.out.println("00" + ":" + m.group(2) + ":" + m.group(3));
+                    }
                     break;
                 case "PM":
-                    System.out.println((Integer.parseInt(m.group(1)) + 12) + ":" + m.group(2) + ":" + m.group(3));
+                    if (! m.group(1).equals("12")) {
+                        int hrs = (Integer.parseInt(m.group(1)) + 12);
+                        System.out.println(hrs + ":" + m.group(2) + ":" + m.group(3));
+                    } else {
+                        System.out.println(m.group(1) + ":" + m.group(2) + ":" + m.group(3));
+                    }
                     break;
             }
         } else {
