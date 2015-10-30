@@ -2,7 +2,7 @@
  * Created by schandramouli on 9/28/15.
  */
 public class TowersOfHanoi {
-    public static final int DISKS = 5;
+    public static final int DISKS = 4;
     public static Stack<Integer> stack1= new Stack<>();
     public static Stack<Integer> stack2= new Stack<>();
     public static Stack<Integer> stack3= new Stack<>();
@@ -64,13 +64,28 @@ public class TowersOfHanoi {
                 // and make that move
                 System.out.println("i = " + i);
                 switch (i%3) {
-                    case 0: if (!stack1.isEmpty()) {
+                    case 0:
                         makeLegalMove(stack1, stack3);
-                    }
                         break;
                     case 1: makeLegalMove(stack1, stack2);
                         break;
                     case 2: makeLegalMove(stack3, stack2);
+                        break;
+                }
+
+                printStacks();
+            } else {
+                // if disks are even, first move is from 1 to 2, always
+                // find the legal move between the two stacks
+                // and make that move
+                System.out.println("i = " + i);
+                switch (i%3) {
+                    case 0:
+                        makeLegalMove(stack1, stack2);
+                        break;
+                    case 1: makeLegalMove(stack1, stack3);
+                        break;
+                    case 2: makeLegalMove(stack2, stack3);
                         break;
                 }
 
