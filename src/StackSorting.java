@@ -15,7 +15,7 @@ public class StackSorting {
         /*for (int i = 10; i > 0; i--) {
             intStack.push(i);
         }*/
-        intStack.addAll(Arrays.asList(4, 1, 5, 2, 3));
+        intStack.addAll(Arrays.asList(4, 1, 5, 2, 3, 6 , 2));
         for (Integer i : intStack) {
             System.out.println(i);
         }
@@ -24,43 +24,24 @@ public class StackSorting {
         System.out.println("-------------------------------------");
         int size = intStack.size();
         //System.out.println(size);
-        // for loop to cover each element, so basically bubble sort here
-        for (int k = 0; k < size; k++) {
-            while (!intStack.isEmpty()) {
-                int temp;
-                if (tempStack.isEmpty()) {
-                    temp = intStack.pop();
-                    if (!intStack.isEmpty() && intStack.peek() > temp) {
-                        // we need to switch these
-                        tempStack.push(intStack.pop());
-                        tempStack.push(temp);
-                    } else if (!intStack.isEmpty() && intStack.peek() <= temp) {
-                        // push in order?
-                        tempStack.push(temp);
-                        tempStack.push(intStack.pop());
-                    } else {
-                        tempStack.push(temp);
-                    }
-                } else {
-                    // compare with tempstack, and swap them if needed.
-                    temp = tempStack.peek();
-                    if (!intStack.isEmpty() && intStack.peek() > temp) {
-                        // we need to swap these
-                        tempStack.pop();
-                        tempStack.push(intStack.pop());
-                        tempStack.push(temp);
-                    } else if (!intStack.isEmpty() && intStack.peek() <= temp) {
-                        // push in order?
-                        tempStack.push(intStack.pop());
-                    }
-                }
+        // for loop to cover each element, so basically insertion sort here
+        while (! intStack.empty()) {
+            //pop  an element
+            int temp = intStack.pop();
+            // compare the popped element and existing elements,
+            // insert popped elt at right pos in tempstack
+            while (! tempStack.empty() && temp < tempStack.peek()) {
+                // < cuz we need bigger elts on top of stack
+                // change to > if u want opposite
+                intStack.push(tempStack.pop());
             }
-            // copy tempstack to intstack, and reset tempstack
-            intStack = (Stack) tempStack.clone();
-            tempStack.clear();
+            // insert the popped elt into tempstack
+            tempStack.push(temp);
         }
-        for (Integer i : intStack) {
+        for (Integer i : tempStack) {
             System.out.println(i);
         }
+
+        //System.out.println(tempStack.pop());
     }
 }
