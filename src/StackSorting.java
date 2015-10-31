@@ -23,7 +23,7 @@ public class StackSorting {
         // bubble sort maybe?
         System.out.println("-------------------------------------");
         int size = intStack.size();
-        System.out.println(size);
+        //System.out.println(size);
         // for loop to cover each element, so basically bubble sort here
         for (int k = 0; k < size; k++) {
             while (!intStack.isEmpty()) {
@@ -54,10 +54,12 @@ public class StackSorting {
                         tempStack.push(intStack.pop());
                     }
                 }
-
             }
+            // copy tempstack to intstack, and reset tempstack
+            intStack = (Stack) tempStack.clone();
+            tempStack.clear();
         }
-        for (Integer i : tempStack) {
+        for (Integer i : intStack) {
             System.out.println(i);
         }
     }
