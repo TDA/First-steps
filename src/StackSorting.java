@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.Stack;
 
 /**
@@ -14,25 +15,47 @@ public class StackSorting {
         /*for (int i = 10; i > 0; i--) {
             intStack.push(i);
         }*/
-
+        intStack.addAll(Arrays.asList(4, 1, 5, 2, 3));
         for (Integer i : intStack) {
             System.out.println(i);
         }
         // lets try with one stack, using the temp stack when needed,
         // bubble sort maybe?
-        while (! intStack.isEmpty()){
-            int temp = intStack.pop();
-            // check if lesser than next elt
-            if (intStack.peek() != null && intStack.peek() > temp) {
-                // we need to switch these
-                tempStack.push(temp);
-                tempStack.push(intStack.pop());
-            }
-            /*if (tempStack.isEmpty()) {
-                tempStack.push(intStack.pop());
-            } else {
+        System.out.println("-------------------------------------");
+        int size = intStack.size();
+        System.out.println(size);
+        // for loop to cover each element, so basically bubble sort here
+        for (int k = 0; k < size; k++) {
+            while (!intStack.isEmpty()) {
+                int temp;
+                if (tempStack.isEmpty()) {
+                    temp = intStack.pop();
+                    if (!intStack.isEmpty() && intStack.peek() > temp) {
+                        // we need to switch these
+                        tempStack.push(intStack.pop());
+                        tempStack.push(temp);
+                    } else if (!intStack.isEmpty() && intStack.peek() <= temp) {
+                        // push in order?
+                        tempStack.push(temp);
+                        tempStack.push(intStack.pop());
+                    } else {
+                        tempStack.push(temp);
+                    }
+                } else {
+                    // compare with tempstack, and swap them if needed.
+                    temp = tempStack.peek();
+                    if (!intStack.isEmpty() && intStack.peek() > temp) {
+                        // we need to swap these
+                        tempStack.pop();
+                        tempStack.push(intStack.pop());
+                        tempStack.push(temp);
+                    } else if (!intStack.isEmpty() && intStack.peek() <= temp) {
+                        // push in order?
+                        tempStack.push(intStack.pop());
+                    }
+                }
 
-            }*/
+            }
         }
         for (Integer i : tempStack) {
             System.out.println(i);
