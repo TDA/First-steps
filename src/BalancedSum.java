@@ -3,7 +3,7 @@
  */
 public class BalancedSum {
     public static void main(String[] args) {
-        int arr[] = {1, 2, 4, 3};
+        int arr[] = {1, 4, 4, 3};
         System.out.println(CheckIfBalanced(arr));
         System.out.println(EnchancedCheckIfBalanced(arr));
     }
