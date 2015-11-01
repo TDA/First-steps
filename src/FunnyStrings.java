@@ -15,14 +15,14 @@ public class FunnyStrings {
             // if equal, go onto next letter seq, if not, break and return false
             //System.out.println(s);
             int k = s.length();
-            System.out.println(k);
+            //System.out.println(k);
             // for 1 to n - 1, check this
             int j = 1;
             for (; j <= k - 1; j++) {
-                System.out.println("first two " + s.charAt(j) + " " + s.charAt(j - 1));
-                System.out.println("first two " + (s.charAt(j) - s.charAt(j - 1)));
-                System.out.println("last two " + s.charAt(k - j) + s.charAt(k - j - 1));
-                System.out.println("last two " + (s.charAt(k - j) - s.charAt(k - j - 1)));
+                //System.out.println("first two " + s.charAt(j) + " " + s.charAt(j - 1));
+                //System.out.println("first two " + (s.charAt(j) - s.charAt(j - 1)));
+                //System.out.println("last two " + s.charAt(k - j) + s.charAt(k - j - 1));
+                //System.out.println("last two " + (s.charAt(k - j) - s.charAt(k - j - 1)));
                 if (Math.abs(s.charAt(j) - s.charAt(j - 1)) == Math.abs(s.charAt(k - j) - s.charAt(k - j - 1))) {
                     continue;
                 } else {
