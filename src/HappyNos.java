@@ -7,11 +7,15 @@ import java.util.Scanner;
 public class HappyNos {
     public static void main(String[] args) {
         int n = 1;
-        HashMap<Integer, Integer> map = new HashMap<>();
         Scanner scanner = new Scanner(System.in);
-        //for (int i = 0; i < n; i++) {
+        for (int i = 0; i < n; i++) {
+            HashMap<Integer, Integer> map = new HashMap<>();
             int count = 0;
             Integer number = scanner.nextInt();
+            if (number == 1) {
+                System.out.println("happy " + count);
+                continue;
+            }
             int sum = 0;
             while (true) {
                 System.out.println(number);
@@ -26,12 +30,19 @@ public class HappyNos {
                     // means a happy number
                     System.out.println("happy " + count);
                     break;
+                } else if (map.get(sum) != null && map.get(sum) == 1) {
+                    // if repeating
+                    System.out.println("unhappy " + (count));
+                    break;
                 } else {
                     // continue on with next iteration
+                    map.put(sum, 1);
                     number = sum;
+                    // reset sum
                     sum = 0;
                 }
             }
-        //}
+            System.out.println(map);
+        }
     }
 }
