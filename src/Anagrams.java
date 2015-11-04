@@ -32,8 +32,8 @@ public class Anagrams {
         HashMap<Character, Integer> map2 = new HashMap<Character, Integer>();
         map1 = storeStringInMap(s1);
         map2 = storeStringInMap(s2);
-        System.out.println(map1);
-        System.out.println(map2);
+        //System.out.println(map1);
+        //System.out.println(map2);
         HashMap<Character, Integer> map3 = new HashMap<Character, Integer>();
         if (! map1.equals(map2)) {
             // since the strings arent anagrams, we need
@@ -53,7 +53,7 @@ public class Anagrams {
                 }
             }
 
-            System.out.println(map3);
+            //System.out.println(map3);
 
             int countOfLettersInBoth = 0;
             int countOfLettersNotInBoth = 0;
