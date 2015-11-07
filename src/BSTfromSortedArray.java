@@ -9,21 +9,15 @@ public class BSTfromSortedArray {
         // first we need to find the root node, which will generally be
         // the center elt in the array
         Node root = new Node(getRootElement(array));
+        // then we can recursively split the array into smaller parts
+        // and return the root element at every level
 
 
-    }
 
-    public static int findRootElementIndex(int[] array) {
-        if (array.length % 2 == 0) {
-            // even array, return the mid element
-            return array.length / 2;
-        } else {
-            return (array.length / 2) + 1;
-        }
     }
 
     public static int getRootElement(int[] array) {
-        int rootIndex = findRootElementIndex(array);
-        return array[rootIndex];
+        // simplified and removed more
+        return array[array.length / 2];
     }
 }
