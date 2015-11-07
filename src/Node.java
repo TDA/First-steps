@@ -3,12 +3,12 @@ import sun.misc.Regexp;
 /**
  * Created by schandramouli on 8/22/15.
  */
-public class Node {
-    String data;
+public class Node <T extends Comparable<T>> {
+    T data;
     Node left;
     Node right;
 
-    public Node (String data) {
+    public Node (T data) {
         this.data = data;
         this.left = null;
         this.right = null;
@@ -118,6 +118,6 @@ public class Node {
 
     @Override
     public String toString() {
-        return this.data;
+        return this.data.toString();
     }
 }
