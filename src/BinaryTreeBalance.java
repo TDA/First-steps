@@ -9,13 +9,15 @@ public class BinaryTreeBalance {
         root.left = new Node("B");
         root.right = new Node("C");
         root.left.left = new Node("G");
+        root.left.left.left = new Node("G1");
         root.left.right = new Node("H");
         root.right.left = new Node("D");
         root.right.right = new Node("E");
         root.right.right.right = new Node("F");
         //root.right.right.right.right = new Node("K");
         //root.right.right.right.right.right = new Node("J");
-        System.out.println(findHeightDifference(root.left, root.right));
+        System.out.println("Final score is " + findHeightDifference(root.left, root.right));
+        //System.out.println(getHeight(root));
         // this is balanced, so lets compute and check
     }
 
@@ -23,15 +25,12 @@ public class BinaryTreeBalance {
         // compute whether each subtree is balanced
         // if both nodes are null, its balanced,
         // so return true
-        if (root.left == null && root.right == null) {
+        if (root == null) {
             return true;
-        } else if (root.left != null && root.right != null){
-            return isTreeBalanced(root.left) && isTreeBalanced(root.right);
-        } else if (root.left != null){
-            return isTreeBalanced(root.left);
         } else {
-            return isTreeBalanced(root.right);
-        }
+            // need to recurse
+            int heightDifference = 1;
+        } return false;
     }
 
     public static int findHeightDifference (Node Left, Node Right) {
@@ -44,10 +43,18 @@ public class BinaryTreeBalance {
             return findHeightDifference(Left.left, Left.right) - findHeightDifference(Right.left, Right.right);
         } else if (Left != null){
             System.out.println(Left.data);
-            return findHeightDifference(Left.left, Left.right);
+            return findHeightDifference(Left.left, Left.right) + 1;
         } else {
             System.out.println(Right.data);
-            return 0 - findHeightDifference(Right.left, Right.right);
+            return findHeightDifference(Right.left, Right.right) - 1;
+        }
+    }
+
+    public static int getHeight (Node root) {
+        if (root == null) {
+            return 0;
+        } else {
+            return Math.max(getHeight(root.left), getHeight(root.right)) + 1;
         }
     }
 }
