@@ -47,6 +47,7 @@ public class LevelOrderTraversal {
         level = 1;
         //System.out.println(level);
         int iterations = 0;
+
         while(! queue.isEmpty()) {
             int size = queue.size();
             while (size > 0) {

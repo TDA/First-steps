@@ -1,5 +1,8 @@
 import sun.misc.Regexp;
 
+import java.util.ArrayDeque;
+import java.util.Queue;
+
 /**
  * Created by schandramouli on 8/22/15.
  */
@@ -40,12 +43,24 @@ public class Node <T extends Comparable<T>> {
         return "";
     }
 
-    public static String levelOrderTraversal(Node root) {
-        if(root != null) {
-            System.out.println(root.data);
-            return levelOrderTraversal(root.left) + " " + levelOrderTraversal(root.right);
+    public static void levelOrderTraversal(Node newNode) {
+        Queue<Node> queue = new ArrayDeque<>();
+        queue.add(newNode);
+        while(! queue.isEmpty()) {
+            int size = queue.size();
+            while (size > 0) {
+                Node root = queue.poll();
+                System.out.print(root.data);
+                if (root.left != null) {
+                    queue.add(root.left);
+                }
+                if (root.right != null) {
+                    queue.add(root.right);
+                }
+                size--;
+            }
+            System.out.println();
         }
-        return "";
     }
 
     public static String removeSpaces(String s) {
