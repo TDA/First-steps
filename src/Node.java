@@ -26,21 +26,21 @@ public class Node <T extends Comparable<T>> {
         if(root != null) {
             return inOrderTraversal(root.left) + " " + root.data + " " + inOrderTraversal(root.right);
         }
-        return "";
+        return "0";
     }
 
     public static String postOrderTraversal(Node root) {
         if(root != null) {
             return postOrderTraversal(root.left) + " " + postOrderTraversal(root.right) + " " + root.data;
         }
-        return "";
+        return "0";
     }
 
     public static String preOrderTraversal(Node root) {
         if(root != null) {
             return root.data + " " + preOrderTraversal(root.left) + " " + preOrderTraversal(root.right);
         }
-        return "";
+        return "0";
     }
 
     public static void levelOrderTraversal(Node newNode) {
@@ -50,7 +50,7 @@ public class Node <T extends Comparable<T>> {
             int size = queue.size();
             while (size > 0) {
                 Node root = queue.poll();
-                System.out.print(root.data);
+                System.out.print(root.data + " ");
                 if (root.left != null) {
                     queue.add(root.left);
                 }
