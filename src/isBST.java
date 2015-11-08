@@ -9,52 +9,42 @@ public class isBST {
         //       3           8
         //  2       4   7       9
         //1            6         10
-//        Node<Integer> root = new Node(1);
-//        root.left = new Node(2);
-//        root.right = new Node(3);
-//        root.left.left = new Node(4);
-//        root.left.left.left = new Node(5);
-//        root.left.right = new Node(6);
-//        root.right.left = new Node(7);
-//        root.right.right = new Node(8);
-//        root.right.right.right = new Node(9);
-//        root.right.right.right.right = new Node(10);
-
-        Node<Integer> root = new Node(5);
-        root.left = new Node(3);
-        root.right = new Node(8);
-        root.left.left = new Node(2);
-        root.left.left.left = new Node(1);
-        root.left.right = new Node(4);
+        Node<Integer> root = new Node(1);
+        root.left = new Node(2);
+        root.right = new Node(3);
+        root.left.left = new Node(4);
+        root.left.left.left = new Node(5);
+        root.left.right = new Node(6);
         root.right.left = new Node(7);
-        root.right.left.left = new Node(6);
-        root.right.right = new Node(9);
-        root.right.right.right = new Node(10);
+        root.right.right = new Node(8);
+        root.right.right.right = new Node(9);
+        root.right.right.right.right = new Node(10);
+
+//        Node<Integer> root = new Node(5);
+//        root.left = new Node(3);
+//        root.right = new Node(8);
+//        root.left.left = new Node(2);
+//        root.left.left.left = new Node(1);
+//        root.left.right = new Node(4);
+//        root.right.left = new Node(7);
+//        root.right.left.left = new Node(6);
+//        root.right.right = new Node(9);
+//        root.right.right.right = new Node(10);
 
 
-        System.out.println(isBTaBST(root));
+        System.out.println(isBTaBST(root, Integer.MIN_VALUE, Integer.MAX_VALUE));
     }
 
-    public static boolean isBTaBST(Node root) {
+    public static boolean isBTaBST(Node root, int min, int max) {
         if (root == null) {
             return true;
-        } else {
-            if (root.left != null) {
-                if (root.data.compareTo(root.left.data) >= 0) {
-                    return isBTaBST(root.left);
-                } else {
-                    return false;
-                }
-            }
-            if (root.right != null) {
-                if (root.data.compareTo(root.left.data) < 0) {
-                    return isBTaBST(root.left);
-                } else {
-                    return false;
-                }
-            }
         }
-        return true;
+        if (max < (int) root.data || min > (int) root.data) {
+            return false;
+        } else {
+            // set bounds
+            return isBTaBST(root.left, min, (int) root.data) && isBTaBST(root.right, (int) root.data, max);
+        }
     }
 
 }
