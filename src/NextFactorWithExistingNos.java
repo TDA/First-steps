@@ -60,7 +60,7 @@ public class NextFactorWithExistingNos {
                     System.out.printf("next factor and expo %s, %s\n", nextFactor, nextExponent);
                     System.out.printf("next new prod %s\n", newProduct * (int) Math.pow(nextFactor, nextExponent));
                     computations++;
-                    while (newProduct * (int) Math.pow(nextFactor, nextExponent) > num && nextExponent >= 0) {
+                    while (newProduct * (int) Math.pow(nextFactor, nextExponent) > num && nextExponent > 0) {
                         // do nothing, just iterate
                         --nextExponent;
                     }
