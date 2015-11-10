@@ -77,6 +77,7 @@ public class NextFactorWithExistingNos {
             }
             x++;
         }
+        // this still doesnt work for 81 - 105 i think
         System.out.printf("Next number divisible by these factors should be between %s and %s\n", num, upperBound);
         System.out.println("Total computations is " + computations);
 
