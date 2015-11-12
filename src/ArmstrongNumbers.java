@@ -12,7 +12,6 @@ public class ArmstrongNumbers {
             for (String c : Integer.toString(i).split("")) {
                 sum += (int) Math.pow(Integer.parseInt(c), 3);
             }
-            //System.out.println(sum);
 
             if (sum == i) {
                 System.out.println("Found Armstrong number " + i);
