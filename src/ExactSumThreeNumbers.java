@@ -30,11 +30,12 @@ public class ExactSumThreeNumbers {
                 forwardPointer++;
             } else {
                 // means we have to add smaller numbers
-                // reduce by two cuz other pointer points to one less than this
-                if (backwardPointer > middlePointer) {
-                    backwardPointer = backwardPointer - 2;
+                if (forwardPointer >= middlePointer) {
+                    // if the other pointers have been exhausted, move the back pointer
+                    backwardPointer--;
                 } else {
-                    middlePointer = middlePointer - 2;
+                    // else move the middle pointer
+                    middlePointer--;
                 }
             }
 
@@ -46,7 +47,7 @@ public class ExactSumThreeNumbers {
             tempSum = array[forwardPointer] + array[middlePointer] + array[backwardPointer];
         }
 
-        if (forwardPointer < backwardPointer && forwardPointer < middlePointer) {
+        if (forwardPointer < backwardPointer && forwardPointer <= middlePointer) {
             System.out.printf("The numbers are %d, %d and %d\n", array[forwardPointer], array[middlePointer], array[backwardPointer]);
         }
 
