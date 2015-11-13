@@ -7,7 +7,7 @@ public class BalancedSum {
         System.out.println(CheckIfBalanced(arr));
         System.out.println(EnchancedCheckIfBalanced(arr));
     }
-    // this is what i wrote for the godaddy interview
+
     public static int EnchancedCheckIfBalanced(int[] arr) {
         int sumLeft = 0;
         int sumRight = sum(arr);
@@ -22,7 +22,7 @@ public class BalancedSum {
         return 0;
     }
 
-    public static int sum (int[] arr) {
+    static int sum(int[] arr) {
         int sum = 0;
         for (int i = 0; i < arr.length; i++) {
             sum += arr[i];
@@ -30,6 +30,7 @@ public class BalancedSum {
         return sum;
     }
 
+    // this is what i wrote for the godaddy interview
     public static int CheckIfBalanced(int[] arr) {
         for (int i = 0; i < arr.length; i++) {
             if (SumLeft(arr, i) == SumRight(arr, i)) {
