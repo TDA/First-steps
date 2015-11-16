@@ -19,17 +19,19 @@ public class FindFibonacciNumber {
 
     static int fibonacci(int n, Type t) {
         // find the nth fibonacci by iteration
-        if (t == Type.Iterative) {
-            int first = 0;
-            int second = 1;
-            while (first + second < n) {
-                int temp = first + second;
-                first = second;
-                second = temp;
-            }
-            return second;
-        } else {
-            return 0;
+        switch (t) {
+            case Iterative:
+                int first = 0;
+                int second = 1;
+                while (first + second < n) {
+                    int temp = first + second;
+                    first = second;
+                    second = temp;
+                }
+                return second;
+                // no break needed
+            default:
+                return 0;
         }
 
     }
