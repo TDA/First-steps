@@ -20,7 +20,7 @@ public class FindFibonacciNumber {
 
        // this is funny cuz for the recursive solution you still need the iterative check :|
         int i;
-        for (i = 1; i < fibonacciLimit / 10; i++) {
+        for (i = 1; i < fibonacciLimit; i++) {
             int recursiveFibo = fibonacci(i, Type.Recursive);
             if (recursiveFibo > fibonacciLimit) {
                 break;
@@ -46,7 +46,7 @@ public class FindFibonacciNumber {
                 return second;
                 // no break needed due to return
             case Recursive:
-                System.out.println("n is " + n);
+                //System.out.println("n is " + n);
                 if (n == 0) {
                     return 0;
                 }
