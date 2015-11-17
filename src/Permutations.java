@@ -9,7 +9,7 @@ public class Permutations<T> {
     static Set<String> stringSet = new HashSet<>();
     static int recCount;
     public static void main(String[] args) {
-        String s = "abcd";
+        String s = "abcdef";
         Permutations<String> permutations = new Permutations<>();
         System.out.println(permutations.findPermutations(s));
         System.out.println(recCount);

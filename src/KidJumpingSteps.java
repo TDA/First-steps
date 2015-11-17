@@ -20,7 +20,6 @@ public class KidJumpingSteps {
 
     static int calculateJumps(int n) {
         recCount++;
-        // base cases, 1, 2, 3
         if (n < 0) {
             return 0;
         }
@@ -34,6 +33,7 @@ public class KidJumpingSteps {
     static int calculateJumpsDP(int n) {
         // we cache stuff
         dpCount++;
+        System.out.println(n);
         // if already cached, return that
         if (hm.containsKey(n)) {
             return hm.get(n);
