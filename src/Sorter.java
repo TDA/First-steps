@@ -1,19 +1,19 @@
-import java.util.ArrayList;
-import java.util.DoubleSummaryStatistics;
+import java.util.HashMap;
 
 /**
  * Created by schandramouli on 11/17/15.
  */
-public class Sorter<T> implements Comparable<T>{
+public class Sorter {
     public static void main(String[] args) {
-        ArrayList<Integer> arrayList = new ArrayList<>();
-        arrayList.add(3);
-        arrayList.add(1);
-        arrayList.add(6);
-        arrayList.add(2);
-        arrayList.add(5);
-        Sorter<Integer> sorter = new Sorter<>();
-        sorter.MergeSorter(arrayList);
+        HashMap<Integer, Complex> hashMap = new HashMap<>();
+        hashMap.put(0, new Complex(3.0, 2.1));
+        hashMap.put(1, new Complex(2.0, 1.1));
+        hashMap.put(2, new Complex(4.0, 8.1));
+        hashMap.put(3, new Complex(6.0, 5.1));
+        hashMap.put(4, new Complex(1.0, 1.1));
+        Sorter sorter = new Sorter();
+        sorter.MergeSorter(hashMap);
+        System.out.println(hashMap);
     }
 
 //    @Override
@@ -27,36 +27,51 @@ public class Sorter<T> implements Comparable<T>{
 //        }
 //    }
 
-    public void MergeSorter(int low, int high, ArrayList<T> arrayList, ArrayList<T> helperList) {
+    public void MergeSorter(int low, int high, HashMap<Integer, Complex> hashMap, HashMap<Integer, Complex> helperList) {
         if (low < high) {
+            System.out.println(low + " and " + high);
             // means we can still sort
             int mid = (low + high) / 2;
-            MergeSorter(low, mid, arrayList, helperList);
-            MergeSorter(mid + 1, high, arrayList, helperList);
-            merge(arrayList, helperList, low, mid, high);
+            MergeSorter(low, mid, hashMap, helperList);
+            MergeSorter(mid + 1, high, hashMap, helperList);
+            merge(hashMap, helperList, low, mid, high);
         }
     }
 
-    public void MergeSorter(ArrayList<T> arrayList) {
-        ArrayList<T> helperList = new ArrayList<>();
-        int high = arrayList.size() - 1;
+    public void MergeSorter(HashMap<Integer, Complex> hashMap) {
+        HashMap<Integer, Complex> helperList = new HashMap<>();
+        int high = hashMap.size() - 1;
         int low = 0;
-        MergeSorter(low, high, arrayList, helperList);
+        MergeSorter(low, high, hashMap, helperList);
     }
 
-    public void merge(ArrayList<T> arrayList, ArrayList<T> helperList, int low, int mid, int high) {
+    public void merge(HashMap<Integer, Complex> hashMap, HashMap<Integer, Complex> helperList, int low, int mid, int high) {
         // first copy arraylist into helper array
         for (int i = low; i <= high; i++) {
-            helperList.add(arrayList.get(i));
+            helperList.put(i, hashMap.get(i));
         }
         int helperLeft = low;
         int helperRight = mid + 1;
         int current = low;
         while (helperLeft <= mid && helperRight <= high) {
             // while at least one element is unsorted
-            if (helperList.get(helperLeft).compareTo(helperList.get(helperRight))) {
-
+            // convert both to doubles and check
+            if (helperList.get(helperLeft).compareTo(helperList.get(helperRight)) > 0) {
+                // means right is greater
+                hashMap.put(current, helperList.get(helperRight));
+                helperRight++;
+            } else {
+                hashMap.put(current, helperList.get(helperLeft));
+                helperLeft++;
             }
+            // in both cases, inc current
+            current++;
+        }
+
+        // is there something left out?
+        int remaining = mid - helperLeft;
+        for (int i = 0; i <= remaining; i++) {
+            hashMap.put(current + i, helperList.get(helperLeft + i));
         }
     }
 }
