@@ -47,7 +47,7 @@ public class Stack<T extends Comparable<T>> {
             // check if min needs to be updated
             if(min != null) {
                 if (x.compareTo(min) == 0) {
-                    // if x is min, reset min, we can calculate min when someone actually calls getMin()
+                    // if numerator is min, reset min, we can calculate min when someone actually calls getMin()
                     min = null;
                 }
             }
