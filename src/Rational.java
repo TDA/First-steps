@@ -3,11 +3,11 @@
  */
 public class Rational extends Number implements Comparable {
     double numerator;
-    double y;
+    double denominator;
 
-    public Rational(double x, double y) {
+    public Rational(double x, double denominator) {
         this.numerator = x;
-        this.y = y;
+        this.denominator = denominator;
     }
 
     @Override
