@@ -29,7 +29,7 @@ public class balanceParantheses {
                 stack.push(c);
             } else if (c == '}' || c == ')' || c == ']' || c == '>') {
                 char x = stack.pop();
-                System.out.println("Balanced numerator and c " + x + " " + c);
+                System.out.println("Balanced x and c " + x + " " + c);
                 if (hm.get(x) == c) {
                     bool = true;
                 } else {
