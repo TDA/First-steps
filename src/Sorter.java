@@ -27,18 +27,7 @@ public class Sorter {
 
     }
 
-//    @Override
-//    public int compareTo(T t) {
-//        if (Double.valueOf(t.toString()) > Double.valueOf(this.toString())) {
-//            return -1;
-//        } else if (Double.valueOf(t.toString()) < Double.valueOf(this.toString())){
-//            return 1;
-//        } else {
-//            return 0;
-//        }
-//    }
-
-    public <T extends NumberImpl> void MergeSorter(int low, int high, HashMap<Integer, NumberImpl> hashMap, HashMap<Integer, NumberImpl> helperList) {
+    public void MergeSorter(int low, int high, HashMap<Integer, NumberImpl> hashMap, HashMap<Integer, NumberImpl> helperList) {
         if (low < high) {
             System.out.println(low + " and " + high);
             // means we can still sort
