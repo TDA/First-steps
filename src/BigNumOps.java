@@ -5,10 +5,11 @@ import java.util.Scanner;
  * Created by schandramouli on 11/21/15.
  */
 public class BigNumOps {
+
     public static void main(String[] args) {
         // add two arbitrarily large numbers
         Scanner scanner = new Scanner(System.in);
-
+        BigNumOps bigNum = new BigNumOps();
         // store them as strings, or as char arrays
         String firstNumber = scanner.nextLine();
         String secondNumber = scanner.nextLine();
@@ -27,8 +28,8 @@ public class BigNumOps {
         // start from right, propagate carry through
         for (int i = firstNumberCharArray.length - 1; i >= 0 ; i--) {
             // carry would be zero from previous if no carry, and 1 if there is carry
-            int digit = (firstNumberCharArray[i] + secondNumberCharArray[i] - (2 * '0')) + carry;
-            if (digit > 10) {
+            int digit = (bigNum.intValue(firstNumberCharArray[i]) + bigNum.intValue(secondNumberCharArray[i])) + carry;
+            if (digit >= 10) {
                 // we have a carry
                 carry = 1;
                 digit = digit - 10;
@@ -42,4 +43,9 @@ public class BigNumOps {
         String sum = new String(sumArray);
         System.out.println(sum);
     }
+
+    public int intValue(char c) {
+        return c - '0';
+    }
+
 }
