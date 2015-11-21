@@ -7,12 +7,21 @@ import java.util.Scanner;
 public class BigNumOps {
     char[] charArray;
 
+
     public BigNumOps(char[] charArray) {
         this.charArray = charArray;
     }
 
     public BigNumOps(String number) {
         this.charArray = number.toCharArray();
+    }
+
+    public BigNumOps(int number) {
+        this.charArray = (number + "").toCharArray();
+    }
+
+    public int length() {
+        return charArray.length;
     }
 
     public static void main(String[] args) {
@@ -23,30 +32,38 @@ public class BigNumOps {
         String firstNumber = scanner.nextLine();
         String secondNumber = scanner.nextLine();
 
-        char[] firstNumberCharArray = firstNumber.toCharArray();
-        BigNumOps bigNum = new BigNumOps(firstNumber);
-        char[] secondNumberCharArray = secondNumber.toCharArray();
+        BigNumOps bigNum1 = new BigNumOps(firstNumber);
+        //System.out.println(bigNum.length());
+        BigNumOps bigNum2 = new BigNumOps(secondNumber);
+        System.out.println("Sum is " + bigNum1.add(bigNum2));
 
+
+    }
+
+    public BigNumOps add (BigNumOps bigNum2) {
         // first we need to check what length to set for our sum array, whether it needs to be same
         // as the bigger array, or if arrays are equal in length, will they result in a carry?
 
         char[] sumArray;
         // if they are equal doesnt matter which ones length was assigned, so.
-        int length = (firstNumberCharArray.length > secondNumberCharArray.length)? firstNumberCharArray.length : secondNumberCharArray.length;
-        if ((firstNumberCharArray.length == secondNumberCharArray.length)) {
-            // lets check
-            if (bigNum.intValue(firstNumberCharArray[0]) + bigNum.intValue(secondNumberCharArray[0]) + 1 >= 10) {
-                // might be overflow, safer to assign extra
-                sumArray = new char[length + 1];
-            } else {
-                // no way for an overflow, so assign
-                sumArray = new char[length];
-            }
+        int sizeDifference = Math.abs(this.length() - bigNum2.length() );
+        int length = (this.length() > bigNum2.length())? this.length() : bigNum2.length();
+
+        // now pad the smaller array to match larger one, padding wont really occur if they are equal
+        if (this.length() > bigNum2.length()) {
+            // pad bignum2
+            bigNum2.padWithZeroes(sizeDifference);
         } else {
-            // assign larger array
-            sumArray = new char[length];
+            this.padWithZeroes(sizeDifference);
         }
 
+        if (this.intValue(this.charArray[0]) + bigNum2.intValue(bigNum2.charArray[0]) + 1 >= 9) {
+            // might be overflow, safer to assign extra
+            sumArray = new char[length + 1];
+        } else {
+            // no way for an overflow, so assign
+            sumArray = new char[length];
+        }
         //
         // convert to char array and add
         // i was right about this here, and possibly the Google guy actually was mistaken :O, storing them as char array
@@ -55,9 +72,9 @@ public class BigNumOps {
         int carry = 0;
         int shift = (length == sumArray.length) ? 0 : 1;
         // start from right, propagate carry through
-        for (int i = firstNumberCharArray.length - 1; i >= 0 ; i--) {
+        for (int i = this.length() - 1; i >= 0 ; i--) {
             // carry would be zero from previous if no carry, and 1 if there is carry
-            int digit = (bigNum.intValue(firstNumberCharArray[i]) + bigNum.intValue(secondNumberCharArray[i])) + carry;
+            int digit = (this.intValue(this.charArray[i]) + bigNum2.intValue(bigNum2.charArray[i])) + carry;
             if (digit >= 10) {
                 // we have a carry
                 carry = 1;
@@ -66,15 +83,14 @@ public class BigNumOps {
                 // reset carry
                 carry = 0;
             }
-            System.out.println(firstNumberCharArray[i] + " and " + secondNumberCharArray[i] + " is " + digit + " and carry " + carry);
+            //System.out.println(this.charArray[i] + " and " + bigNum2.charArray[i] + " is " + digit + " and carry " + carry);
             sumArray[i + shift] = (char) (digit + '0');
         }
         // special case, might be an overflow
         if (shift == 1) {
-            sumArray[0] = bigNum.charValue(carry);
+            sumArray[0] = this.charValue(carry);
         }
-        BigNumOps sum = new BigNumOps(sumArray);
-        System.out.println(sum);
+        return new BigNumOps(sumArray);
     }
 
     public int intValue(char c) {
@@ -87,6 +103,27 @@ public class BigNumOps {
 
     @Override
     public String toString() {
-        return new String(charArray);
+        String s = new String(charArray);
+        // strip leading zeroes
+        while (s.startsWith("0")) {
+            s = s.substring(1);
+        }
+        return s;
     }
+
+    public void padWithZeroes(int padding) {
+        if (padding == 0) {
+            return;
+        }
+        int currentLength = this.charArray.length;
+        int newLength = currentLength + padding;
+        char[] tempArray = new char[newLength];
+
+        for (int i = 0; i < padding; i++) {
+            tempArray[i] = this.charValue(0);
+        }
+        System.arraycopy(this.charArray, 0, tempArray, padding, currentLength);
+        this.charArray = tempArray;
+    }
+
 }
