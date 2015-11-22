@@ -20,6 +20,10 @@ public class BigNumOps {
         this.charArray = (number + "").toCharArray();
     }
 
+    public BigNumOps() {
+        // initialize to all zeroes
+    }
+
     public int length() {
         return charArray.length;
     }
@@ -36,6 +40,7 @@ public class BigNumOps {
         //System.out.println(bigNum.length());
         BigNumOps bigNum2 = new BigNumOps(secondNumber);
         System.out.println("Sum is " + bigNum1.add(bigNum2));
+        System.out.println("Product is " + bigNum1.multiply(bigNum2));
 
 
     }
@@ -93,6 +98,30 @@ public class BigNumOps {
         return new BigNumOps(sumArray);
     }
 
+
+    public BigNumOps multiply (BigNumOps bigNum2) {
+        // initialize the product
+        BigNumOps product = new BigNumOps("0");
+        System.out.println(product);
+
+        int BN2Length = bigNum2.length();
+        for (int i = BN2Length - 1; i >= 0; i--) {
+            int times = bigNum2.intValue(bigNum2.charArray[i]);
+            if (times == 0) {
+                continue;
+            }
+            BigNumOps temp2 = new BigNumOps(this.charArray);
+            while (times > 1) {
+                temp2 = this.add(temp2);
+                times--;
+            }
+            int pad = BN2Length - 1 - i;
+            temp2.padWithZeroes(-pad);
+            product = product.add(temp2);
+        }
+        return product;
+    }
+
     public int intValue(char c) {
         return c - '0';
     }
@@ -116,13 +145,18 @@ public class BigNumOps {
             return;
         }
         int currentLength = this.charArray.length;
-        int newLength = currentLength + padding;
+        int newLength = currentLength + Math.abs(padding);
         char[] tempArray = new char[newLength];
 
-        for (int i = 0; i < padding; i++) {
+        for (int i = 0; i < newLength; i++) {
+            // fill with all zeroes
             tempArray[i] = this.charValue(0);
         }
-        System.arraycopy(this.charArray, 0, tempArray, padding, currentLength);
+        if (padding > 0) {
+            System.arraycopy(this.charArray, 0, tempArray, padding, currentLength);
+        } else {
+            System.arraycopy(this.charArray,0, tempArray, 0, currentLength);
+        }
         this.charArray = tempArray;
     }
 
