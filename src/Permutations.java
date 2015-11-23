@@ -5,17 +5,17 @@ import java.util.Set;
 /**
  * Created by schandramouli on 11/17/15.
  */
-public class Permutations<T> {
+public class Permutations {
     static Set<String> stringSet = new HashSet<>();
     static int recCount;
     public static void main(String[] args) {
         String s = "abcdef";
-        Permutations<String> permutations = new Permutations<>();
+        Permutations permutations = new Permutations();
         System.out.println(permutations.findPermutations(s));
         System.out.println(recCount);
     }
 
-    ArrayList findPermutations(String string) {
+    ArrayList<String> findPermutations(String string) {
         recCount++;
         ArrayList<String> stringArrayList = new ArrayList<>();
         // just a letter, so return it
