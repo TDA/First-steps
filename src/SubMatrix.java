@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by schandramouli on 11/24/15.
@@ -10,14 +11,45 @@ public class SubMatrix {
     // however edge cases will definitely be there :) like the below one. so the largest element might not always figure
     // in the largest submatrix
     public static void main(String[] args) {
+        long startTime = System.nanoTime();
+
         int [][] matrix = {
                 {-1, 2, -1},
-                {-4, 5, -6},
-                {-7, 8, -9}
+                {-2, 6, -3},
+                {-7, 8, -5}
         };
 
-        // finding largest element
-        System.out.println(returnSubMatrices(matrix, 2));
+        // print all submatrices
+        ArrayList<ArrayList<Integer>> submatrices = returnSubMatrices(matrix, 2);
+        System.out.println("Submatrices are : " + submatrices);
+
+        int maxValue = 0;
+        int maxValueIndex = 0;
+        int index = 0;
+        for (ArrayList<Integer> integerArrayList : submatrices) {
+            int sum = calcSumArrayList(integerArrayList);
+            if (sum > maxValue) {
+                // found a new big value, update
+                maxValue = sum;
+                maxValueIndex = index;
+            }
+            index++;
+        }
+        System.out.println("Max value was " + maxValue + " found at " + maxValueIndex);
+        System.out.println("Corresponding submatrix was " + submatrices.get(maxValueIndex));
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime) / 1000000;
+        System.out.println("Duration : " + duration);
+    }
+
+    public static int calcSumArrayList (ArrayList<Integer> integers) {
+        int[] ints = new int[integers.size()];
+        int i = 0;
+        for (Integer integer : integers) {
+            ints[i] = integer;
+            i++;
+        }
+        return BalancedSum.sum(ints);
     }
 
     public static ArrayList<ArrayList<Integer>> returnSubMatrices(int[][] matrix, int subMatrixSize) {
