@@ -17,26 +17,33 @@ public class SubMatrix {
         };
 
         // finding largest element
-        returnSubMatrices(matrix, 2);
+        System.out.println(returnSubMatrices(matrix, 2));
     }
 
-    public static ArrayList<Integer[]> returnSubMatrices(int[][] matrix, int subMatrixSize) {
+    public static ArrayList<ArrayList<Integer>> returnSubMatrices(int[][] matrix, int subMatrixSize) {
         int lastIndexLimit = matrix.length - subMatrixSize;
         // we need three loops here to control and contain each submatrix
         int currentSubMatrixIndex = 0;
         int currentIndexI = 0;
         int currentIndexJ = 0;
+        ArrayList<ArrayList<Integer>> subMatrices = new ArrayList<>();
         while (currentSubMatrixIndex < lastIndexLimit) {
             // outer loop to know when all submatrices have been done
+            // create an arraylist to hold each submatrix
+            ArrayList<Integer> submatrix = new ArrayList<>();
             for (int i = currentIndexI; i < (currentIndexI + subMatrixSize); i++) {
                 // this loop to iterate through the rows
                 for (int j = currentIndexJ; j < (currentIndexJ + subMatrixSize); j++) {
                     // this for columns
-                    System.out.println(i + "," + j);
+                    //System.out.println(i + "," + j);
                     //System.out.println(matrix[i][j]);
+                    submatrix.add(matrix[i][j]);
                 }
-                System.out.println();
+                //System.out.println();
             }
+
+            // add the submatrix
+            subMatrices.add(submatrix);
             currentIndexJ++;
             // see if the columns for this row are done, if so switch to next row
             if (currentIndexJ > lastIndexLimit) {
@@ -50,6 +57,6 @@ public class SubMatrix {
             }
 
         }
-        return null;
+        return subMatrices;
     }
 }
