@@ -8,11 +8,15 @@ enum TYPES {
     STATEMENT,
     LOOP,
     COMMENT,
-    EMPTY
+    EMPTY,
+    DECLARATION,
+    ASSIGNMENT,
+    UNMATCHED
 }
 public class bigOCount {
     // for each program fed in as input, calculate the big o running complexity
     // this is a simple one that doesnt think much about loops
+    // only takes basic statements into account, like assignment, if, switch etc
     public static void main(String[] args) throws FileNotFoundException, IOException{
         Scanner scanner = new Scanner(System.in);
         File f1 = new File("src/bignumbers.java");
@@ -47,10 +51,17 @@ public class bigOCount {
         if (line.matches("^(//|/\\*|\\s*\\*|(import)).*")) {
             return TYPES.COMMENT;
         }
+
         if (line.matches("for|while|do")) {
             return TYPES.LOOP;
-        } else {
+        }
+
+        if (line.matches(".*(public)|(class)|(interface)|(enum)|(union)|(struct)")) {
+            return TYPES.DECLARATION;
+        }
+        if (line.matches(".*(\\+|\\-|/|\\*|(if)|(switch)|=).*")) {
             return TYPES.STATEMENT;
         }
+        return TYPES.UNMATCHED;
     }
 }
