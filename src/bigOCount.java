@@ -17,10 +17,12 @@ public class bigOCount {
     // for each program fed in as input, calculate the big o running complexity
     // this is a simple one that doesnt think much about loops
     // only takes basic statements into account, like assignment, if, switch etc
+    static BufferedReader buff;
+    static Stack<String> braceStack = new Stack<>();
     public static void main(String[] args) throws FileNotFoundException, IOException{
         Scanner scanner = new Scanner(System.in);
         File f1 = new File("src/bignumbers.java");
-        BufferedReader buff = new BufferedReader(new FileReader(f1));
+        buff = new BufferedReader(new FileReader(f1));
         int count = 0;
         String line;
         while ((line = buff.readLine()) != null) {
@@ -30,8 +32,15 @@ public class bigOCount {
                     break;
                 case LOOP:
                     // add logic here to find the amount of looping required, nested loops etc
+                    if (line.contains("for")) {
+                        parseFor(line);
+                    } else {
+                        parseWhile(line);
+                    }
                     break;
                 case COMMENT:
+                case EMPTY:
+                case DECLARATION:
                     // do nothing
                     break;
             }
@@ -63,5 +72,13 @@ public class bigOCount {
             return TYPES.STATEMENT;
         }
         return TYPES.UNMATCHED;
+    }
+
+    public static void parseFor(String line) {
+        System.out.println();
+    }
+
+    public static void parseWhile(String line) {
+        System.out.println();
     }
 }
