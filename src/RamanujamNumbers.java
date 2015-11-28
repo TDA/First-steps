@@ -68,6 +68,7 @@ public class RamanujamNumbers {
         System.out.println("i is " + (i - 1));
         System.out.println(RamanujamNumbers.size());
         System.out.println(RamanujamNumbers);
+        // what is the big O here?
         System.out.println(count);
     }
 }
