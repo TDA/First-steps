@@ -5,6 +5,14 @@ import java.util.Comparator;
  */
 public class CircularQueue<T> implements Comparable {
 
+    T[] queue;
+    int size;
+    int activePointer;
+
+    public CircularQueue(int size, int activePointer) {
+        this.size = size;
+        this.activePointer = 0;
+    }
 
     @Override
     public int compareTo(Object o) {
