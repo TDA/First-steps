@@ -14,6 +14,21 @@ public class CircularQueue<T> implements Comparable {
         this.activePointer = 0;
     }
 
+    public boolean insertAtHead(T data) {
+        //TODO: have to insert into the queue
+        queue[activePointer++] = data;
+        if (activePointer >= size) {
+            // reset the active pointer to beginning
+            activePointer = 0;
+        }
+        return true;
+    }
+
+    public boolean insertAt(int position, T data) {
+        //TODO: have to insert into the queue
+        return true;
+    }
+
     @Override
     public int compareTo(Object o) {
         return 0;
