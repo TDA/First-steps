@@ -9,13 +9,13 @@ public class CircularQueue<T> implements Comparable {
     int size;
     int activePointer;
 
-    public CircularQueue(int size, int activePointer) {
+    public CircularQueue(int size) {
         this.size = size;
         this.activePointer = 0;
+        this.queue = (T[]) new Object[size];
     }
 
     public void insertAtHead(T data) {
-        //TODO: have to insert into the queue
         queue[activePointer++] = data;
         if (activePointer >= size) {
             // reset the active pointer to beginning
@@ -57,8 +57,36 @@ public class CircularQueue<T> implements Comparable {
         }
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        return obj.getClass() == this.getClass() && this.compareTo(obj) == 0;
+    }
+
+    @Override
+    public String toString() {
+        String s = "";
+        for (T t : queue) {
+            s += t + " ";
+        }
+        return s;
+    }
+
     public static void main(String[] args) {
         // driver pgm
+        CircularQueue<Integer> circularQueue = new CircularQueue<>(5);
+        CircularQueue<Integer> circularQueue2 = new CircularQueue<>(5);
+
+        for (int i = 0; i < 7; i++) {
+            circularQueue.insertAtHead(i);
+        }
+
+        for (int i = 0; i < 6; i++) {
+            circularQueue2.insertAtHead(i);
+        }
+
+        System.out.println(circularQueue);
+        System.out.println(circularQueue2);
+        System.out.println(circularQueue.equals(circularQueue2));
 
     }
 }
