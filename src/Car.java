@@ -5,6 +5,14 @@ public class Car {
     String manufacturer;
     String make;
     String year;
+    Engine engine;
+
+    public Car(String manufacturer, String make, String year, Engine engine) {
+        this.manufacturer = manufacturer;
+        this.make = make;
+        this.year = year;
+        this.engine = engine;
+    }
 
     public Car(String manufacturer, String make, String year) {
         this.manufacturer = manufacturer;
