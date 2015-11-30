@@ -14,6 +14,14 @@ public class Car {
         this.engine = engine;
     }
 
+    public Engine getEngine() {
+        return engine;
+    }
+
+    public void setEngine(Engine engine) {
+        this.engine = engine;
+    }
+
     public Car(String manufacturer, String make, String year) {
         this.manufacturer = manufacturer;
         this.make = make;
