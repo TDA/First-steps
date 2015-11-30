@@ -10,6 +10,14 @@ public class Engine {
         this.maxHP = maxHP;
     }
 
+    @Override
+    public String toString() {
+        return "Engine{" +
+                "type='" + type + '\'' +
+                ", maxHP=" + maxHP +
+                '}';
+    }
+
     public String getType() {
         return type;
     }
