@@ -64,10 +64,10 @@ public class Stack<T extends Comparable<T>> {
         // O(1) for getting min if not null
         if (min == null) {
             min = stack.get(0);
-            for (int x = top; x > 0; x--) {
-                 if (stack.get(x).compareTo(min) < 0) {
+            for (int n = top; n > 0; n--) {
+                 if (stack.get(n).compareTo(min) < 0) {
                      // element is lesser than min, so reassign
-                     min = stack.get(x);
+                     min = stack.get(n);
                  }
             }
         }

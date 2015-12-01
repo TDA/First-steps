@@ -44,7 +44,7 @@ public class Rational extends NumberImpl implements Comparable<NumberImpl> {
             // they are equal, return 0
             return 0;
         }
-        // only care about numerator values
+
         if (this.doubleValue() > ((Rational) o).doubleValue()) {
             return 1;
         } else {
