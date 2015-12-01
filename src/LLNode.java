@@ -117,6 +117,20 @@ public class LLNode {
     LLNode deleteAt (int pos) {
         // cannot delete first element
         LLNode n = this;
+        if (pos == 0) {
+            if (n.next != null) {
+                n = n.next;
+            } else {
+                return null;
+            }
+            LLNode x = new LLNode(n.data);
+            //copy everything else
+            while (n.next != null) {
+                n = n.next;
+                x.appendTail(n.data);
+            }
+            return x;
+        }
         LLNode x = new LLNode(n.data);
         int count = 1;
         while (n.next != null && count < pos - 1) {
@@ -185,6 +199,9 @@ public class LLNode {
         LLNode reversed = node.reverseList();
         reversed.printLLNode();
 
+        System.out.println("Deleted node at 0");
+        LLNode y = node.deleteAt(0);
+        y.printLLNode();
     }
 
 
