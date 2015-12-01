@@ -23,12 +23,15 @@ public class BinarySearch {
 
     public static void main(String[] args) {
         int [] array = {1, 2, 3, 4, 5, 6};
-        int x = binarySearch(array, 0, array.length, 11);
+        int x = binarySearch(array, 0, array.length, 3);
         if (x == -1) {
             System.out.println("Not found");
         } else {
             System.out.println("Found at position " + x);
         }
+
+        //assertEquals(x, 2);
+
     }
 
 }
