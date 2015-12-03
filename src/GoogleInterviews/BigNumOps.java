@@ -1,4 +1,5 @@
-import java.util.Arrays;
+package GoogleInterviews;
+
 import java.util.Scanner;
 
 /**
