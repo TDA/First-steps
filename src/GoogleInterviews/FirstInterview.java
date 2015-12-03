@@ -10,4 +10,7 @@ public class FirstInterview {
 //    [1] -> b1, b2
 //    [2] -> c1, c3
 //    => a1, b1, c1, a2, b2, a3, c3 should be the output :)
+    public static void main(String[] args) {
+
+    }
 }
