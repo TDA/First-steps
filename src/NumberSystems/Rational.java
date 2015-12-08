@@ -1,10 +1,10 @@
+/**
+ * Created by schandramouli on 11/17/15.
+ */
 package NumberSystems;
 
 import java.math.BigDecimal;
 
-/**
- * Created by schandramouli on 11/17/15.
- */
 public class Rational extends NumberImpl implements Comparable<NumberImpl> {
     double numerator;
     double denominator;
@@ -72,6 +72,10 @@ public class Rational extends NumberImpl implements Comparable<NumberImpl> {
         return new Rational(lcmNum, lcmDenom);
     }
 
+    public void rationalize(int n) {
+        this.value = Math.round(this.value * n);
+    }
+
     @Override
     public String toString() {
         return this.value + "";
@@ -100,14 +104,14 @@ public class Rational extends NumberImpl implements Comparable<NumberImpl> {
     public int compareTo(NumberImpl o) {
         // low precision
         double epsilon = 1 / Math.pow(10, this.precision);
-        System.out.println(this.doubleValue() + " , " + o.doubleValue() + " diff " + (Math.abs(this.doubleValue() - ((Rational) o).doubleValue()) < epsilon) + " " + epsilon);
+        System.out.println(this.doubleValue() + " , " + o.doubleValue() + " diff " + (Math.abs(this.doubleValue() - o.doubleValue()) < epsilon) + " " + epsilon);
 
-        if (Math.abs(this.doubleValue() - ((Rational) o).doubleValue()) < epsilon) {
+        if (Math.abs(this.doubleValue() - o.doubleValue()) < epsilon) {
             // they are equal, return 0
             return 0;
         }
 
-        if (this.doubleValue() > ((Rational) o).doubleValue()) {
+        if (this.doubleValue() > o.doubleValue()) {
             return 1;
         } else {
             return -1;

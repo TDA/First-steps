@@ -17,6 +17,11 @@ public class MillerIndices {
         this.z = z;
     }
 
+    public void rationalize(int n) {
+        x.rationalize(n);
+        y.rationalize(n);
+        z.rationalize(n);
+    }
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         System.out.printf("Enter x = ");
@@ -33,7 +38,17 @@ public class MillerIndices {
         System.out.println(x.getPrecision());
         System.out.println(x + " , " + y);
         Rational lcm = x.getLCM(y).getLCM(z);
-        System.out.println(lcm);
-        System.out.println("Done");
+        System.out.println(lcm.intValue());
+        millerIndices.rationalize(lcm.intValue());
+        System.out.println("Done" + ", " + millerIndices);
+    }
+
+    @Override
+    public String toString() {
+        return "MillerIndices<" +
+                "x=" + x +
+                ", y=" + y +
+                ", z=" + z +
+                ">";
     }
 }
