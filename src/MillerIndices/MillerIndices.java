@@ -32,8 +32,8 @@ public class MillerIndices {
         x.setPrecision(1);
         System.out.println(x.getPrecision());
         System.out.println(x + " , " + y);
-        Rational lcm = x.getLCM(y);
-        System.out.println(lcm.intValue());
+        Rational lcm = x.getLCM(y).getLCM(z);
+        System.out.println(lcm);
         System.out.println("Done");
     }
 }

@@ -60,8 +60,16 @@ public class Rational extends NumberImpl implements Comparable<NumberImpl> {
         // find the lcm of the denoms, then multiply both numbers to get same denom
         Double lcmDenom = Integers.getLCM(cloneThis.denominator, cloneSecond.denominator);
         // multi first number
+        cloneThis.numerator = cloneThis.numerator * lcmDenom / cloneThis.denominator;
+        cloneThis.denominator = cloneThis.numerator * lcmDenom / cloneThis.denominator;
 
-        return cloneThis;
+
+        cloneSecond.numerator = cloneSecond.numerator * lcmDenom / cloneSecond.denominator;
+        cloneSecond.denominator = cloneSecond.numerator * lcmDenom / cloneSecond.denominator;
+
+        Double lcmNum = Integers.getLCM(cloneThis.numerator, cloneSecond.numerator);
+
+        return new Rational(lcmNum, lcmDenom);
     }
 
     @Override
