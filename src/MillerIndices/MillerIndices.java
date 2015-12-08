@@ -29,5 +29,11 @@ public class MillerIndices {
         Rational z = new Rational(scanner.nextLine());
 
         MillerIndices millerIndices =  new MillerIndices(x, y, z);
+        x.setPrecision(1);
+        System.out.println(x.getPrecision());
+        System.out.println(x + " , " + y);
+        Rational lcm = x.getLCM(y);
+        System.out.println(lcm.intValue());
+        System.out.println("Done");
     }
 }
