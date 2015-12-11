@@ -7,6 +7,7 @@ import java.util.Scanner;
 import NumberSystems.Rational;
 
 public class MillerIndices {
+    // TODO: will have rounding off errors, have to fix that
     Rational x;
     Rational y;
     Rational z;
@@ -22,6 +23,7 @@ public class MillerIndices {
         y.rationalize(n);
         z.rationalize(n);
     }
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         System.out.printf("Enter x = ");
