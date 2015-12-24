@@ -1,4 +1,6 @@
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Scanner;
 
 /**
@@ -28,5 +30,16 @@ public class PeopleAgeDistribution {
             }
         }
         System.out.println(peopleBirths);
+        // After this straightforward, cycle through the map
+        // find largest value, and corresponding key
+        int max = 0;
+        int maxYear = 0;
+        for (Map.Entry<Integer, Integer> entry: peopleBirths.entrySet()) {
+            if (entry.getValue() > max) {
+                max = entry.getValue();
+                maxYear = entry.getKey();
+            }
+        }
+        System.out.println(maxYear + " is the year with largest number of births");
     }
 }
