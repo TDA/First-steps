@@ -1,3 +1,6 @@
+import java.util.HashMap;
+import java.util.Scanner;
+
 /**
  * Created by schandramouli on 12/11/15.
  */
@@ -11,13 +14,17 @@ public class PeopleAgeDistribution {
         System.out.println("Enter the number of people");
         int n = Integer.parseInt(s.nextLine());
         for (int i = 0; i < n; i++) {
+            System.out.print("Birth Year:");
         	int birthYear = s.nextInt();
+            System.out.println();
+            System.out.print("Death Year:");
         	int deathYear = s.nextInt();
-            if (map.containsKey(birthYear)) {
-                int x = map.get(birthYear);
-                map.put(birthYear, ++x);
+            System.out.println();
+            if (peopleBirths.containsKey(birthYear)) {
+                int x = peopleBirths.get(birthYear);
+                peopleBirths.put(birthYear, ++x);
             } else {
-                map.put(birthYear, 1);
+                peopleBirths.put(birthYear, 1);
             }
         }
         System.out.println(peopleBirths);
