@@ -11,6 +11,8 @@ public class PeopleAgeDistribution {
         // given a list of start and end (birth and death dates) of people
         // find which year has the most number of people born in it :D
         // hashmap i think?
+        // change this to find the most frequent AGE instead of birth year,
+        // so start - end :)
         HashMap<Integer, Integer> peopleBirths = new HashMap<>();
         Scanner s = new Scanner(System.in);
         System.out.println("Enter the number of people");
@@ -22,11 +24,13 @@ public class PeopleAgeDistribution {
             System.out.print("Death Year:");
         	int deathYear = s.nextInt();
             System.out.println();
-            if (peopleBirths.containsKey(birthYear)) {
-                int x = peopleBirths.get(birthYear);
-                peopleBirths.put(birthYear, ++x);
+            int age = deathYear - birthYear;
+            // just for the record, this would be literally 2 lines with ruby/python :D :|
+            if (peopleBirths.containsKey(age)) {
+                int x = peopleBirths.get(age);
+                peopleBirths.put(age, ++x);
             } else {
-                peopleBirths.put(birthYear, 1);
+                peopleBirths.put(age, 1);
             }
         }
         System.out.println(peopleBirths);
@@ -40,6 +44,6 @@ public class PeopleAgeDistribution {
                 maxYear = entry.getKey();
             }
         }
-        System.out.println(maxYear + " is the year with largest number of births");
+        System.out.println(maxYear + " is the age with largest number of people");
     }
 }
