@@ -7,12 +7,15 @@ import java.util.Scanner;
  * Created by schandramouli on 1/14/16.
  */
 public class RandomOutputs {
+    // basically a one-time pad :D
     public static void main(String[] args) {
         // this will return random letters using a hashmap
-        HashMap<Integer, Integer> defaultHashMap = new HashMap<>();
-        for (int i = 1; i < 27; i++) {
+        // nice use for the default hashmaps :D good going prusse
+        DefaultHashMap<Integer, Integer> defaultHashMap = new DefaultHashMap<>(1111);
+        for (int i = 0; i < 26; i++) {
             // cast to int, generate a random hashmap
-            defaultHashMap.put(i, (int) Math.floor(Math.random() * 27));
+            // TODO: avoid duplicates, and this will be a beautiful hash function
+            defaultHashMap.put(i, (int) Math.floor(Math.random() * 26));
         }
 
         System.out.println(defaultHashMap);
@@ -29,23 +32,32 @@ public class RandomOutputs {
             // get the random maps, and print those instead
             int x = ((int) c) - 97;
             System.out.println(x);
-            stringBuilder.append(alphabets[(int) defaultHashMap.get(x) - 1]);
+            stringBuilder.append(alphabets[(int) defaultHashMap.get(x)]);
         }
 
         // encryption? encrypted string here by pure randomization
         System.out.println(stringBuilder);
 
+        StringBuilder originalString = new StringBuilder();
         // can we decrypt this? or is it a one way thing?
         for (char c: stringBuilder.toString().toCharArray()) {
             // get the position of the char in the alphabets array
             int index = Arrays.binarySearch(alphabets, c);
+            System.out.println("Index: " + index);
             // get the key corresponding to the value
-            for (Map.Entry entry : defaultHashMap.entrySet()) {
+            int key = 0;
+            for (Map.Entry<Integer, Integer> entry : defaultHashMap.entrySet()) {
                 if ((int) entry.getValue() == index) {
-
+                    key = (int) entry.getKey();
+                    break;
                 }
             }
+            // now use the key to get the original character
+            System.out.println("Key: " + key);
+            char f = (char) (key + 97);
+            originalString.append(f);
         }
 
+        System.out.println(originalString);
     }
 }

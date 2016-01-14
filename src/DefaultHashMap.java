@@ -1,4 +1,6 @@
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by schandramouli on 1/10/16.
@@ -32,5 +34,10 @@ public class DefaultHashMap<K, V> extends HashMap {
 
         System.out.println(defaultHashMap);
 
+    }
+
+    @Override
+    public Set<Entry<K, V>> entrySet() {
+        return (Set<Entry<K, V>>) super.entrySet();
     }
 }
