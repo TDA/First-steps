@@ -1,3 +1,6 @@
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 /**
@@ -6,7 +9,7 @@ import java.util.Scanner;
 public class RandomOutputs {
     public static void main(String[] args) {
         // this will return random letters using a hashmap
-        DefaultHashMap<Integer, Integer> defaultHashMap = new DefaultHashMap<>(1);
+        HashMap<Integer, Integer> defaultHashMap = new HashMap<>();
         for (int i = 1; i < 27; i++) {
             // cast to int, generate a random hashmap
             defaultHashMap.put(i, (int) Math.floor(Math.random() * 27));
@@ -31,5 +34,18 @@ public class RandomOutputs {
 
         // encryption? encrypted string here by pure randomization
         System.out.println(stringBuilder);
+
+        // can we decrypt this? or is it a one way thing?
+        for (char c: stringBuilder.toString().toCharArray()) {
+            // get the position of the char in the alphabets array
+            int index = Arrays.binarySearch(alphabets, c);
+            // get the key corresponding to the value
+            for (Map.Entry entry : defaultHashMap.entrySet()) {
+                if ((int) entry.getValue() == index) {
+
+                }
+            }
+        }
+
     }
 }
