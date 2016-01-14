@@ -8,6 +8,9 @@ import java.util.Scanner;
  */
 public class RandomOutputs {
     // basically a one-time pad :D
+    // so will still have to think of key transmission
+    // not ideal, but hey, this was a fun push :D
+    // already done 8 pushes to private repos today :P
     public static void main(String[] args) {
         // this will return random letters using a hashmap
         // nice use for the default hashmaps :D good going prusse

@@ -38,6 +38,7 @@ public class DefaultHashMap<K, V> extends HashMap {
 
     @Override
     public Set<Entry<K, V>> entrySet() {
+        // not sure about these typecasts etc
         return (Set<Entry<K, V>>) super.entrySet();
     }
 }
