@@ -4,6 +4,8 @@
 public class AirFlights {
     // lets define a flight class
     Engine engine;
+    // we should NOT be able to change capacity
+    // after setting
     int seatCapacity;
     String type;
     String flightName;
@@ -27,15 +29,12 @@ public class AirFlights {
     }
 
     public void setEngine(Engine engine) {
+        // we should be able to replace a engine
         this.engine = engine;
     }
 
     public int getSeatCapacity() {
         return seatCapacity;
-    }
-
-    public void setSeatCapacity(int seatCapacity) {
-        this.seatCapacity = seatCapacity;
     }
 
     public String getType() {
