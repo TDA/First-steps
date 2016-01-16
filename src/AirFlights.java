@@ -4,16 +4,19 @@
 public class AirFlights {
     // lets define a flight class
     Engine engine;
-    // we should NOT be able to change capacity
-    // after setting
-    int seatCapacity;
-    String type;
-    String flightName;
+    float maxSpeed;
     int width;
     int height;
-    float maxSpeed;
+    String flightName;
     String to;
     String from;
+
+    // we should NOT be able to change capacity
+    // after setting, after all thats not possible
+    // unless we remodel the flight right?
+    final int seatCapacity;
+    // same for type of the flight
+    final String type;
 
     public AirFlights(Engine engine, int seatCapacity, String flightName, String type) {
         // these fours things are not dependent on anything
@@ -39,10 +42,6 @@ public class AirFlights {
 
     public String getType() {
         return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public static void main(String[] args) {
