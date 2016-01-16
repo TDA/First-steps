@@ -13,6 +13,15 @@ public class AirFlights {
     String to;
     String from;
 
+    public AirFlights(Engine engine, int seatCapacity, String flightName, String type) {
+        // these fours things are not dependent on anything
+        // other than creation
+        this.engine = engine;
+        this.seatCapacity = seatCapacity;
+        this.flightName = flightName;
+        this.type = type;
+    }
+
     public Engine getEngine() {
         return engine;
     }
