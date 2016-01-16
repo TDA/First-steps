@@ -55,6 +55,18 @@ public class AirFlights {
         return type;
     }
 
+    public void prepareFlight(String from, String to) {
+        this.from = from;
+        this.to = to;
+    }
+
+    public void prepareFlight(String from, String to, String flightName) {
+        this.from = from;
+        this.to = to;
+        this.flightName = flightName;
+    }
+
+
     public static void main(String[] args) {
 
     }
