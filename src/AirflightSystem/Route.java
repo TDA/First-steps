@@ -11,9 +11,8 @@ public class Route {
     ArrayList<Airport> airports = new ArrayList<>();
 
     // needs to add, modify, delete airports on the given route.
-    // for now, jsut override toString
 
-
+    // for now, just override toString
     @Override
     public String toString() {
         String s = "";
