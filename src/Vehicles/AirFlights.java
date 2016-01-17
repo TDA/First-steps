@@ -66,6 +66,10 @@ public class AirFlights {
         this.flightName = flightName;
     }
 
+    public void setMaxSpeed(float maxSpeed) {
+        this.maxSpeed = maxSpeed;
+    }
+
     @Override
     public String toString() {
         return "AirFlights{" +
@@ -85,6 +89,8 @@ public class AirFlights {
         AirFlights airFlight = new AirFlights(new Engine("Jinjuks", 200000), 102, "LH709", "Boeing747", new Dimension2D(300.0F, 100.0F));
         System.out.println(airFlight);
         airFlight.prepareFlight("Chennai", "Frankfurt");
+        System.out.println(airFlight);
+        airFlight.setMaxSpeed(892.0F);
         System.out.println(airFlight);
     }
 }
