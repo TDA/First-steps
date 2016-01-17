@@ -14,6 +14,8 @@ public class AirFlights {
     // declared here instead of in engine :)
     private float maxSpeed;
     private String flightName;
+
+    // TODO: this needs to be a Route? or leave as is?
     private String to;
     private String from;
 
