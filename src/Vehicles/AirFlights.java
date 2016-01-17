@@ -7,23 +7,23 @@ import javafx.geometry.Dimension2D;
  */
 public class AirFlights {
     // lets define a flight class
-    Engine engine;
+    private Engine engine;
     // my argument is that max speed is determined by
     // more than just the engine, so it needs to be
     // declared here instead of in engine :)
-    float maxSpeed;
-    String flightName;
-    String to;
-    String from;
+    private float maxSpeed;
+    private String flightName;
+    private String to;
+    private String from;
 
     // we should NOT be able to change capacity
     // after setting, after all thats not possible
     // unless we remodel the flight right?
-    final int seatCapacity;
+    private final int seatCapacity;
     // same for type of the flight
-    final String type;
-    final int width;
-    final int height;
+    private final String type;
+    private final int width;
+    private final int height;
 
     public AirFlights(Engine engine, int seatCapacity, String flightName, String type, Dimension2D d) {
         // these fours things are not dependent on anything
@@ -66,8 +66,25 @@ public class AirFlights {
         this.flightName = flightName;
     }
 
+    @Override
+    public String toString() {
+        return "AirFlights{" +
+                "engine=" + engine +
+                ", maxSpeed=" + maxSpeed +
+                ", flightName='" + flightName + '\'' +
+                ", to='" + to + '\'' +
+                ", from='" + from + '\'' +
+                ", seatCapacity=" + seatCapacity +
+                ", type='" + type + '\'' +
+                ", width=" + width +
+                ", height=" + height +
+                '}';
+    }
 
     public static void main(String[] args) {
-
+        AirFlights airFlight = new AirFlights(new Engine("Jinjuks", 200000), 102, "LH709", "Boeing747", new Dimension2D(300.0F, 100.0F));
+        System.out.println(airFlight);
+        airFlight.prepareFlight("Chennai", "Frankfurt");
+        System.out.println(airFlight);
     }
 }
