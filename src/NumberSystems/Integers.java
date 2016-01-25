@@ -61,6 +61,7 @@ public class Integers {
         System.out.println(atoi("        123        "));
         System.out.println(atoi("%$%^#$@123"));
         System.out.println(atoi("123"));
+        System.out.println(atoi("-123"));
         //System.out.println(atoi("12312353464575"));
     }
 }
