@@ -36,20 +36,21 @@ public class Integers {
 
     public static int atoi(String s) {
         try {
-            int val = Integer.parseInt(s);
-            return val;
+            return Integer.parseInt(s);
         } catch (NumberFormatException e) {
             // we know that the string is not in the proper format
             StringBuilder stringBuilder = new StringBuilder();
             // lets iterate through the string removing invalid characters
             for (int i = 0; i < s.length(); i++) {
                 char c = s.charAt(i);
-                if (c > 30 && c < 40) {
-
+                if (c >= 48 && c <= 57) {
+                    stringBuilder.append(c);
                 }
-
             }
-            return 0;
+            if ("".equals(stringBuilder.toString())) {
+                stringBuilder.append(0);
+            }
+            return Integer.parseInt(stringBuilder.toString());
         }
 
     }
