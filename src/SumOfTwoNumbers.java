@@ -18,7 +18,7 @@ public class SumOfTwoNumbers {
 
         for (int i = 0; i < array.length; i++) {
             // this is O(log n) for searching done n times => n O(log n)
-            System.out.println("two: " + i + " " + Arrays.binarySearch(array, copy[i]));
+            // System.out.println("two: " + i + " " + Arrays.binarySearch(array, copy[i]));
             // map the new indices to original indices
             hashMap.put(Arrays.binarySearch(array, copy[i]), i);
         }
@@ -45,9 +45,15 @@ public class SumOfTwoNumbers {
         System.out.println(firstElement);
         System.out.println(secondElement);
 
-        // these are the positions from the original array
+        // these are the positions from the original array,
+        // we add one cuz the output format is such
         System.out.println(hashMap.get(l) + 1);
         System.out.println(hashMap.get(r) + 1);
+
+        // So overall complexity for this is something like:
+        // O(n) + O(n log n) + n O(log n) ==> Amortized to O(n) ?
+        // is that even right? Im not sure, but its definitely
+        // lesser than O(n^2) haha :D
     }
 
 }
