@@ -15,7 +15,6 @@ public class SumOfTwoNumbers {
 
         HashMap<Integer, Integer> hashMap = new HashMap<>();
 
-
         for (int i = 0; i < array.length; i++) {
             // this is O(log n) for searching done n times => n O(log n)
             // System.out.println("two: " + i + " " + Arrays.binarySearch(array, copy[i]));
@@ -42,18 +41,39 @@ public class SumOfTwoNumbers {
         int secondElement = array[r];
 
         // these are the elements that add to the given sum
-        System.out.println(firstElement);
-        System.out.println(secondElement);
+        System.out.println("First element is " + firstElement);
+        System.out.println("Second element is " + secondElement);
 
         // these are the positions from the original array,
         // we add one cuz the output format is such
-        System.out.println(hashMap.get(l) + 1);
-        System.out.println(hashMap.get(r) + 1);
+        System.out.println("First element is in ordinal " + (hashMap.get(l) + 1));
+        System.out.println("Second element is in ordinal " + (hashMap.get(r) + 1));
 
         // So overall complexity for this is something like:
-        // O(n) + O(n log n) + n O(log n) ==> Amortized to O(n) ?
+        // O(n) + O(n log n) + n O(log n) ==> Amortized to O(n log n)
         // is that even right? Im not sure, but its definitely
         // lesser than O(n^2) haha :D
+    }
+
+    public int[] findPairOptimized(int[] array, int sum) {
+        int[] pair = new int[2];
+        // A faster way is as below: you use the hashmap to
+        // hold the differences, and check if the number is present
+        // this is O(n)! wooohoo! Thanks to Rajat for this:
+        HashMap<Integer, Integer> differenceMap = new HashMap<>();
+        for (int i = 0; i < array.length; i++) {
+            if (differenceMap.containsKey(array[i])) {
+                // means we found the needed number wooohooo!
+                // return i, and also the value already stored
+                // in the hashmap
+                pair[0] = i;
+                pair[1] = differenceMap.get(i);
+            } else {
+                // add the DIFFERENCE to the map
+                differenceMap.put(sum - array[i], i);
+            }
+        }
+        return pair;
     }
 
 }
