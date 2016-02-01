@@ -53,9 +53,20 @@ public class SumOfTwoNumbers {
         // O(n) + O(n log n) + n O(log n) ==> Amortized to O(n log n)
         // is that even right? Im not sure, but its definitely
         // lesser than O(n^2) haha :D
+
+        System.out.println();
+
+        int[] pair = findPairOptimized(copy, sum);
+        System.out.println("First element is " + copy[pair[0]]);
+        System.out.println("Second element is " + copy[pair[1]]);
+
+        // we add one cuz the output format is such
+        System.out.println("First element is in ordinal " + (pair[0] + 1));
+        System.out.println("Second element is in ordinal " + (pair[1] + 1));
+
     }
 
-    public int[] findPairOptimized(int[] array, int sum) {
+    public static int[] findPairOptimized(int[] array, int sum) {
         int[] pair = new int[2];
         // A faster way is as below: you use the hashmap to
         // hold the differences, and check if the number is present
@@ -66,8 +77,9 @@ public class SumOfTwoNumbers {
                 // means we found the needed number wooohooo!
                 // return i, and also the value already stored
                 // in the hashmap
-                pair[0] = i;
-                pair[1] = differenceMap.get(i);
+                pair[0] = differenceMap.get(array[i]);
+                pair[1] = i;
+                break;
             } else {
                 // add the DIFFERENCE to the map
                 differenceMap.put(sum - array[i], i);
