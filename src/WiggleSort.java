@@ -12,6 +12,17 @@ public class WiggleSort {
         // n log n solution is to sort and
         // then use two pointers
         Arrays.sort(array);
-        for ()
+        System.out.println(array);
+        int l = 0;
+        int r = array.length - 1;
+        int i = 0;
+        while (l < r) {
+            l++;
+            r--;
+            finalArray[i] = array[l];
+            finalArray[i + 1] = array[r];
+            i = i + 2;
+        }
+        System.out.println(finalArray);
     }
 }
