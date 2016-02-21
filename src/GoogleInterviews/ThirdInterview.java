@@ -19,7 +19,7 @@ public class ThirdInterview {
 
     public static void main(String[] args) {
 
-        Range r = new Range(0, 10);
+        Range r = new Range(0, 18);
         Range s = new Range("8-15");
         Range t = new Range("17-18");
         Range u = new Range("22-30");
@@ -64,10 +64,15 @@ public class ThirdInterview {
             int count = 0;
             int j = i + 1;
             Range range = ranges.get(i);
+            // TODO: change this to the running total
             if (i != 0 && range.isOverlapping(ranges.get(i - 1))) {
                 // WHY? why is it that we check only one back, while we check so many forward
                 // cuz if we check one back, and its not overlapping, it can NEVER
-                // be overlapping with anything before that.
+                // be overlapping with anything before that. This is cuz, this start would
+                // then have to greater than the end of the previous one, which by
+                // definition is greater than the start of the previous one
+                // this is also why the optimization part is SOOO
+                // important to have a running total
                 count++;
                 runs++;
             }
