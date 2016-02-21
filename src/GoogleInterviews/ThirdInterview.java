@@ -38,12 +38,12 @@ public class ThirdInterview {
         ranges.add(t);
         ranges.add(u);
         ranges.add(v);
-//        ranges.add(w);
-//        ranges.add(x);
-//        ranges.add(y);
+        ranges.add(w);
+        ranges.add(x);
+        ranges.add(y);
         ranges.add(z);
         ranges.add(z1);
-//        ranges.add(z2);
+        ranges.add(z2);
         ranges.add(z3);
         System.out.println(ranges);
         // need to sort this according to the start times, and
@@ -64,7 +64,6 @@ public class ThirdInterview {
             int count = 0;
             int j = i + 1;
             Range range = ranges.get(i);
-            // TODO: change this to the running total
             if (range.isOverlapping(runningRange)) {
                 // WHY? why is it that we check only one back, while we check so many forward
                 // cuz if we check one back, and its not overlapping, it can NEVER
@@ -76,8 +75,11 @@ public class ThirdInterview {
                 count++;
                 runs++;
             }
-            while (j < ranges.size() && range.isOverlapping(ranges.get(j))) {
-                j++;
+            // only need to check the next item, cuz if it is NOT
+            // overlapping the next one, then we KNOW that it cannot
+            // overlapping anything further, WHY??
+            // cuz this.start <= this.end <= next.start <= next.end <= n2.start !!!
+            if (j < ranges.size() && range.isOverlapping(ranges.get(j))) {
                 count++;
                 runs++;
             }
@@ -95,10 +97,10 @@ public class ThirdInterview {
                 // means no overlap, can put in
                 rangeSet.add(range);
             }
-            System.out.println(range);
+            // System.out.println(range);
             System.out.println(runningRange);
         }
-        System.out.println(rangeIntegerHashMap);
+        // System.out.println(rangeIntegerHashMap);
         System.out.println(rangeSet);
         System.out.println(runs);
     }
