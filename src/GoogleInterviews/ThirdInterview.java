@@ -54,10 +54,10 @@ public class ThirdInterview {
         ranges = Range.sortRanges(ranges);
         System.out.println(ranges);
 
-        Range OverlappedRanges = new Range("0-0");
         int runs = 0;
         Set<Range> rangeSet = new HashSet<>();
         LinkedHashMap<Range, Integer> rangeIntegerHashMap = new LinkedHashMap<>();
+        Range runningRange = new Range(0, 0);
         for (int i = 0; i < ranges.size(); i++) {
             // definitely not n^2, i dont even think this is n logn, it seems
             // to be much lesser
@@ -65,7 +65,7 @@ public class ThirdInterview {
             int j = i + 1;
             Range range = ranges.get(i);
             // TODO: change this to the running total
-            if (i != 0 && range.isOverlapping(ranges.get(i - 1))) {
+            if (range.isOverlapping(runningRange)) {
                 // WHY? why is it that we check only one back, while we check so many forward
                 // cuz if we check one back, and its not overlapping, it can NEVER
                 // be overlapping with anything before that. This is cuz, this start would
@@ -81,14 +81,24 @@ public class ThirdInterview {
                 count++;
                 runs++;
             }
+
+            // update the running range, we have seen until the end
+            // of this range, and future ones should not have
+            // an overlap with this. irrespective of an overlap, the
+            // range needs to be updated, to the max of what is seen,
+            // and what was seen now.
+            runningRange.setEnd(Math.max(range.getEnd(), runningRange.getEnd()));
+
             // this is almost the solution I gave for Google
             rangeIntegerHashMap.put(range, count);
             if (count == 0) {
                 // means no overlap, can put in
                 rangeSet.add(range);
             }
-            // TODO: heres where the optimization part comes in.
+            System.out.println(range);
+            System.out.println(runningRange);
         }
+        System.out.println(rangeIntegerHashMap);
         System.out.println(rangeSet);
         System.out.println(runs);
     }
