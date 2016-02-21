@@ -17,9 +17,13 @@ public class ThirdInterview {
     // => Output is 17-20 since it doesnt overlap with anything else
     // Everything else overlaps with something else, so can be discounted :)
 
+    // THIS IS THE SOLUTION I CAME UP WITH IN 40 MINS AT GOOGLE HQ :D :D
+    // I CANT BELIEVE I GOT IT RIGHT JUST BY INTUITION.
+    // (and help from the interviewer :D)
+    // it would have been wayyy cooler to have got in :(
     public static void main(String[] args) {
 
-        Range r = new Range(0, 18);
+        Range r = new Range(0, 7);
         Range s = new Range("8-15");
         Range t = new Range("17-18");
         Range u = new Range("22-30");
@@ -38,12 +42,12 @@ public class ThirdInterview {
         ranges.add(t);
         ranges.add(u);
         ranges.add(v);
-        ranges.add(w);
-        ranges.add(x);
-        ranges.add(y);
+//        ranges.add(w);
+//        ranges.add(x);
+//        ranges.add(y);
         ranges.add(z);
         ranges.add(z1);
-        ranges.add(z2);
+//        ranges.add(z2);
         ranges.add(z3);
         System.out.println(ranges);
         // need to sort this according to the start times, and
@@ -56,11 +60,11 @@ public class ThirdInterview {
 
         int runs = 0;
         Set<Range> rangeSet = new HashSet<>();
-        LinkedHashMap<Range, Integer> rangeIntegerHashMap = new LinkedHashMap<>();
+        // LinkedHashMap<Range, Integer> rangeIntegerHashMap = new LinkedHashMap<>();
         Range runningRange = new Range(0, 0);
         for (int i = 0; i < ranges.size(); i++) {
-            // definitely not n^2, i dont even think this is n logn, it seems
-            // to be much lesser
+            // this is THE solution I gave for Google
+
             int count = 0;
             int j = i + 1;
             Range range = ranges.get(i);
@@ -68,9 +72,9 @@ public class ThirdInterview {
                 // WHY? why is it that we check only one back, while we check so many forward
                 // cuz if we check one back, and its not overlapping, it can NEVER
                 // be overlapping with anything before that. This is cuz, this start would
-                // then have to greater than the end of the previous one, which by
+                // then have to be greater than the end of the previous one, which by
                 // definition is greater than the start of the previous one
-                // this is also why the optimization part is SOOO
+                // this is also why, in the optimization part it is SOOO
                 // important to have a running total
                 count++;
                 runs++;
@@ -91,8 +95,7 @@ public class ThirdInterview {
             // and what was seen now.
             runningRange.setEnd(Math.max(range.getEnd(), runningRange.getEnd()));
 
-            // this is almost the solution I gave for Google
-            rangeIntegerHashMap.put(range, count);
+            // rangeIntegerHashMap.put(range, count);
             if (count == 0) {
                 // means no overlap, can put in
                 rangeSet.add(range);
