@@ -9,6 +9,8 @@ public class InputOutput {
         Scanner sc=new Scanner(System.in);
         int x = sc.nextInt();
         Double y = sc.nextDouble();
+        // consume the newline after the double
+        sc.nextLine();
         String s = sc.nextLine();
 // It wasnt working cuz u reversed the order of input
         //Complete this code
