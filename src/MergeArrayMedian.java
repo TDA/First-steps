@@ -12,17 +12,32 @@ public class MergeArrayMedian {
         int k = 0;
         int n= a.length;
         int n2 = (n * 2);
-        for (int i = 0; i < n2; i++) {
+        int i;
+        for (i = 0; i < n2; i++) {
             //c[i]
-            if (a[l] > b[k]) {
-                c[i] = b[k];
-                k++;
+            if (l < n && k < n) {
+                if (a[l] > b[k]) {
+                    c[i] = b[k];
+                    k++;
+                } else {
+                    c[i] = a[l];
+                    l++;
+                }
             } else {
-                c[i] = a[l];
-                l++;
+                break;
             }
         }
-
+        if (i < n2) {
+            while (l < n) {
+                c[i++] = a[l++];
+            }
+            while (k < n) {
+                c[i++] = b[k++];
+            }
+        }
         System.out.println(Arrays.toString(c));
+        // 2n is always even
+        int median = (c[n - 1] + c[n])/ 2;
+        System.out.println("Median: " + median);
     }
 }
