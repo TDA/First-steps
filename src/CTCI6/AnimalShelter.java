@@ -16,9 +16,17 @@ public class AnimalShelter {
     }
 
     public Object dequeueCat() {
+        return dequeue("Cat");
+    }
+
+    public Object dequeueDog() {
+        return dequeue("Dog");
+    }
+
+    private Object dequeue(String s) {
         Object x = this.dequeueAny();
         LinkedList<Object> temp = new LinkedList<>();
-        while (x != null &&  !x.getClass().toString().equals("class CTCI6.Cat")) {
+        while (x != null &&  !x.getClass().toString().equals("class CTCI6." + s)) {
             System.out.println(x.getClass());
             temp.add(x);
             x = this.dequeueAny();
@@ -49,6 +57,7 @@ public class AnimalShelter {
         animalShelter.enqueue(d);
         System.out.println(animalShelter);
         System.out.println(animalShelter.dequeueCat());
+        System.out.println(animalShelter.dequeueDog());
     }
 
 }
