@@ -12,6 +12,7 @@ public class SecondInterview {
 //       player one can win, else returns false.
 //       a. If a player has no legal moves at the start of his turn => he wins.
 
+//    THIS IS A P-SPACE COMPLETE PROBLEM :(
     public static void main(String[] args) {
 
     }
