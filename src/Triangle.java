@@ -4,6 +4,11 @@ import java.awt.*;
  * Created by schandramouli on 9/7/16.
  */
 public class Triangle {
+    // This was apparently a Zappos question and a student brought
+    // it to my attention. I believe it is extremely stupid and knowledge based.
+    // if you didnt know how to do this, then you will not be able to get the
+    // answer at all. Interviews should not be about knowing things, they should
+    // be about figuring out stuff.
     Point v1;
     Point v2;
     Point v3;
@@ -14,13 +19,12 @@ public class Triangle {
         this.v2 = v2;
         this.v3 = v3;
         this.area = computeArea(v1, v2, v3);
-        System.out.println("Area of triangle " + area);
     }
 
     public static void main(String[] args) {
         Triangle triangle = new Triangle(new Point(1,2), new Point(5,2), new Point(3,4));
-        Point p1 = new Point(2,4);
-        Point p2 = new Point(6,3);
+        Point p1 = new Point(2, 3);
+        Point p2 = new Point(3, 3);
         System.out.println(triangle.isPointInside(p1));
         System.out.println(triangle.isPointInside(p2));
     }
@@ -43,8 +47,8 @@ public class Triangle {
         float x3 = point3.x;
         float y3 = point3.y;
 
-        float area = (x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2))/2;
-        System.out.println(area);
+        float area = Math.abs(x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2));
+        System.out.println("Area of triangle " + area);
         return area;
     }
 }
