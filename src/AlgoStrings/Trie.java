@@ -42,7 +42,7 @@ public class Trie {
     @Override
     public String toString() {
         return "Trie{" +
-                "root=" + root +
+                "root=" + root.printTrieNode(0) +
                 '}';
     }
 
@@ -52,6 +52,14 @@ public class Trie {
         t.insertWord("tree", t.root);
         System.out.println(t);
         t.insertWord("trap", t.root);
+        System.out.println(t);
+        t.insertWord("trap", t.root);
+        System.out.println(t);
+        t.insertWord("triangle", t.root);
+        System.out.println(t);
+        t.insertWord("trengle", t.root);
+        System.out.println(t);
+        t.insertWord("adonis", t.root);
         System.out.println(t);
     }
 }

@@ -41,14 +41,16 @@ public class TrieNode {
         children.put(c, n);
     }
 
-    @Override
-    public String toString() {
+    public String printTrieNode(int offset) {
         String s = "\n";
-        s += "TrieNode{";
-        s += "c=" + c;
+        for (int i = 0; i < offset; i++) {
+            s += "\t";
+        }
+        s += "{";
+        s += c;
         HashMap<Character, TrieNode> children = this.getChildren();
         for (TrieNode child : children.values()) {
-            s += ", children=" + child.toString();
+            s += " =>" + child.printTrieNode(offset + 1);
         }
         s += "}";
         return s;
