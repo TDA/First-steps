@@ -20,7 +20,7 @@ public class Trie {
 
     public void insertWord(String word, TrieNode n) {
         int wordLength = word.length();
-        System.out.println("Word is " + word + " and node is " + n);
+        //System.out.println("Word is " + word + " and node is " + n);
         if (wordLength == 0) {
             return;
         }
@@ -31,12 +31,27 @@ public class Trie {
         } else {
             // insert the character and move down
             TrieNode child = new TrieNode(c);
-            System.out.println("Inserting " + c);
+            //System.out.println("Inserting " + c);
             n.insertChild(c, child);
             // recursively populate its children.
             insertWord(word.substring(1), child);
         }
+    }
 
+    public boolean isWordPresent(String word, TrieNode n) {
+        int wordLength = word.length();
+        if (wordLength == 0) {
+            return true;
+        }
+        char c = word.charAt(0);
+        return (n.hasChild(c)) && isWordPresent(word.substring(1), n.getChild(c));
+    }
+
+    public void insertWord(String word) {
+        insertWord(word, root);
+    }
+    public boolean isWordPresent(String word) {
+        return isWordPresent(word, root);
     }
 
     @Override
@@ -49,17 +64,20 @@ public class Trie {
     public static void main(String[] args) {
         Trie t = new Trie();
         System.out.println(t);
-        t.insertWord("tree", t.root);
+        t.insertWord("tree");
         System.out.println(t);
-        t.insertWord("trap", t.root);
+        t.insertWord("trap");
         System.out.println(t);
-        t.insertWord("trap", t.root);
+        t.insertWord("trap");
         System.out.println(t);
-        t.insertWord("triangle", t.root);
+        t.insertWord("triangle");
         System.out.println(t);
-        t.insertWord("trengle", t.root);
+        t.insertWord("trengle");
         System.out.println(t);
-        t.insertWord("adonis", t.root);
+        t.insertWord("adonis");
         System.out.println(t);
+
+        System.out.println(t.isWordPresent("tree"));
+        System.out.println(t.isWordPresent("adonit"));
     }
 }
