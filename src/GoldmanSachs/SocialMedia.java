@@ -38,6 +38,12 @@ public class SocialMedia implements Comparable{
         Collections.sort(messages);
         System.out.println(messages);
 
+        // need 3 hashmaps to answer each of the three questions
+        // 1. Whose messages got forwarded most
+        // 2. Which time interval had most messages
+        // 3. Which message is sent very frequently
+        // good thing is all these can be finished in 1 loop :O
+
     }
 
     @Override
