@@ -46,7 +46,7 @@ public class SocialMedia implements Comparable{
         // 2. Which time interval had most messages
         // 3. Which message is sent very frequently
         // good thing is all these can be finished in 1 loop :O
-        HashMap<String, Integer> messagesForwarded = new HashMap<>();
+        HashMap<String, ArrayList<String>> messagesForwarded = new HashMap<>();
         HashMap<String, Integer> messageFrequency = new HashMap<>();
         // trick: using good-ole array is sufficient for timeIntervals :D
         int[] timeIntervals = new int[24];
@@ -63,10 +63,31 @@ public class SocialMedia implements Comparable{
             } else {
                 messageFrequency.put(message, 0);
             }
+
+            // now the slightly more complicated one - most influential person
+            // wkt, the messages are arranged by time --> we did this
+            // which means, (name, message) is the only thing that matters now
+            // cuz if (sai, hi) comes before (swathi, hi), it counts as a point for sai
+            // so we go through messages and if not found earlier, we credit 1
+            // to this person, if found earlier, then credit one to that person
+            // .... BUUUUT, we just did that above!!!! but we didnt keep track of who sent the message
+            // how do we address that? easy peesy, Hashmaps to the rescue
+            ArrayList<String> nameList = new ArrayList<>();
+            if (messagesForwarded.containsKey(message)) {
+                 nameList = messagesForwarded.get(message);
+                nameList.add(name);
+                messagesForwarded.put(message, nameList);
+            } else {
+                nameList.add(name);
+                messagesForwarded.put(message, nameList);
+            }
+
+
         }
 
         System.out.println(Arrays.toString(timeIntervals));
         System.out.println(messageFrequency);
+        System.out.println(messagesForwarded);
 
     }
 
