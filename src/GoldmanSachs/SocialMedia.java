@@ -9,7 +9,7 @@ import java.util.jar.Pack200;
 /**
  * Created by schandramouli on 9/13/16.
  */
-public class SocialMedia implements Comparable{
+public class SocialMedia implements Comparable {
     String name, time, message;
 
     public SocialMedia(String name, String time, String message) {
@@ -44,7 +44,7 @@ public class SocialMedia implements Comparable{
         // need a hashmaps to answer each of the three questions
         // 1. Whose messages got forwarded most
         // 2. Which time interval had most messages
-        // 3. Which message is sent very frequently
+        // 3. Which buzzword is sent very frequently
         // good thing is all these can be finished in 1 loop :O
         HashMap<String, ArrayList<String>> messagesForwarded = new HashMap<>();
         HashMap<String, Integer> messageFrequency = new HashMap<>();
@@ -55,7 +55,8 @@ public class SocialMedia implements Comparable{
             String time = sm.time;
             String message = sm.message;
             String name = sm.name;
-            String hours = sm.time.substring(0,2);
+
+            String hours = time.substring(0,2);
             timeIntervals[Integer.parseInt(hours)]++;
             // next messages, second-easiest
             if (messageFrequency.containsKey(message)) {
@@ -74,7 +75,7 @@ public class SocialMedia implements Comparable{
             // how do we address that? easy peesy, Hashmaps to the rescue
             ArrayList<String> nameList = new ArrayList<>();
             if (messagesForwarded.containsKey(message)) {
-                 nameList = messagesForwarded.get(message);
+                nameList = messagesForwarded.get(message);
                 nameList.add(name);
                 messagesForwarded.put(message, nameList);
             } else {
@@ -85,7 +86,51 @@ public class SocialMedia implements Comparable{
 
         }
 
+        // still O(n), print the top three time intervals
+        // we cannot sort this, cuz we will lose the hour info
+        int max1 = timeIntervals[0],
+            max2 = timeIntervals[0],
+            max3 = timeIntervals[0],
+            index1 = 0,
+            index2 = 0,
+            index3 = 0;
+        // we could add a binary search after this for log n search and retrieving the keys
+        // but i prefer doing it here, its just 3 variables extra
+        for (int i = 1; i < timeIntervals.length; i++) {
+            int val = timeIntervals[i];
+            if (max1 >= val) {
+                // no change for max1, but is max2 or 3 affected?
+                if (max2 >= val) {
+                    // no change for max2, but is max3 affected?
+                    if (!(max3 >= val)) {
+                        // reset only max3
+                        max3 = val;
+                        index3 = i;
+                    }
+                } else {
+                    // uh-oh, shift max2->3
+                    max3 = max2;
+                    index3 = index2;
+                    max2 = val;
+                    index2 = i;
+                }
+            } else {
+                // uh - ohhhhh, shift all three
+                max3 = max2;
+                index3 = index2;
+                max2 = max1;
+                index2 = index1;
+                max1 = val;
+                index1 = i;
+            }
+        }
+
         System.out.println(Arrays.toString(timeIntervals));
+        System.out.println(max1 + " " + max2 + " " + max3);
+        System.out.println("The three most frequent time intervals are");
+        System.out.println(index1 + " hrs to " + (index1+1) + "hrs with " + max1 + " messages");
+        System.out.println(index2 + " hrs to " + (index2+1) + "hrs with " + max2 + " messages");
+        System.out.println(index3 + " hrs to " + (index3+1) + "hrs with " + max3 + " messages");
         System.out.println(messageFrequency);
         System.out.println(messagesForwarded);
 
