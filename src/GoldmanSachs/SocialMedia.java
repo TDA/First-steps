@@ -22,8 +22,8 @@ public class SocialMedia implements Comparable {
         // given a list of (name, time, message), find the person
         // whose messages get forwarded the most (aka) most influential
         ArrayList<SocialMedia> messages = new ArrayList<>();
-        messages.add(new SocialMedia("sai", "081520" , "hi"));
-        messages.add(new SocialMedia("sanjana", "091520" , "hi"));
+        messages.add(new SocialMedia("sai", "081520" , "hi lovely"));
+        messages.add(new SocialMedia("sanjana", "091520" , "hi darling"));
         messages.add(new SocialMedia("sai", "101520" , "hi"));
         messages.add(new SocialMedia("seema", "111520" , "hello"));
         messages.add(new SocialMedia("sai", "121520" , "hi"));
@@ -58,11 +58,14 @@ public class SocialMedia implements Comparable {
 
             String hours = time.substring(0,2);
             timeIntervals[Integer.parseInt(hours)]++;
-            // next messages, second-easiest
-            if (messageFrequency.containsKey(message)) {
-                messageFrequency.put(message, messageFrequency.get(message) + 1);
-            } else {
-                messageFrequency.put(message, 0);
+            // next buzzwords, second-easiest
+            // assume only whitespace and commas, no period
+            for (String word: message.split("[,\\s]")) {
+                if (messageFrequency.containsKey(word)) {
+                    messageFrequency.put(word, messageFrequency.get(word) + 1);
+                } else {
+                    messageFrequency.put(word, 1);
+                }
             }
 
             // now the slightly more complicated one - most influential person
@@ -133,7 +136,6 @@ public class SocialMedia implements Comparable {
         System.out.println(index3 + " hrs to " + (index3+1) + "hrs with " + max3 + " messages");
         System.out.println(messageFrequency);
         System.out.println(messagesForwarded);
-
     }
 
     @Override
