@@ -42,6 +42,7 @@ public class FindMissingNumberAndRepeated {
         int max = a.get(a.size() - 1);
         int x = 0, y = 0;
         int actualSum = 0;
+        long sqSum = 0;
 
         for (int i = 0; i < a.size(); i++) {
             // update min and max
@@ -49,6 +50,7 @@ public class FindMissingNumberAndRepeated {
                 max = a.get(i);
             }
             actualSum = actualSum + a.get(i);
+
         }
 
         int expectedSum = max * (max + 1)/2;
