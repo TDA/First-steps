@@ -56,10 +56,26 @@ public class PrimeNumbers {
         return Integer.toBinaryString(a);
     }
 
+    public static String getNaryString(int a, int base) {
+        if (a <= 0) {
+            return "0";
+        }
+        String s = "";
+        while (a > 0) {
+            int rem = a % base;
+            a = a / base;
+            s += rem;
+        }
+        StringBuilder stringBuilder = new StringBuilder(s);
+        return stringBuilder.reverse().toString();
+    }
+
+
     public static void main(String[] args) {
 //        System.out.println(isPrime(3));
 //        System.out.println(sieve(39601));
 //        System.out.println(sieve(10));
-        System.out.println(getBinaryString(10));
+        System.out.println(getBinaryString(400000000));
+        System.out.println(getNaryString(400000000, 256));
     }
 }
