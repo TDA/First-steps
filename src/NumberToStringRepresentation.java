@@ -15,6 +15,9 @@ public class NumberToStringRepresentation {
         int count = 0;
         String[] appendices = {"", "thousand", "million", "billion"};
         StringBuilder number = new StringBuilder("");
+        // pretty sure this can be written in a better way,
+        // but it works, so lets leave it as is.
+        // need to handle special cases for 11-20.
         while (num > 0) {
             // get a 3 digit slice
             int digitSlice = num % 1000;
