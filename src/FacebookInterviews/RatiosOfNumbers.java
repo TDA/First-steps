@@ -1,5 +1,6 @@
 package FacebookInterviews;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -61,15 +62,49 @@ public class RatiosOfNumbers {
         for (RatiosOfNumbers r : ratios) {
             // or however we get i/p, from cmdline would be easier tbh, no need for a stupid class then
             // but i created the class anyway so
-
+            char num = r.num;
+            char denom = r.denom;
+            float val = r.value;
+            // insert into col/row, nothing fancy, just use the mapping we defined above
+            adjMatrix[rowColMaps.get(num)][rowColMaps.get(denom)] = val;
         }
 
+        // lets check if we did it right
+        for (int i = 0; i < 26; i++) {
+            for (int j = 0; j < 26; j++) {
+                System.out.print(adjMatrix[i][j] + "\t");
+            }
+            System.out.println();
+        }
 
-
-        computeRatio('A', 'D');
+        // cool now the bulk of the logic, tbh we can skip everything above for an interview
+        // whats below is important, can move below into a hlper for clearer code, if needed
+        computeRatio(rowColMaps.get('A'), rowColMaps.get('D'), adjMatrix);
     }
 
-    private static float computeRatio(char num, char denom) {
+    private static float computeRatio(int num, int denom, float[][] adjMatrix) {
+        // check if we have a direct value
+        if (adjMatrix[num][denom] != 0) {
+            int eventualDenom = denom;
+            // means we need to check for further matching denoms
+            // for each denom of num, we need to search for values, and
+            // check if they in turn can reach eventualDenom
+            // can do BFS OR DFS here, same width and height possibly so.
+            // but im going with DFS cuz:
+            //  1. searching for denoms in the same row is easier
+            //  2. Intuition feels that there will be lesser checks on average
+
+        } else {
+            return adjMatrix[num][denom];
+        }
         return 0;
+    }
+
+    @Override
+    public String toString() {
+        return "RatiosOfNumbers{" + num +
+                "/" + denom +
+                ", " + value +
+                '}';
     }
 }
