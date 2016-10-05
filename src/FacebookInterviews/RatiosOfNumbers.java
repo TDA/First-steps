@@ -28,8 +28,9 @@ public class RatiosOfNumbers {
         // lets start with that
         RatiosOfNumbers r1 = new RatiosOfNumbers('A', 'B', 1.0F);
         RatiosOfNumbers r2 = new RatiosOfNumbers('B', 'C', 0.8F);
-        RatiosOfNumbers r3 = new RatiosOfNumbers('C', 'D', 0.5F);
-        RatiosOfNumbers[] ratios = {r1, r2, r3};
+        RatiosOfNumbers r3 = new RatiosOfNumbers('B', 'D', 0.2F);
+        RatiosOfNumbers r4 = new RatiosOfNumbers('C', 'D', 0.5F);
+        RatiosOfNumbers[] ratios = {r1, r2, r3, r4};
 
         // on second thought, a graph based approach seems almost perfect for
         // this problem, and it makes sense, cuz FB is huge into graphs
@@ -37,7 +38,7 @@ public class RatiosOfNumbers {
         // like so:
         //    A  B  C  D
         // A  0  1
-        // B     0 0.8
+        // B     0 0.8 0.2
         // C        0 0.5
         // D           0
 
@@ -79,13 +80,13 @@ public class RatiosOfNumbers {
 
         // cool now the bulk of the logic, tbh we can skip everything above for an interview
         // whats below is important, can move below into a hlper for clearer code, if needed
-        computeRatio(rowColMaps.get('A'), rowColMaps.get('D'), adjMatrix);
+        System.out.println(computeRatio(rowColMaps.get('A'), rowColMaps.get('D'), adjMatrix));
     }
 
     private static float computeRatio(int num, int denom, float[][] adjMatrix) {
+        int eventualDenom = denom;
         // check if we have a direct value
-        if (adjMatrix[num][denom] != 0) {
-            int eventualDenom = denom;
+        if (adjMatrix[num][denom] == 0) {
             // means we need to check for further matching denoms
             // for each denom of num, we need to search for values, and
             // check if they in turn can reach eventualDenom
@@ -93,6 +94,15 @@ public class RatiosOfNumbers {
             // but im going with DFS cuz:
             //  1. searching for denoms in the same row is easier
             //  2. Intuition feels that there will be lesser checks on average
+            for (int i = 0; i < 26; i++) {
+                if (i == num || i == denom) {
+                    continue;
+                }
+                if (adjMatrix[num][i] != 0) {
+                    // recursively check if those can lead to eventualDenom
+                    return adjMatrix[num][i] * computeRatio(i, eventualDenom, adjMatrix);
+                }
+            }
 
         } else {
             return adjMatrix[num][denom];
