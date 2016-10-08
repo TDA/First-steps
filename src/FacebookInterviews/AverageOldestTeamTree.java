@@ -58,6 +58,9 @@ public class AverageOldestTeamTree {
         for (TreeNode child : root.getChildren()) {
             System.out.println("I am trying to check " + child);
             sum += calculateSums(child) + child.age;
+            // really clever here, might never again think of doing it this way
+            // propagate the childs value to the top, since this is essentially
+            // dfs, itll work. if bfs, this might not.
             root.totalNumOfChildren += child.getNumberOfChildren();
             root.setSum(sum);
         }
