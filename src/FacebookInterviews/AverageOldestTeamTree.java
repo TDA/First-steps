@@ -53,7 +53,7 @@ public class AverageOldestTeamTree {
         int sum = 0;
         for (TreeNode child : root.getChildren()) {
             System.out.println("I am trying to check " + child);
-            sum += calculateSums(child);
+//            sum += calculateSums(child);
             root.setSum(sum);
         }
         return root.getSum();
