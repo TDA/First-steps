@@ -3,7 +3,7 @@ import java.util.Arrays;
 /**
  * Created by schandramouli on 7/19/15.
  */
-public class arrays {
+public class arraySortingAllTypes {
     public static void main(String[] args){
         int[] arr = {13,2134,546,743,76,34,23,12,1};
         System.out.println("Selection Sort");
