@@ -17,7 +17,7 @@ public class AverageOldestTeamTree {
         TreeNode d = new TreeNode("D", 4);
         TreeNode e = new TreeNode("E", 4);
         TreeNode f = new TreeNode("F", 3);
-        TreeNode g = new TreeNode("G", 8);
+        TreeNode g = new TreeNode("G", 3);
         TreeNode h = new TreeNode("H", 2);
         a.setChildren(new ArrayList<TreeNode>(Arrays.asList(b, c, d)));
         b.setChildren(new ArrayList<TreeNode>(Arrays.asList(e, f)));
@@ -26,7 +26,7 @@ public class AverageOldestTeamTree {
         f.setChildren(new ArrayList<TreeNode>(Arrays.asList(h)));
 
         calculateAverages(a);
-        printTree(a);
+//        printTree(a);
     }
 
     private static void printTree(TreeNode t) {
@@ -46,6 +46,36 @@ public class AverageOldestTeamTree {
 
     private static void calculateAverages(TreeNode root) {
         calculateSums(root);
+        // now for the logic to calculate the averages, lets assume either
+        // average of org = (sum of children + value of self)/ no of children + 1
+        // average of org = (sum of children)/ (no of children)
+        // both are straightforward, lets do case 1 here:
+        // traverse the tree
+        ArrayList<TreeNode> allNodes = new ArrayList<>();
+        int nextIndex = 1;
+        allNodes.add(root);
+        while (root != null) {
+            allNodes.addAll(root.getChildren());
+            root = allNodes.get(nextIndex);
+            nextIndex++;
+            if (nextIndex >= allNodes.size()) {
+                break;
+            }
+        }
+        // after writing the above i just realized i did level order traversal, lolwow.
+        // now see which node wins, by design, this will find the higher org tree
+        // that is oldest in case of a tie.
+        float maxAverage = 0;
+        TreeNode oldestAverageOrg = null;
+        for (TreeNode node: allNodes) {
+            float average = (node.getSum() + node.age) / (node.getNumberOfChildren() + 1);
+            System.out.println("Average for " + node + " is " + average);
+            if (average > maxAverage) {
+                oldestAverageOrg = node;
+                maxAverage = average;
+            }
+        }
+        System.out.println("Oldest org in the tree has root at " + oldestAverageOrg);
     }
 
     private static int calculateSums(TreeNode root) {
