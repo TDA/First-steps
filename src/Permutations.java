@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -10,13 +11,12 @@ public class Permutations {
     static int recCount;
     public static void main(String[] args) {
         String s = "abcdef";
-        Permutations permutations = new Permutations();
-        System.out.println(permutations.findPermutations(s));
+        System.out.println(findPermutations(s));
         System.out.println(recCount);
     }
 
-    ArrayList<String> findPermutations(String string) {
-        recCount++;
+    static ArrayList<String> findPermutations(String string) {
+        // recCount++;
         ArrayList<String> stringArrayList = new ArrayList<>();
         // just a letter, so return it
         if (string.length() == 1) {
@@ -29,7 +29,7 @@ public class Permutations {
         char first = string.charAt(0);
         String remainderString = string.substring(1);
         // find perms of remaining ones, and insert first char into each of those
-        ArrayList<String> tempStringArrayList = this.findPermutations(remainderString);
+        ArrayList<String> tempStringArrayList = findPermutations(remainderString);
         for (String s : tempStringArrayList) {
             for (int i = 0; i <= s.length(); i++) {
                 String newString = insertCharAt(s, first, i);
