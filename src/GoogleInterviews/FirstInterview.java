@@ -29,6 +29,11 @@ public class FirstInterview {
     int nextList;
     int nextElement;
 
+    // these will hold the biggest column and the last row
+    // so we dont have to compute these every time.
+    int rowCount;
+    int longestColumnCount;
+
     public static void main(String[] args) {
         ArrayList<String> l1 = new ArrayList<>();
         ArrayList<String> l2 = new ArrayList<>();
@@ -43,25 +48,55 @@ public class FirstInterview {
         f.addList(l1);
         f.addList(l2);
         f.addList(l3);
+        System.out.println(f);
     }
 
     private void addList(ArrayList<String> l) {
         LoL.add(l);
+        rowCount++;
+        longestColumnCount = Math.max(l.size(), longestColumnCount);
     }
 
     public FirstInterview() {
         this.nextList = 0;
         this.nextElement = 0;
+        this.longestColumnCount = 0;
+        this.rowCount = 0;
     }
 
     public String next() {
-        System.out.println();
-        return "";
+        String result = "";
+        if (this.hasNext()) {
+            result = this.LoL.get(nextList).get(nextElement);
+            nextList++;
+        }
+        return result;
     }
 
     public boolean hasNext() {
-        System.out.println();
-        return true;
+        while (nextElement < longestColumnCount) {
+            // System.out.println(nextList + " " + nextElement);
+            if (nextList >= rowCount) {
+                // reset the nextList
+                nextList = 0;
+                nextElement++;
+            }
+            try {
+                this.LoL.get(nextList).get(nextElement);
+                return true;
+            } catch (IndexOutOfBoundsException e) {
+                nextList++;
+            }
+        }
+        return false;
     }
 
+    @Override
+    public String toString() {
+        String s = "";
+        while (this.hasNext()) {
+            s += this.next();
+        }
+        return s;
+    }
 }
