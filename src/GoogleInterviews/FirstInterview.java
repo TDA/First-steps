@@ -75,7 +75,6 @@ public class FirstInterview {
 
     public boolean hasNext() {
         while (nextElement < longestColumnCount) {
-            // System.out.println(nextList + " " + nextElement);
             if (nextList >= rowCount) {
                 // reset the nextList
                 nextList = 0;
@@ -95,7 +94,7 @@ public class FirstInterview {
     public String toString() {
         String s = "";
         while (this.hasNext()) {
-            s += this.next();
+            s += this.next() + " ";
         }
         return s;
     }

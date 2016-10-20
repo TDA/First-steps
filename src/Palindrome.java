@@ -3,7 +3,7 @@
  */
 public class Palindrome {
     public static void main(String[] args) {
-        String s = "not a palindorme";
+        String s = "not a palindrome";
         // spaces count as characters, if they don't, then strip the string before
         //System.out.println(new StringBuilder(s).reverse().toString());
         if (isConcisePalindrome(s)) {
