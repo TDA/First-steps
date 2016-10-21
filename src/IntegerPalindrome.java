@@ -4,7 +4,11 @@
 public class IntegerPalindrome {
     public static void main(String[] args) {
         int a = 14744741;
+        int b = 123456;
         System.out.println(isIntegerPalindrome(a));
+        System.out.println(isIntegerToStringPalindrome(a));
+        System.out.println(isIntegerPalindrome(b));
+        System.out.println(isIntegerToStringPalindrome(b));
     }
 
     public static boolean isIntegerPalindrome(int a) {
@@ -23,5 +27,8 @@ public class IntegerPalindrome {
         return reversedInt == regInt;
     }
 
-
+    public static boolean isIntegerToStringPalindrome(int a) {
+        String s = String.valueOf(a);
+        return new StringBuffer(s).reverse().toString().equals(s);
+    }
 }
