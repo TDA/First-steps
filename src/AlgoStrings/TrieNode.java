@@ -7,6 +7,7 @@ import java.util.HashMap;
  */
 public class TrieNode {
     char c;
+    Object endValue;
     HashMap<Character, TrieNode> children = new HashMap<>();
 
     public TrieNode() {
@@ -39,6 +40,14 @@ public class TrieNode {
 
     public void insertChild(char c, TrieNode n) {
         children.put(c, n);
+    }
+
+    public Object getEndValue() {
+        return endValue;
+    }
+
+    public void setEndValue(Object endValue) {
+        this.endValue = endValue;
     }
 
     public String printTrieNode(int offset) {
