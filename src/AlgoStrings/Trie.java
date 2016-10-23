@@ -1,5 +1,6 @@
 package AlgoStrings;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,14 +33,14 @@ public class Trie {
         char c = word.charAt(0);
         if (n.hasChild(c)) {
             // continue traversing its children
-            insertWord(word.substring(1), n.getChild(c));
+            insertWord(word.substring(1), o, n.getChild(c));
         } else {
             // insert the character and move down
             TrieNode child = new TrieNode(c);
             //System.out.println("Inserting " + c);
             n.insertChild(c, child);
             // recursively populate its children.
-            insertWord(word.substring(1), child);
+            insertWord(word.substring(1), o, child);
         }
     }
 
@@ -48,12 +49,28 @@ public class Trie {
         insertWord(word, o, root);
     }
 
-    public Map prefixMap(String prefix) {
-        if (this.isWordPresent(prefix)) {
-            // need to move to that node and get its endValue
+    public Object prefixMap(String prefix) {
+        HashMap<String, Object> prefMap = new HashMap<>();
+        return prefixMap(prefix, prefMap, root);
+    }
+
+    private Object prefixMap(String prefix, HashMap prefMap, TrieNode n) {
+        // we havent hit the end of the string yet
+        while (prefix.length() >= 0) {
+            if (prefix.length() == 0) {
+                // we have hit the end of the string, means we need to get all children out now,
+                // and put them as key => value pairs and return that
+            }
+            // else move to the end of the string
+            char c = prefix.charAt(0);
+            if (n.hasChild(c)) {
+                n = n.getChild(c);
+                prefix = prefix.substring(1);
+            }
         }
         return null;
     }
+
 
     public boolean isWordPresent(String word, TrieNode n) {
         int wordLength = word.length();
@@ -95,7 +112,8 @@ public class Trie {
     public static void main(String[] args) {
         Trie t = new Trie();
         System.out.println(t);
-        t.insertWord("tree", "tree");
+        String[] Lol = {"a", "b"};
+        t.insertWord("tree", Arrays.asList(Lol));
         System.out.println(t);
         t.insertWord("trap", "trap");
         System.out.println(t);
@@ -111,6 +129,6 @@ public class Trie {
         System.out.println(t.isWordPresent("tree"));
         System.out.println(t.isWordPresent("adonit"));
 
-        System.out.println(t.getWordValue("tree"));
+        System.out.println(t.prefixMap("tr"));
     }
 }
