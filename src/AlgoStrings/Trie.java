@@ -60,24 +60,33 @@ public class Trie {
                 prefixCopy = prefixCopy.substring(1);
             }
         }
-
         // we have hit the end of the string, means we need to get all children out now,
         // and put them as key => value pairs and return that
-
-        Queue<TrieNode> allChildren = new ArrayDeque<>();
+        Stack<TrieNode> allChildren = new Stack<>();
         allChildren.addAll(n.getChildren().values());
+        System.out.println(allChildren);
+        prefixCopy = prefix;
         while (! allChildren .isEmpty()) {
             // get one child and see if its got a value
-            TrieNode currentChild = allChildren.poll();
-            System.out.println(currentChild);
+            TrieNode currentChild = allChildren.pop();
+            String key = prefix + currentChild.val();
+            System.out.println(key);
             if (currentChild.getEndValue() != null) {
-                String key = prefix + currentChild.val();
                 prefMap.put(key, currentChild.getEndValue());
+                prefix = prefixCopy;
             } else {
                 // this is prolly not a leaf node, add its children if present
-                // this is like a bfs basically
+                // this is like a dfs basically
+//                prefMap.put(key, null);
+                prefix += currentChild.val();
                 if (! currentChild.isLeaf()) {
-                    allChildren.addAll(currentChild.getChildren().values());
+                    for (TrieNode child : currentChild.getChildren().values()) {
+                        allChildren.push(child);
+                    }
+                } else {
+                    // it is a leaf child, which means reset the prefix to previous prefix
+                    System.out.println("I NEVER GOT HERE");
+                    prefix = prefixCopy;
                 }
                 // IMP: need to keep track of the letters which dont have a value, bfs would be tough to do this.
             }
@@ -118,27 +127,30 @@ public class Trie {
                 '}';
     }
 
+    public void printAllWordsWithPrefix(String prefix) {
 
+    }
 
     public static void main(String[] args) {
         Trie t = new Trie();
-        System.out.println(t);
+//        System.out.println(t);
         String[] Lol = {"a", "b"};
         t.insertWord("tree", Arrays.asList(Lol));
-        System.out.println(t);
+//        System.out.println(t);
         t.insertWord("trap", "trap");
-        System.out.println(t);
+//        System.out.println(t);
         t.insertWord("triangle", "triangle");
-        System.out.println(t);
+//        System.out.println(t);
         t.insertWord("trengle", "trengle");
-        System.out.println(t);
+        t.insertWord("trengx", "trengx");
+//        System.out.println(t);
         t.insertWord("adonis", "adonis");
-        System.out.println(t);
+//        System.out.println(t);
 
-        System.out.println(t.isWordPresent("tree"));
-        System.out.println(t.isWordPresent("adonit"));
+//        System.out.println(t.isWordPresent("tree"));
+//        System.out.println(t.isWordPresent("adonit"));
 
         System.out.println(t.getWordValue("trap"));
-        System.out.println(t.prefixMap("tre"));
+        System.out.println(t.prefixMap("t"));
     }
 }
