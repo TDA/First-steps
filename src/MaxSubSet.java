@@ -118,10 +118,10 @@ public class MaxSubSet {
         List<Integer> list = Arrays.asList(A);
         ArrayList<Integer> arrayList = new ArrayList<Integer>(Arrays.asList(A));
         List<Integer> list2 = new ArrayList<>();
-        ArrayList<Integer> arrayList2 = new ArrayList<Integer>(Arrays.asList(new Integer[]{ -846930886, -1714636915, 424238335, -1649760492 }));
+        ArrayList<Integer> arrayList2 = new ArrayList<Integer>(Arrays.asList(new Integer[]{ 1, 0, 1, 1, 1, 0, -1, 1, 0, 1, -1, -1 }));
         list2.add(-500);
 //        System.out.println(maxSubArray(list));
-//        System.out.println(maxset(arrayList));
         System.out.println(maxset(arrayList2));
+//        System.out.println(maxset(arrayList2));
     }
 }
