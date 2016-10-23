@@ -64,4 +64,12 @@ public class TrieNode {
         s += "}";
         return s;
     }
+
+    @Override
+    public String toString() {
+        return "TrieNode{" +
+                "c=" + c +
+                ", endValue=" + endValue +
+                '}';
+    }
 }

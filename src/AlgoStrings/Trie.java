@@ -1,8 +1,6 @@
 package AlgoStrings;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by schandramouli on 9/9/16.
@@ -24,11 +22,8 @@ public class Trie {
         int wordLength = word.length();
         //System.out.println("Word is " + word + " and node is " + n);
         if (wordLength == 0) {
-            return;
-        }
-        if (wordLength == 1) {
-            // final character, set its endValue
             n.setEndValue(o);
+            return;
         }
         char c = word.charAt(0);
         if (n.hasChild(c)) {
@@ -55,20 +50,39 @@ public class Trie {
     }
 
     private Object prefixMap(String prefix, HashMap prefMap, TrieNode n) {
-        // we havent hit the end of the string yet
-        while (prefix.length() >= 0) {
-            if (prefix.length() == 0) {
-                // we have hit the end of the string, means we need to get all children out now,
-                // and put them as key => value pairs and return that
-            }
-            // else move to the end of the string
-            char c = prefix.charAt(0);
+        String prefixCopy = prefix;
+        // while we havent hit the end of the string yet
+        while (prefixCopy.length() > 0) {
+            // move to the end of the string
+            char c = prefixCopy.charAt(0);
             if (n.hasChild(c)) {
                 n = n.getChild(c);
-                prefix = prefix.substring(1);
+                prefixCopy = prefixCopy.substring(1);
             }
         }
-        return null;
+
+        // we have hit the end of the string, means we need to get all children out now,
+        // and put them as key => value pairs and return that
+
+        Queue<TrieNode> allChildren = new ArrayDeque<>();
+        allChildren.addAll(n.getChildren().values());
+        while (! allChildren .isEmpty()) {
+            // get one child and see if its got a value
+            TrieNode currentChild = allChildren.poll();
+            System.out.println(currentChild);
+            if (currentChild.getEndValue() != null) {
+                String key = prefix + currentChild.val();
+                prefMap.put(key, currentChild.getEndValue());
+            } else {
+                // this is prolly not a leaf node, add its children if present
+                // this is like a bfs basically
+                if (! currentChild.isLeaf()) {
+                    allChildren.addAll(currentChild.getChildren().values());
+                }
+                // IMP: need to keep track of the letters which dont have a value, bfs would be tough to do this.
+            }
+        }
+        return prefMap;
     }
 
 
@@ -87,9 +101,6 @@ public class Trie {
 
     public Object getWordValue(String word, TrieNode n) {
         if (word.length() == 0) {
-            return null;
-        }
-        if (word.length() == 1) {
             return n.getEndValue();
         }
         char c = word.charAt(0);
@@ -117,8 +128,6 @@ public class Trie {
         System.out.println(t);
         t.insertWord("trap", "trap");
         System.out.println(t);
-        t.insertWord("trap", "trap");
-        System.out.println(t);
         t.insertWord("triangle", "triangle");
         System.out.println(t);
         t.insertWord("trengle", "trengle");
@@ -129,6 +138,7 @@ public class Trie {
         System.out.println(t.isWordPresent("tree"));
         System.out.println(t.isWordPresent("adonit"));
 
-        System.out.println(t.prefixMap("tr"));
+        System.out.println(t.getWordValue("trap"));
+        System.out.println(t.prefixMap("tre"));
     }
 }
