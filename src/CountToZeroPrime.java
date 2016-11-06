@@ -1,4 +1,6 @@
+import java.util.ArrayDeque;
 import java.util.HashMap;
+import java.util.Queue;
 
 /**
  * Created by schandramouli on 11/3/16.
@@ -16,19 +18,25 @@ public class CountToZeroPrime {
         this.n = n;
     }
 
-    public int checkIfPrime() {
+    public Queue<Integer> checkIfPrime() {
+        Queue<Integer> factorsQueue = new ArrayDeque<>();
         if (n <= 0) {
-            return 0;
+            factorsQueue.add(0);
+            return factorsQueue;
         }
         int flooredSqrt = ((int) Math.sqrt(n));
         int highestFactor = 0;
+        int secondHighestFactor = 0;
 
         for (int i = 2; i <= flooredSqrt; i++) {
             if (n % i == 0) {
+                secondHighestFactor = highestFactor;
                 highestFactor = i;
             }
         }
-        return highestFactor;
+        factorsQueue.add(highestFactor);
+        factorsQueue.add(secondHighestFactor);
+        return factorsQueue;
     }
 
     public static void main(String[] args) {
@@ -39,9 +47,11 @@ public class CountToZeroPrime {
 
         CountToZeroPrime countToZeroPrime1 = new CountToZeroPrime(603900);
         int stepCount = 0;
+        Queue<Integer> factorsQueue = new ArrayDeque<>();
 
         while (countToZeroPrime1.n != 0) {
-            int firstFactor = countToZeroPrime1.checkIfPrime();
+            factorsQueue = countToZeroPrime1.checkIfPrime();
+            int firstFactor = factorsQueue.poll();
             System.out.println(firstFactor);
             if (firstFactor == 0) {
                 System.out.println("Unable to factorize");
