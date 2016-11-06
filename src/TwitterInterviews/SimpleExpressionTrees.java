@@ -13,6 +13,11 @@ public class SimpleExpressionTrees {
         System.out.println(s);
         Stack<Character> charStack = new Stack<>();
         for (char c : s.toCharArray()) {
+            if (c == '(') {
+                c = ')';
+            } else if (c == ')') {
+                c = '(';
+            }
             charStack.push(c);
         }
         String rS = "";
@@ -20,22 +25,6 @@ public class SimpleExpressionTrees {
             char c = charStack.pop();
             rS += c;
         }
-        System.out.println(revPar(rS));
-    }
-
-    public static String revPar(String s) {
-        char[] sArray = s.toCharArray();
-        for (int i = 0; i < sArray.length; i++) {
-            if (sArray[i] == '(') {
-                sArray[i] = ')';
-            } else if (sArray[i] == ')') {
-                sArray[i] = '(';
-            }
-        }
-        String rS = "";
-        for (int i = 0; i < sArray.length; i++) {
-            rS += sArray[i];
-        }
-        return rS;
+        System.out.println(rS);
     }
 }
