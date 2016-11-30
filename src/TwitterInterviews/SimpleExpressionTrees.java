@@ -18,11 +18,7 @@ public class SimpleExpressionTrees {
     public static String reverse1(String s) {
         Stack<Character> charStack = new Stack<>();
         for (char c : s.toCharArray()) {
-            if (c == '(') {
-                c = ')';
-            } else if (c == ')') {
-                c = '(';
-            }
+            c = revPar(c);
             charStack.push(c);
         }
         String rS = "";
@@ -38,13 +34,18 @@ public class SimpleExpressionTrees {
         for (int i = s.length() - 1; i > -1; i--) {
             // reversing made easier?
             char c = s.charAt(i);
-            if (c == '(') {
-                c = ')';
-            } else if (c == ')') {
-                c = '(';
-            }
+            c = revPar(c);
             rS2 += c;
         }
         return rS2;
+    }
+
+    public static char revPar(char c) {
+        if (c == '(') {
+            c = ')';
+        } else if (c == ')') {
+            c = '(';
+        }
+        return c;
     }
 }
