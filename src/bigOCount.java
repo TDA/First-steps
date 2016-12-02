@@ -33,9 +33,9 @@ public class bigOCount {
                 case LOOP:
                     // add logic here to find the amount of looping required, nested loops etc
                     if (line.contains("for")) {
-                        parseFor(line);
+                        count *= parseFor(line);
                     } else {
-                        parseWhile(line);
+                        count *= parseWhile(line);
                     }
                     break;
                 case COMMENT:
@@ -74,11 +74,13 @@ public class bigOCount {
         return TYPES.UNMATCHED;
     }
 
-    public static void parseFor(String line) {
-        System.out.println();
+    public static int parseFor(String line) {
+        // parse the line and get the number
+        return 1;
     }
 
-    public static void parseWhile(String line) {
-        System.out.println();
+    public static int parseWhile(String line) {
+        // parse the line and get the number
+        return 1;
     }
 }
