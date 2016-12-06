@@ -1,5 +1,7 @@
 package Graphs;
 
+import java.util.Arrays;
+
 /**
  * Created by schandramouli on 12/5/16.
  */
@@ -13,18 +15,35 @@ public class Graph {
     }
 
     void addEdge(int node1, int node2) {
-        adjMatrix[node1][node2] = 1;
+        adjMatrix[node1 - 1][node2 - 1] = 1;
+        adjMatrix[node2 - 1][node1 - 1] = 1;
     }
 
     void removeEdge(int node1, int node2) {
-        adjMatrix[node1][node2] = 0;
+        adjMatrix[node1 - 1][node2 - 1] = 0;
+        adjMatrix[node2 - 1][node1 - 1] = 0;
     }
 
     boolean hasEdge(int node1, int node2) {
-        return adjMatrix[node1][node2] == 1;
+        return adjMatrix[node1 - 1][node2 - 1] == 1;
+    }
+
+    public void printGraph() {
+        for (int i = 0; i < adjMatrix.length; i++) {
+            for (int j = 0; j < adjMatrix.length; j++) {
+                System.out.print(adjMatrix[i][j] + "\t");
+            }
+            System.out.println();
+        }
     }
 
     public static void main(String[] args) {
-
+        Graph graph = new Graph(2);
+        graph.addEdge(1, 2);
+        System.out.println(graph.hasEdge(1, 2));
+        graph.printGraph();
+        graph.removeEdge(1, 2);
+        System.out.println(graph.hasEdge(1, 2));
+        graph.printGraph();
     }
 }
