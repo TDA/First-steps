@@ -7,6 +7,10 @@ import java.util.Arrays;
  */
 public class Graph {
     // this will be a adjacency matrix based representation
+    // pros, easy to implement
+    // cons, for a sparse graph the matrix will also be sparse and waste extra space
+    // the other option is an adjacency list
+    // which creates a sort of ragged array, i think.
     int[][] adjMatrix;
 
     public Graph(int n) {
