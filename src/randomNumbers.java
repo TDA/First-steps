@@ -30,4 +30,12 @@ public class randomNumbers {
         long n = System.currentTimeMillis();
         return (int)n % 5;
     }
+
+
+    public static int rand7() {
+        // returns a no between 1 and 7 inclusive,
+        // with equal probability
+        long n = System.currentTimeMillis();
+        return (int)n % 7;
+    }
 }
