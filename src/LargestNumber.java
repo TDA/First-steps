@@ -8,6 +8,26 @@ import java.util.HashMap;
 
 public class LargestNumber {
     public static void main(String args[]){
+        int[] input = {3, 30, 34, 5, 9};
+        HashMap<Integer, ArrayList> bucket = new HashMap<>();
+        for (int i = 0; i < input.length; i++) {
+            int number = input[i];
+            String s = String.valueOf(number);
+            System.out.println(s);
+            Integer firstDigit = getFirstDigit(number);
+
+            if (bucket.get(firstDigit) != null) {
+                // already exists
+                ArrayList<Integer> existingList = bucket.get(firstDigit);
+                existingList.add(number);
+                bucket.put(firstDigit, existingList);
+            } else {
+                ArrayList<Integer> existingList = new ArrayList<>();
+                existingList.add(number);
+                bucket.put(firstDigit, existingList);
+            }
+        }
+        System.out.println(bucket);
 
     }
 
