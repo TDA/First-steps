@@ -28,7 +28,15 @@ public class LargestNumber {
             }
         }
         System.out.println(bucket);
-
+        String ss = "";
+        for (int i = 9; i >= 0 ; i--) {
+            ArrayList list = bucket.get(i);
+            if (list != null) {
+                Collections.reverse(list);
+                ss += list.toString();
+            }
+        }
+        System.out.println(ss);
     }
 
     private static int getFirstDigit(int number) {
