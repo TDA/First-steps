@@ -7,16 +7,19 @@ import java.util.Set;
  * Created by schandramouli on 11/17/15.
  */
 public class Permutations {
+    // Use a hashset when duplicates are in the string
     static Set<String> stringSet = new HashSet<>();
     static int recCount;
     public static void main(String[] args) {
-        String s = "abcdef";
-        System.out.println(findPermutations(s));
-        System.out.println(recCount);
+        String s = "abca";
+        ArrayList<String> permutations = findPermutations(s);
+        System.out.println(permutations);
+        System.out.println(permutations.size());
+        System.out.println("Stack depth: " + recCount);
     }
 
     static ArrayList<String> findPermutations(String string) {
-        // recCount++;
+         recCount++;
         ArrayList<String> stringArrayList = new ArrayList<>();
         // just a letter, so return it
         if (string.length() == 1) {
@@ -28,7 +31,8 @@ public class Permutations {
         // and insert the first character into each of these permutations
         char first = string.charAt(0);
         String remainderString = string.substring(1);
-        // find perms of remaining ones, and insert first char into each of those
+        // find perms of remaining ones, and insert first char into each position
+        // of those strings
         ArrayList<String> tempStringArrayList = findPermutations(remainderString);
         for (String s : tempStringArrayList) {
             for (int i = 0; i <= s.length(); i++) {
