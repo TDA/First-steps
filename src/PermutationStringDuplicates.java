@@ -2,7 +2,7 @@
  * Created by schandramouli on 6/11/17.
  */
 
-import java.util.HashMap;
+import java.util.HashSet;
 
 public class PermutationStringDuplicates {
     static int fact(int num) {
@@ -38,19 +38,22 @@ public class PermutationStringDuplicates {
                 index2 = (index2 + 1) % input.length();
             }
         }
+        HashSet<String> permutations = new HashSet<>();
 
         for (int l = 0; l < perm.length; l++) {
-            for (int m = 0; m < perm[l].length; m++)
-                System.out.print(perm[l][m]);
-            System.out.println("");
+            String s = getString(perm[l]);
+            permutations.add(s);
         }
 
-//        HashMap<char[],char[]> hs=new HashMap<char[],char[]>();
-//        for(int l=0;l<fact(input.length());l++)
-//            hs.put(perm[l], perm[l]);
-//        //while(hs!=null)
-//            System.out.println(hs.toString());
+        System.out.println(permutations.size());
+        System.out.println(permutations);
+    }
 
-
+    static String getString(char[] chars) {
+        StringBuilder sb = new StringBuilder();
+        for (char c : chars) {
+            sb.append(c);
+        }
+        return sb.toString();
     }
 }
