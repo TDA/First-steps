@@ -1,5 +1,3 @@
-import sun.misc.Regexp;
-
 import java.util.ArrayDeque;
 import java.util.Queue;
 
@@ -7,9 +5,9 @@ import java.util.Queue;
  * Created by schandramouli on 8/22/15.
  */
 public class Node <T extends Comparable<T>> {
-    T data;
-    Node left;
-    Node right;
+    public T data;
+    public Node left;
+    public Node right;
 
     public Node (T data) {
         this.data = data;
@@ -101,8 +99,10 @@ public class Node <T extends Comparable<T>> {
         return false;
     }
     public static void main (String [] args) {
+
         // Create a tree
         Node root = new Node("A");
+        System.out.println(root.getClass().getPackageName());
         root.left = new Node("B");
         root.right = new Node("C");
         root.left.left = new Node("G");
