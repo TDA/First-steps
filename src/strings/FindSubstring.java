@@ -1,6 +1,6 @@
 package strings;
 
-public class FindString {
+public class FindSubstring {
     public int strStr(String haystack, String needle) {
         int haystackLength = haystack.length();
         int needleLength = needle.length();
@@ -36,6 +36,7 @@ public class FindString {
             // add first 3 chars
             runningHashValue += haystack.charAt(i);
         }
+        // too many edge cases for Karp impl, don't attempt in interview
         while (windowStart < haystackLength) {
             if (runningHashValue != needleHash) {
                 runningHashValue -= haystack.charAt(windowStart);
@@ -60,15 +61,15 @@ public class FindString {
     }
 
     public static void main(String[] args) {
-        System.out.println(new FindString().strStr("sadbutsad", "sad"));
-        System.out.println(new FindString().strStrKarp("sadbutsad", "sad"));
-        System.out.println(new FindString().strStr("leetcode", "leeto"));
-        System.out.println(new FindString().strStrKarp("leetcode", "leeto"));
-        System.out.println(new FindString().strStr("abc", "c"));
-        System.out.println(new FindString().strStrKarp("abc", "c"));
-        System.out.println(new FindString().strStr("a", "a"));
-        System.out.println(new FindString().strStrKarp("a", "a"));
-        System.out.println(new FindString().strStr("mississippi", "pi"));
-        System.out.println(new FindString().strStrKarp("mississippi", "pi"));
+        System.out.println(new FindSubstring().strStr("sadbutsad", "sad"));
+        System.out.println(new FindSubstring().strStrKarp("sadbutsad", "sad"));
+        System.out.println(new FindSubstring().strStr("leetcode", "leeto"));
+        System.out.println(new FindSubstring().strStrKarp("leetcode", "leeto"));
+        System.out.println(new FindSubstring().strStr("abc", "c"));
+        System.out.println(new FindSubstring().strStrKarp("abc", "c"));
+        System.out.println(new FindSubstring().strStr("a", "a"));
+        System.out.println(new FindSubstring().strStrKarp("a", "a"));
+        System.out.println(new FindSubstring().strStr("mississippi", "pi"));
+        System.out.println(new FindSubstring().strStrKarp("mississippi", "pi"));
     }
 }

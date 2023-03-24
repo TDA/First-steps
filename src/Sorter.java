@@ -1,3 +1,7 @@
+import NumberSystems.Complex;
+import NumberSystems.NumberImpl;
+import NumberSystems.Rational;
+
 import java.util.HashMap;
 
 /**

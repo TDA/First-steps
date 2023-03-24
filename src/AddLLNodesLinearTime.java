@@ -19,13 +19,13 @@ class ListNode {
 
     @Override
     public String toString() {
-        return "ListNode{" +
-                "val=" + val +
-                ", next=" + next +
+        return "{" +
+                val +
+                ", " + next +
                 '}';
     }
 }
-public class AddLLNodes {
+public class AddLLNodesLinearTime {
     public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
         int carry = 0;
         String totes = "";
@@ -65,6 +65,6 @@ public class AddLLNodes {
         System.out.println(l1);
         ListNode l2 = new ListNode(List.of(1, 9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9));
         System.out.println(l2);
-        System.out.println(new AddLLNodes().addTwoNumbers(l1, l2));
+        System.out.println(new AddLLNodesLinearTime().addTwoNumbers(l1, l2));
     }
 }

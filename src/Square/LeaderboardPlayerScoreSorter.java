@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import lombok.Data;
-
 // 1. coding: At the end of the game, we get an array of scoring events This is a time series of scores that players have earned at various points in the game
 // Given an array with tuples of (player and score), calculate.. ............... ..
 //
@@ -68,10 +66,9 @@ public class LeaderboardPlayerScoreSorter {
         return modifiedLeaderboard;
     }
 
-    @Data
     private static class PlayerScore implements Comparable<PlayerScore> {
-        final String player;
-        final int score;
+        public final String player;
+        public final int score;
 
         public PlayerScore(String player, int score) {
             this.player = player;
@@ -80,7 +77,7 @@ public class LeaderboardPlayerScoreSorter {
 
         @Override
         public int compareTo(PlayerScore playerScore) {
-            return this.getScore() - playerScore.getScore();
+            return this.score - playerScore.score;
         }
     }
 

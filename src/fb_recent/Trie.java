@@ -12,7 +12,7 @@ public class Trie {
         node = new TrieNode();
     }
 
-    void insert(String s) {
+    public void insert(String s) {
         TrieNode currentNode = this.node;
         for (char c : s.toCharArray()) {
             TrieNode node = currentNode.getChild(c);
@@ -84,7 +84,7 @@ public class Trie {
         return false;
     }
 
-    List<String> suffixes(String prefix) {
+    public List<String> suffixes(String prefix) {
         TrieNode currentNode = this.node;
         for (char c : prefix.toCharArray()) {
             if (currentNode.getChild(c) != null) {

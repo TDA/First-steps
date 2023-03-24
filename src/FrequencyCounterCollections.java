@@ -3,7 +3,7 @@ package com.csai;
 import java.util.Collections;
 import java.util.HashMap;
 
-public class Main {
+public class FrequencyCounterCollections {
 
     public static void main(String[] args) {
 	// write your code here

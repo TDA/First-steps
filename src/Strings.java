@@ -1,5 +1,3 @@
-import jdk.nashorn.internal.runtime.regexp.RegExp;
-
 /**
  * Created by schandramouli on 7/11/15.
  */

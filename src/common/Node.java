@@ -1,3 +1,4 @@
+package common;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
@@ -102,7 +103,6 @@ public class Node <T extends Comparable<T>> {
 
         // Create a tree
         Node root = new Node("A");
-        System.out.println(root.getClass().getPackageName());
         root.left = new Node("B");
         root.right = new Node("C");
         root.left.left = new Node("G");

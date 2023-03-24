@@ -1,6 +1,6 @@
 package GoogleInterviews;
 
-import org.apache.commons.collections4.trie.PatriciaTrie;
+import fb_recent.Trie;
 
 import java.util.Scanner;
 
@@ -9,17 +9,17 @@ import java.util.Scanner;
  */
 public class GoogleSearch {
     public static void main(String[] args) {
-        PatriciaTrie words = new PatriciaTrie<>();
-        words.put("sai", new Integer(1));
-        words.put("nancy", new Integer(2));
-        words.put("nandu", new Integer(3));
-        words.put("sanju", new Integer(4));
-        words.put("sam", new Integer(5));
-        words.put("sri", new Integer(6));
-        words.put("lux", new Integer(7));
-        words.put("namratha", new Integer(8));
-        words.put("lucas", new Integer(9));
-        words.put("luke", new Integer(10));
+        Trie words = new Trie();
+        words.insert("sai");
+        words.insert("nancy");
+        words.insert("nandu");
+        words.insert("sanju");
+        words.insert("sam");
+        words.insert("sri");
+        words.insert("lux");
+        words.insert("namratha");
+        words.insert("lucas");
+        words.insert("luke");
 
         Scanner scanner = new Scanner(System.in);
         while (true) {
@@ -27,7 +27,7 @@ public class GoogleSearch {
             if ("quit".equals(s)) {
                 break;
             }
-            System.out.println(words.prefixMap(s));
+            System.out.println(words.suffixes(s));
         }
     }
 }

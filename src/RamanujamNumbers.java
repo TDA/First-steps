@@ -1,4 +1,3 @@
-import com.sun.tools.javac.util.Pair;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,6 +6,12 @@ import java.util.Scanner;
 /**
  * Created by schandramouli on 11/26/15.
  */
+class Pair<R, R1> {
+
+    public Pair(R r, R1 r1) {
+
+    }
+}
 public class RamanujamNumbers {
     int x3;
     int y3;

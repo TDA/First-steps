@@ -1,6 +1,7 @@
 /**
  * Created by schandramouli on 11/7/15.
  */
+import common.Node;
 public class isBST {
     public static void main(String[] args) {
         // is this a binary search tree?
