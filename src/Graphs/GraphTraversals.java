@@ -1,4 +1,4 @@
-package graphs;
+package Graphs;
 
 import java.util.ArrayDeque;
 import java.util.Collection;

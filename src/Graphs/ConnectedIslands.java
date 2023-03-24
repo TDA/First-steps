@@ -1,6 +1,6 @@
-package graphs;
+package Graphs;
 
-import static graphs.Utility.prettyMatrix;
+import static Graphs.Utility.prettyMatrix;
 
 public class ConnectedIslands {
     public int numIslands(char[][] grid) {

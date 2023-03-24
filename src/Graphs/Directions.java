@@ -1,4 +1,4 @@
-package graphs;
+package Graphs;
 
 public enum Directions {
     LEFT(0, -1),

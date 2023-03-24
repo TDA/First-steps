@@ -1,10 +1,11 @@
-package graphs;
-
-import static graphs.Utility.prettyMatrix;
+package Graphs;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static Graphs.Utility.prettyMatrix;
+
 
 public class PacificAtlanticWater {
     public List<List<Integer>> pacificAtlantic(int[][] heights) {

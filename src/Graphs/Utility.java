@@ -1,4 +1,4 @@
-package graphs;
+package Graphs;
 
 public class Utility {
     public static void prettyMatrix (boolean[][] matrix) {

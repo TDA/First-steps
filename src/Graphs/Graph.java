@@ -1,53 +1,58 @@
 package Graphs;
 
-import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
-/**
- * Created by schandramouli on 12/5/16.
- */
 public class Graph {
-    // this will be a adjacency matrix based representation
-    // pros, easy to implement
-    // cons, for a sparse graph the matrix will also be sparse and waste extra space
-    // the other option is an adjacency list
-    // which creates a sort of ragged array, i think.
-    int[][] adjMatrix;
-
-    public Graph(int n) {
-        // n is number of nodes
-        adjMatrix = new int[n][n];
+    public Graph() {
     }
 
-    void addEdge(int node1, int node2) {
-        adjMatrix[node1 - 1][node2 - 1] = 1;
-        adjMatrix[node2 - 1][node1 - 1] = 1;
+    Map<String, GraphNode> nodes = new LinkedHashMap<>();
+
+    public void addDirectedEdge(GraphNode nodeX, GraphNode nodeY) {
+        nodeX.addEdge(nodeY);
+        nodeY.incrementInboundEdges();
+        nodes.putAll(Map.of(nodeX.nodeName, nodeX, nodeY.nodeName, nodeY));
     }
 
-    void removeEdge(int node1, int node2) {
-        adjMatrix[node1 - 1][node2 - 1] = 0;
-        adjMatrix[node2 - 1][node1 - 1] = 0;
+    public GraphNode getOrAddNode(String currentNodeName) {
+        if (!nodes.containsKey(currentNodeName)) {
+            nodes.put(currentNodeName, new GraphNode(currentNodeName));
+        }
+        return nodes.get(currentNodeName);
     }
 
-    boolean hasEdge(int node1, int node2) {
-        return adjMatrix[node1 - 1][node2 - 1] == 1;
+    public void addNode(GraphNode node) {
+        nodes.put(node.nodeName, node);
     }
 
-    public void printGraph() {
-        for (int i = 0; i < adjMatrix.length; i++) {
-            for (int j = 0; j < adjMatrix.length; j++) {
-                System.out.print(adjMatrix[i][j] + "\t");
-            }
-            System.out.println();
+    public void addNodes(List<GraphNode> nodes) {
+        for (GraphNode graphNode: nodes) {
+            this.nodes.put(graphNode.nodeName, graphNode);
         }
     }
 
-    public static void main(String[] args) {
-        Graph graph = new Graph(2);
-        graph.addEdge(1, 2);
-        System.out.println(graph.hasEdge(1, 2));
-        graph.printGraph();
-        graph.removeEdge(1, 2);
-        System.out.println(graph.hasEdge(1, 2));
-        graph.printGraph();
+    public void addUndirectedEdge(GraphNode nodeX, GraphNode nodeY) {
+        nodeX.addEdge(nodeY);
+        nodeY.addEdge(nodeX);
+        nodes.putAll(Map.of(nodeX.nodeName, nodeX, nodeY.nodeName, nodeY));
+    }
+
+    public void removeUndirectedEdge(GraphNode nodeX, GraphNode nodeY) {
+        nodeX.removeEdge(nodeY);
+        nodeY.removeEdge(nodeX);
+    }
+
+    public void removeDirectedEdge(GraphNode nodeX, GraphNode nodeY) {
+        nodeX.removeEdge(nodeY);
+    }
+
+    public Graph(Graph graphToCopy) {
+        graphToCopy.nodes.forEach((name, graphNode) -> {
+            GraphNode copiedNode = new GraphNode(graphNode.nodeName);
+            copiedNode.setEdges(graphNode.getEdges());
+            nodes.put(copiedNode.nodeName, copiedNode);
+        });
     }
 }
