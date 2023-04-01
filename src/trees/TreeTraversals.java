@@ -1,8 +1,6 @@
 package trees;
 
-import java.util.ArrayDeque;
-import java.util.Queue;
-import java.util.StringJoiner;
+import java.util.*;
 
 public class TreeTraversals {
     public static void main(String[] args){
@@ -59,11 +57,12 @@ public class TreeTraversals {
         bstNode8.left = bstNode7;
 
         System.out.println(treeTraversals.levelOrder(bstNode6));
+        System.out.println(treeTraversals.zigzagLevelOrder(bstNode6));
         System.out.println(treeTraversals.inOrder(bstNode6));
         System.out.println(treeTraversals.validateBST(bstNode6));
         System.out.println(treeTraversals.validateBST(binaryTreeNode));
 
-//        System.out.println(treeTraversals.levelOrder(treeTraversals.invertTree(bstNode6)));
+        System.out.println(treeTraversals.levelOrder(treeTraversals.invertTree(bstNode6)));
 
         BinaryTreeNode btn1 = new BinaryTreeNode(1);
         BinaryTreeNode btn2 = new BinaryTreeNode(2);
@@ -92,7 +91,7 @@ public class TreeTraversals {
     public String levelOrder(BinaryTreeNode binaryTreeNode) {
         StringJoiner levelOrderString = new StringJoiner(" - ", "[", "]");
         // use a queue for each node popped and add its children immediately
-        Queue<BinaryTreeNode> queue = new ArrayDeque<>();
+        Queue<BinaryTreeNode> queue = new LinkedList<>();
         queue.add(binaryTreeNode);
         while (!queue.isEmpty()) {
             int popSize = queue.size();
@@ -100,13 +99,45 @@ public class TreeTraversals {
                 BinaryTreeNode treeNode = queue.poll();
                 if (treeNode != null) {
                     levelOrderString.add(String.valueOf(treeNode.value));
-                    if (treeNode.left != null) queue.add(treeNode.left);
-                    if (treeNode.right != null) queue.add(treeNode.right);
+                    queue.add(treeNode.left);
+                    queue.add(treeNode.right);
+                } else {
+                    levelOrderString.add("X");
                 }
             }
             levelOrderString.add("\n");
         }
         return levelOrderString.toString();
+    }
+
+    public List<List<Integer>> zigzagLevelOrder(BinaryTreeNode root) {
+        Queue<BinaryTreeNode> queue = new ArrayDeque<>();
+        List<List<Integer>> bigList = new ArrayList<>();
+        if (root == null) return List.of();
+        queue.add(root);
+        boolean isZig = true;
+        while (!queue.isEmpty()) {
+            int sizeToPop = queue.size();
+
+            List<Integer> levelList = new ArrayList<>();
+            for (int i = 0; i < sizeToPop; i++) {
+                BinaryTreeNode node = queue.poll();
+                if (node != null) {
+                    levelList.add(node.value);
+                    if (node.left != null) queue.add(node.left);
+                    if (node.right != null) queue.add(node.right);
+                }
+            }
+            if (isZig) {
+                bigList.add(levelList);
+            } else {
+                Collections.reverse(levelList);
+                bigList.add(levelList);
+            }
+
+            isZig = !isZig;
+        }
+        return bigList;
     }
 
     public boolean isBalancedSuboptimalFromCTCI(BinaryTreeNode binaryTreeNode) {
@@ -161,7 +192,7 @@ public class TreeTraversals {
 
     public String postOrder(BinaryTreeNode binaryTreeNode) {
         if (binaryTreeNode == null) return "";
-        return preOrder(binaryTreeNode.left) + " - " + preOrder(binaryTreeNode.right) +  " - " + binaryTreeNode.value;
+        return postOrder(binaryTreeNode.left) + " - " + postOrder(binaryTreeNode.right) +  " - " + binaryTreeNode.value;
     }
 
     public boolean validateBST(BinaryTreeNode binaryTreeNode) {

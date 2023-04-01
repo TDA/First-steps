@@ -1,8 +1,8 @@
 package fb_recent;
 
-import static graphs.Utility.prettyMatrix;
+import static Graphs.Utility.prettyMatrix;
 
-import graphs.Directions;
+import Graphs.Directions;
 
 public class NumberProvinces {
     public int findCircleNum(int[][] isConnected) {

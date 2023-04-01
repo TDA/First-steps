@@ -12,10 +12,6 @@ public class BinaryTreeNode {
 
     @Override
     public String toString() {
-        return "BinaryTreeNode{" +
-                "value=" + value +
-                ", left=" + left +
-                ", right=" + right +
-                '}';
+        return new TreeTraversals().levelOrder(this);
     }
 }

@@ -5,26 +5,26 @@ import java.util.HashMap;
 /**
  * Created by schandramouli on 9/18/15.
  */
-public class LLCircular extends LLNode {
+public class ListCircular extends ListNode {
     HashMap<Integer, Integer> hm;
 
-    public LLCircular() {
+    public ListCircular() {
         super();
     }
 
-    public LLCircular(int data) {
+    public ListCircular(int data) {
         super(data);
     }
 
     boolean isCircularList () {
         boolean b = false;
-        LLNode n = this;
+        ListNode n = this;
         hm = new HashMap<>();
         while (n != null) {
-            if (hm.get(n.data) == null) {
-                hm.put(n.data, 1);
-            } else if (hm.get(n.data) == 1){
-                hm.put(n.data, 2);
+            if (hm.get(n.val) == null) {
+                hm.put(n.val, 1);
+            } else if (hm.get(n.val) == 1){
+                hm.put(n.val, 2);
                 b = true;
                 break;
             }
@@ -44,7 +44,7 @@ public class LLCircular extends LLNode {
     }
 
     public static void main(String[] args) {
-        LLCircular circ = new LLCircular('A');
+        ListCircular circ = new ListCircular('A');
         circ.appendTail('B');
         circ.appendTail('C');
         circ.appendTail('D');

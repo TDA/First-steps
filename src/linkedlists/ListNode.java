@@ -5,50 +5,50 @@ import java.util.Stack;
 /**
  * Created by schandramouli on 8/26/15.
  */
-public class LLNode {
-    LLNode next;
-    int data;
+public class ListNode {
+    ListNode next;
+    int val;
 
-    public LLNode() {
-        data = -11111;
+    public ListNode() {
+        val = -11111;
     }
-    public LLNode(int data) {
-        this.data = data;
+    public ListNode(int val) {
+        this.val = val;
     }
 
 
-    void appendTail(LLNode end) {
-        LLNode n = this;
+    void appendTail(ListNode end) {
+        ListNode n = this;
         while (n.next != null) {
             n = n.next;
         }
         n.next = end;
     }
 
-    LLNode reverseList() {
-        LLNode n = this;
-        Stack<LLNode> nodeStack = new Stack<>();
+    ListNode reverseList() {
+        ListNode n = this;
+        Stack<ListNode> nodeStack = new Stack<>();
         while (n.next != null) {
             nodeStack.push(n);
             n = n.next;
         }
         nodeStack.push(n);
-        LLNode reverse = new LLNode(nodeStack.pop().data);
+        ListNode reverse = new ListNode(nodeStack.pop().val);
         while (! nodeStack.empty()) {
-            int data = nodeStack.pop().data;
+            int data = nodeStack.pop().val;
             reverse.appendTail(data);
         }
         return reverse;
     }
 
     void appendTail(int data) {
-        LLNode end = new LLNode(data);
+        ListNode end = new ListNode(data);
         appendTail(end);
     }
 
 
-    LLNode moveTo (int position) {
-        LLNode n = this;
+    ListNode moveTo (int position) {
+        ListNode n = this;
         while(position > 0) {
             if(n.next != null) {
                 n = n.next;
@@ -58,29 +58,29 @@ public class LLNode {
         return n;
     }
 
-    LLNode reverseFrom (int position) {
-        LLNode n = this;
-        LLNode reversePart = n.moveTo(position);
+    ListNode reverseFrom (int position) {
+        ListNode n = this;
+        ListNode reversePart = n.moveTo(position);
         //n = this;
-        LLNode newList;
-        newList = new LLNode(n.data);
+        ListNode newList;
+        newList = new ListNode(n.val);
 
         while(position > 1) {
             // copy elements till position
             n = n.next;
-            newList.appendTail(n.data);
+            newList.appendTail(n.val);
             position--;
         }
 
         // Use a stack to hold the reverse parts
-        Stack<LLNode> nodeStack = new Stack<>();
+        Stack<ListNode> nodeStack = new Stack<>();
         while (reversePart.next != null) {
             nodeStack.push(reversePart);
             reversePart = reversePart.next;
         }
         nodeStack.push(reversePart);
         while (! nodeStack.empty()) {
-            int data = nodeStack.pop().data;
+            int data = nodeStack.pop().val;
             newList.appendTail(data);
         }
         return newList;
@@ -88,27 +88,27 @@ public class LLNode {
 
     void printLLNode () {
         System.out.println("Linked List: ");
-        LLNode n = this;
+        ListNode n = this;
         while (n.next != null) {
-            System.out.print(n.data + "-->");
+            System.out.print(n.val + "-->");
             n = n.next;
         }
-        System.out.print(n.data);
+        System.out.print(n.val);
         System.out.println();
     }
 
     int findKthFromLast (int k) {
         int len = this.findLengthofList();
         int pos = len - k;
-        LLNode n = this;
+        ListNode n = this;
         n = n.moveTo(pos);
-        return n.data;
+        return n.val;
     }
 
     int findLengthofList() {
         // needed so that we can also extract last element
         int len = 1;
-        LLNode n = this;
+        ListNode n = this;
         while (n.next != null) {
             n = n.next;
             len++;
@@ -116,28 +116,28 @@ public class LLNode {
         return len;
     }
 
-    LLNode deleteAt (int pos) {
+    ListNode deleteAt (int pos) {
         // cannot delete first element
-        LLNode n = this;
+        ListNode n = this;
         if (pos == 0) {
             if (n.next != null) {
                 n = n.next;
             } else {
                 return null;
             }
-            LLNode x = new LLNode(n.data);
+            ListNode x = new ListNode(n.val);
             //copy everything else
             while (n.next != null) {
                 n = n.next;
-                x.appendTail(n.data);
+                x.appendTail(n.val);
             }
             return x;
         }
-        LLNode x = new LLNode(n.data);
+        ListNode x = new ListNode(n.val);
         int count = 1;
         while (n.next != null && count < pos - 1) {
             n = n.next;
-            x.appendTail(n.data);
+            x.appendTail(n.val);
             count++;
         }
         // now skip an element
@@ -145,29 +145,37 @@ public class LLNode {
         // now copy the rest
         while (n.next != null) {
             n = n.next;
-            x.appendTail(n.data);
+            x.appendTail(n.val);
         }
         // n.next = n.next.next;
         return x;
     }
 
-    LLNode copyFromTo (int x, int y) {
-        LLNode n = this;
-        LLNode copy;
+    ListNode copyFromTo (int x, int y) {
+        ListNode n = this;
+        ListNode copy;
         int count = x;
         n = n.moveTo(x);
-        copy = new LLNode(n.data);
+        copy = new ListNode(n.val);
         while (count < y && n.next != null) {
             n = n.next;
-            copy.appendTail(n.data);
+            copy.appendTail(n.val);
             count++;
         }
 
         return copy;
     }
 
+    @Override
+    public String toString() {
+        return "ListNode{" +
+                "val=" + val +
+                ", next=" + next +
+                '}';
+    }
+
     public static void main(String[] args) {
-        LLNode node = new LLNode(1);
+        ListNode node = new ListNode(1);
         node.appendTail(2);
         node.appendTail(3);
         node.appendTail(4);
@@ -175,12 +183,12 @@ public class LLNode {
         node.printLLNode();
 
 
-        LLNode newNode = node.moveTo(2);
+        ListNode newNode = node.moveTo(2);
         newNode.printLLNode();
 
         node.printLLNode();
 
-        LLNode revList = node.reverseFrom(2);
+        ListNode revList = node.reverseFrom(2);
 
         System.out.print("Half reversed: ");
         revList.printLLNode();
@@ -191,18 +199,18 @@ public class LLNode {
         System.out.println("5th from last is " + node.findKthFromLast(5));
 
         System.out.println("Deleted node at 3");
-        LLNode x = node.deleteAt(3);
+        ListNode x = node.deleteAt(3);
         x.printLLNode();
 
         System.out.println("Copied from 2 to 4");
-        LLNode copy = node.copyFromTo(1, 3);
+        ListNode copy = node.copyFromTo(1, 3);
         copy.printLLNode();
 
-        LLNode reversed = node.reverseList();
+        ListNode reversed = node.reverseList();
         reversed.printLLNode();
 
         System.out.println("Deleted node at 0");
-        LLNode y = node.deleteAt(0);
+        ListNode y = node.deleteAt(0);
         y.printLLNode();
     }
 
