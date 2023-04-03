@@ -7,23 +7,23 @@ import java.util.Queue;
 
 public class PrintBinaryTree {
     class Wrapper {
-        BinaryTreeNode node;
+        TreeNode node;
         int x;
         int y;
 
-        public Wrapper(BinaryTreeNode root, int x, int y) {
+        public Wrapper(TreeNode root, int x, int y) {
             node = root;
             this.x = x;
             this.y = y;
         }
     }
 
-    public int getHeight(BinaryTreeNode root){
+    public int getHeight(TreeNode root){
         if(root == null)
             return 0;
         return 1 + Math.max(getHeight(root.left), getHeight(root.right));
     }
-    public List<List<String>> printTree(BinaryTreeNode root) {
+    public List<List<String>> printTree(TreeNode root) {
         if (root == null) return List.of();
         int height = getHeight(root);
 
@@ -44,10 +44,10 @@ public class PrintBinaryTree {
             for (int i = 0; i < sizeToPop; i++) {
                 Wrapper node = wrapperQueue.poll();
                 if (node != null) {
-                    BinaryTreeNode nodeToAdd = node.node;
+                    TreeNode nodeToAdd = node.node;
                     int row = node.x;
                     int col = node.y;
-                    results.get(row).set(col, "" + nodeToAdd.value);
+                    results.get(row).set(col, "" + nodeToAdd.val);
                     int leftChildY = col - (int)Math.pow(2, (height-row-2));
                     int rightChildY = col + (int)Math.pow(2, (height-row-2));
                     if (nodeToAdd.left != null) wrapperQueue.add(new Wrapper(nodeToAdd.left, row + 1 , leftChildY));
@@ -60,15 +60,15 @@ public class PrintBinaryTree {
     }
 
     public static void main(String[] args) {
-        BinaryTreeNode binaryTreeNode = new BinaryTreeNode(0);
-        BinaryTreeNode binaryTreeNode1 = new BinaryTreeNode(1);
-//        BinaryTreeNode binaryTreeNode2 = new BinaryTreeNode(2);
-//        BinaryTreeNode binaryTreeNode3 = new BinaryTreeNode(3);
-//        BinaryTreeNode binaryTreeNode4 = new BinaryTreeNode(4);
-//        BinaryTreeNode binaryTreeNode5 = new BinaryTreeNode(5);
-//        BinaryTreeNode binaryTreeNode6 = new BinaryTreeNode(6);
-//        BinaryTreeNode binaryTreeNode7 = new BinaryTreeNode(7);
-//        BinaryTreeNode binaryTreeNode8 = new BinaryTreeNode(8);
+        TreeNode binaryTreeNode = new TreeNode(0);
+        TreeNode binaryTreeNode1 = new TreeNode(1);
+//        TreeNode binaryTreeNode2 = new TreeNode(2);
+//        TreeNode binaryTreeNode3 = new TreeNode(3);
+//        TreeNode binaryTreeNode4 = new TreeNode(4);
+//        TreeNode binaryTreeNode5 = new TreeNode(5);
+//        TreeNode binaryTreeNode6 = new TreeNode(6);
+//        TreeNode binaryTreeNode7 = new TreeNode(7);
+//        TreeNode binaryTreeNode8 = new TreeNode(8);
 
 //        binaryTreeNode4.left = binaryTreeNode1;
 //        binaryTreeNode4.right = binaryTreeNode6;

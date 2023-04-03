@@ -1,5 +1,7 @@
 package trees;
 
+import java.util.List;
+
 public class TreeNode {
     int val;
     TreeNode left;
@@ -14,10 +16,14 @@ public class TreeNode {
 
     @Override
     public String toString() {
-        return "TreeNode{" +
-                "val=" + val +
-                ", left=" + left +
-                ", right=" + right +
-                '}';
+        StringBuilder sb = new StringBuilder();
+        List<List<String>> x = new PrintBinaryTree().printTree(this);
+        for (List<String> strings : x) {
+            for (String string : strings) {
+                sb.append(string).append("\t");
+            }
+            sb.append("\n");
+        }
+        return sb.toString();
     }
 }
