@@ -1,7 +1,5 @@
 package trees;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.security.InvalidParameterException;
 
 public class QuadTrees {
