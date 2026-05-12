@@ -74,7 +74,9 @@ public class TimedKVStore {
     void set(String key, String value, int timestamp) {
         // for this effectively we look up the existing key or create a new default reset if one doesn't exist and then We add the new value to the existing set and update the hash map.
         var existingSet = this.map.getOrDefault(key, new ArrayList<>());
+        // Possible extension - out of order items, we need a sort here. Or we need to switch to TreeSets, either way insertion is now O(n log n) instead of O(1)
         existingSet.add(new ValueRecord(value, timestamp));
+        Collections.sort(existingSet);
         this.map.put(key, existingSet);
         System.out.println(this.map);
     }
@@ -135,15 +137,18 @@ public class TimedKVStore {
         store.set("exchangeRate", "1.10", 2);   // -> returns void
         store.set("exchangeRate", "1.12", 5);   // -> returns void
         store.set("exchangeRate", "1.14", 7);   // -> returns void
+        // Updated test case - send an out of order item
         store.set("exchangeRate", "1.19", 0);   // -> returns void
-//        System.out.println(store.get("exchangeRate", 1));           // -> returns null
-//        System.out.println(store.get("exchangeRate", 4));           // -> returns "1.10"
-//        System.out.println(store.get("exchangeRate", 5));           // -> returns "1.12"
-//        System.out.println(store.get("exchangeRate", 9));           // -> returns "1.12"
-//        System.out.println(store.get("unknownKey", 3));            // -> returns null
+        System.out.println("Testing O(n)");
+        System.out.println(store.get("exchangeRate", 1));           // -> returns null
+        System.out.println(store.get("exchangeRate", 4));           // -> returns "1.10"
+        System.out.println(store.get("exchangeRate", 5));           // -> returns "1.12"
+        System.out.println(store.get("exchangeRate", 9));           // -> returns "1.12"
+        System.out.println(store.get("unknownKey", 3));            // -> returns null
 
 
         System.out.println("------------------------");
+        System.out.println("Testing O(log n)");
         System.out.println(store.getModifiedBS("exchangeRate", 1));           // -> returns null
         System.out.println(store.getModifiedBS("exchangeRate", 4));           // -> returns "1.10"
         System.out.println(store.getModifiedBS("exchangeRate", 5));           // -> returns "1.12"
