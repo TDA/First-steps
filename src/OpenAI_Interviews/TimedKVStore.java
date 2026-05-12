@@ -48,7 +48,6 @@ package OpenAI_Interviews;
 //At time 9, the latest stored time ≤ 9 is 5 → "1.12".
 //An unknown key always returns null.
 
-import java.sql.SQLOutput;
 import java.util.*;
 
 record ValueRecord(String value, int timestamp) implements Comparable<ValueRecord> {
@@ -140,7 +139,7 @@ public class TimedKVStore {
         // Updated test case - send an out of order item
         store.set("exchangeRate", "1.19", 0);   // -> returns void
         System.out.println("Testing O(n)");
-        System.out.println(store.get("exchangeRate", 1));           // -> returns null
+        System.out.println(store.get("exchangeRate", 1));           // -> returns 1.19
         System.out.println(store.get("exchangeRate", 4));           // -> returns "1.10"
         System.out.println(store.get("exchangeRate", 5));           // -> returns "1.12"
         System.out.println(store.get("exchangeRate", 9));           // -> returns "1.12"
@@ -149,7 +148,7 @@ public class TimedKVStore {
 
         System.out.println("------------------------");
         System.out.println("Testing O(log n)");
-        System.out.println(store.getModifiedBS("exchangeRate", 1));           // -> returns null
+        System.out.println(store.getModifiedBS("exchangeRate", 1));           // -> returns 1.19
         System.out.println(store.getModifiedBS("exchangeRate", 4));           // -> returns "1.10"
         System.out.println(store.getModifiedBS("exchangeRate", 5));           // -> returns "1.12"
         System.out.println(store.getModifiedBS("exchangeRate", 9));           // -> returns "1.12"
