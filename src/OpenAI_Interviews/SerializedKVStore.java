@@ -73,9 +73,9 @@ public class SerializedKVStore {
         var lastEntry = sortedMap.lastEntry();
         for (var entry : sortedMap.entrySet()) {
             // each key and value should be quoted, and represented by a `:` for assignment
-            sb.append("\"").append(entry.getKey()).append("\"");
+            sb.append("\"").append(escapeJson(entry.getKey())).append("\"");
             sb.append(": ");
-            sb.append("\"").append(entry.getValue()).append("\"");
+            sb.append("\"").append(escapeJson(entry.getValue())).append("\"");
             // trailing comma is not valid JSON
             if (!entry.equals(lastEntry)) {
                 sb.append(",");
@@ -86,20 +86,59 @@ public class SerializedKVStore {
         return sb.toString();
     }
 
+    private String escapeJson(String data) {
+        return data.replace("\\", "\\\\")
+                .replace("\"", "\\\"");
+    }
+
+    private String deEscapeJson(String data) {
+        return data.replace("\\\\", "\\")
+                .replace("\\\"", "\"");
+    }
+
     public void deserialize(String data) {
         // We have here a regular JSON blob with only one level of nesting. The key constraint here is that we need to
         // **replace** the current in-memory contents with the data from the provided string.
 
         // parse boundaries first - this is very brittle and can break with invalid JSON.
         // A better idea would be to build our JSON parsing with a tokenizer + lexer.
-        var startIndex = data.indexOf("{") + 1;
-        var endIndex = data.indexOf("}");
-        var substringToParse = data.substring(startIndex, endIndex);
+        var trimmedData = data.trim();
+        var startIndex = trimmedData.indexOf('{');
+        var substringToParse = trimmedData.substring(startIndex);
 
-        String[] entries = substringToParse.split(",");
+        // The important items to parse out would be quotes, comma, colon, backslashes. because these hold special meanings in JSON.
+        // Sample JSON: {"address":"New York, NY","time":"12:30:45","quote":"he said \"hello\"","path":"C:\\Users\\test","my:key":"colon:in:value","my,key":"comma,in,value","empty":"","normal":"plain value","nested_escape":"tab\there\nnewline","unicode":"caf\u00e9"}
+        int i = 0;
+        boolean isKey = true;
+        List<String> keys = new ArrayList<>();
+        List<String> values = new ArrayList<>();
+        System.out.println("trimmed data: " + trimmedData);
+        while (i < substringToParse.length()) {
+            if (substringToParse.charAt(i) == '"') {
+                // if previous char was escapeChar, this should be skipped as well
+                var prevChar = substringToParse.charAt(i - 1);
+                var start = ++i;
+                while (i < substringToParse.length() && (substringToParse.charAt(i) != '\"' || prevChar == '\\')) {
+                    ++i;
+                    prevChar = substringToParse.charAt(i - 1);
+                }
+                String extracted = substringToParse.substring(start, i);
+                if (isKey) {
+                    keys.add(deEscapeJson(extracted));
+                } else {
+                    values.add(deEscapeJson(extracted));
+                }
+                isKey = !isKey;
+            }
+            // skip all other characters
+            ++i;
+        }
+
         TreeMap<String, String> tempMap = new TreeMap<>();
-        for (var entry : entries) {
-            tempMap.put(getKey(entry), getValue(entry));
+        if (keys.size() != values.size())
+            throw new Error("rip");
+        for (int j = 0; j < keys.size(); j++) {
+            tempMap.put(keys.get(j), values.get(j));
         }
         sortedMap = tempMap;
     }
@@ -118,15 +157,131 @@ public class SerializedKVStore {
     }
 
     public static void main(String[] args) {
-//        testEmptyStore();
+        testEmptyStore();
         testPromptExample();
         testSetGetOverwriteAndSortedKeys();
         testDelete();
         testSerializeProducesJsonForFullStore();
         testDeserializeFromJson();
         testDeserializeReplacesExistingData();
+        testEmptyStoreRoundTrip();
+        testValueContainingComma();
+        testValueContainingColon();
+        testValueContainingQuotes();
+        testKeyContainingSpecialCharacters();
+        testSingleEntry();
+        testEmptyStringValue();
+        testLargeRoundTrip();
 
         System.out.println("All SerializedKVStore tests passed!");
+    }
+
+    // === Edge Case Tests ===
+
+    private static void testEmptyStoreRoundTrip() {
+        SerializedKVStore store = new SerializedKVStore();
+        String serialized = store.serialize();
+        // Should produce "{}" or "{ }"
+
+        SerializedKVStore copy = new SerializedKVStore();
+        copy.deserialize(serialized);
+        assertKeys(copy.keys(), List.of(), "empty store should survive serialize/deserialize round trip");
+        assertNull(copy.get("anything"), "empty deserialized store should return null for any key");
+    }
+
+    private static void testValueContainingComma() {
+        SerializedKVStore store = new SerializedKVStore();
+        store.set("address", "New York, NY");
+        store.set("name", "Alice");
+
+        String serialized = store.serialize();
+        SerializedKVStore copy = new SerializedKVStore();
+        copy.deserialize(serialized);
+
+        assertEquals("New York, NY", copy.get("address"), "values containing commas should survive round trip");
+        assertEquals("Alice", copy.get("name"), "other entries should be unaffected by comma in sibling value");
+    }
+
+    private static void testValueContainingColon() {
+        SerializedKVStore store = new SerializedKVStore();
+        store.set("time", "12:30:45");
+        store.set("label", "key:value");
+
+        String serialized = store.serialize();
+        SerializedKVStore copy = new SerializedKVStore();
+        copy.deserialize(serialized);
+
+        assertEquals("12:30:45", copy.get("time"), "values containing colons should survive round trip");
+        assertEquals("key:value", copy.get("label"), "values containing colons should not confuse key-value splitting");
+    }
+
+    private static void testValueContainingQuotes() {
+        SerializedKVStore store = new SerializedKVStore();
+        store.set("quote", "he said \"hello\"");
+        store.set("path", "C:\\Users\\test");
+
+        String serialized = store.serialize();
+        SerializedKVStore copy = new SerializedKVStore();
+        copy.deserialize(serialized);
+
+        assertEquals("he said \"hello\"", copy.get("quote"), "values containing escaped quotes should survive round trip");
+        assertEquals("C:\\Users\\test", copy.get("path"), "values containing backslashes should survive round trip");
+    }
+
+    private static void testKeyContainingSpecialCharacters() {
+        SerializedKVStore store = new SerializedKVStore();
+        store.set("my:key", "value1");
+        store.set("my,key", "value2");
+        store.set("my\"key", "value3");
+
+        String serialized = store.serialize();
+        SerializedKVStore copy = new SerializedKVStore();
+        copy.deserialize(serialized);
+
+        assertEquals("value1", copy.get("my:key"), "keys containing colons should survive round trip");
+        assertEquals("value2", copy.get("my,key"), "keys containing commas should survive round trip");
+        assertEquals("value3", copy.get("my\"key"), "keys containing quotes should survive round trip");
+    }
+
+    private static void testSingleEntry() {
+        SerializedKVStore store = new SerializedKVStore();
+        store.set("only", "one");
+
+        String serialized = store.serialize();
+        SerializedKVStore copy = new SerializedKVStore();
+        copy.deserialize(serialized);
+
+        assertEquals("one", copy.get("only"), "single entry store should survive round trip");
+        assertKeys(copy.keys(), List.of("only"), "single entry store should have exactly one key");
+    }
+
+    private static void testEmptyStringValue() {
+        SerializedKVStore store = new SerializedKVStore();
+        store.set("empty", "");
+        store.set("normal", "value");
+
+        String serialized = store.serialize();
+        SerializedKVStore copy = new SerializedKVStore();
+        copy.deserialize(serialized);
+
+        assertEquals("", copy.get("empty"), "empty string values should survive round trip");
+        assertEquals("value", copy.get("normal"), "normal values should be unaffected by empty sibling");
+    }
+
+    private static void testLargeRoundTrip() {
+        SerializedKVStore store = new SerializedKVStore();
+        for (int i = 0; i < 100; i++) {
+            store.set("key" + i, "value" + i);
+        }
+
+        String serialized = store.serialize();
+        SerializedKVStore copy = new SerializedKVStore();
+        copy.deserialize(serialized);
+
+        for (int i = 0; i < 100; i++) {
+            assertEquals("value" + i, copy.get("key" + i), "entry " + i + " should survive round trip");
+        }
+        assertEquals(100, copy.keys().size(), "all 100 entries should survive round trip");
     }
 
     private static void testEmptyStore() {
