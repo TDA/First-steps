@@ -93,8 +93,9 @@ package OpenAI_Interviews;
 //    At time 61, the first credit is expired, leaving 20.
 //    The second credit is usable during [60, 70] and expired at 71.
 
+import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.PriorityQueue;
+import java.util.List;
 
 // Since we are stuck with Java, there is no better way to create a data class that also has setters in it. Alternative is to mark the fields as public but that's a very well known anti-pattern.
 class GPUCredit {
@@ -102,14 +103,12 @@ class GPUCredit {
     int amount;
     int startTime;
     int expiryTime;
-    int expiration;
 
     GPUCredit(String creditID, int amount, int timestamp, int expiration) {
         this.creditID = creditID;
         this.amount = amount;
         this.startTime = timestamp;
         this.expiryTime = timestamp + expiration;
-        this.expiration = expiration;
     }
 
     public int getStartTime() {
@@ -136,43 +135,41 @@ public class GPUCreditCalculator {
     // Reasonably certain that is the starting point where they don't care about tenancy and the extension will be about multi-tenancy.
 
     // Clarify assumption with the interviewer on whether the earliest timestamp credits must be used before future timestamp credits if credits have overlapping grants.
-    PriorityQueue<GPUCredit> creditPriorityQueue = new PriorityQueue<>(
-            Comparator.comparing(GPUCredit::getStartTime).thenComparing(GPUCredit::getExpiryTime)
-    );
+    // A priority queue only guarantees the order of the minimum item in the heap and does not guarantee order while iterating through the items.
+    // While in practice for small sets this doesn't make a difference. For larger data sets it likely will start failing. So So we just use a regular plain old list here instead of using a priority queue.
+    List<GPUCredit> creditsSortedList = new ArrayList<>();
 
 
     // O(1)
     private void addCredit(String creditId, int amount, int timestamp, int expiration) {
-        creditPriorityQueue.add(new GPUCredit(creditId, amount, timestamp, expiration));
-        System.out.println(creditPriorityQueue);
+        // We offload the sorting to when credits are used, since there will be re-shuffles needed there either way
+        // We keep this append-only to get O(1) perf
+        creditsSortedList.add(new GPUCredit(creditId, amount, timestamp, expiration));
     }
 
     // O(n)
     private int getBalance(int timestamp) {
         // NOTE: Lazy expiry can be done here if get* requests are fewer than use* requests
         int sumBalance = 0;
-        for (var credit : creditPriorityQueue) {
+        for (var credit : creditsSortedList) {
             if (timestamp >= credit.getStartTime() && timestamp <= credit.getExpiryTime()) sumBalance += credit.amount;
         }
         return sumBalance;
     }
 
-    // O(n) -> I don't think this can be made more efficient even with a modified binary search. We would be able to find the floor and the ceiling for the search space by running a modified binary search. However, between the floor and the ceiling, we still need to iterate through all the possible credits if the pending amount is large enough. So worst case scenario this is still O, assuming that pending amount is such a large amount and spans the entire list.
+    // O(n log on) -> I don't think this can be made more efficient even with a modified binary search. We would be able to find the floor and the ceiling for the search space by running a modified binary search. However, between the floor and the ceiling, we still need to iterate through all the possible credits if the pending amount is large enough. So worst case scenario this is still O, assuming that pending amount is such a large amount and spans the entire list.
     private void useCredit(int amount, int timestamp) {
         int pendingAmount = amount;
-        var itemsInQueue = creditPriorityQueue.stream().toList();
         int index = 0; // 2
+        // This is O(n log n), but means that the other two methods can be lean
+        creditsSortedList.sort(Comparator.comparing(GPUCredit::getStartTime).thenComparing(GPUCredit::getExpiryTime));
 
         // 1. Find the credits usable right now and reduce the amounts in each
-        while (pendingAmount > 0 && index < itemsInQueue.size()) {
-            var credit = itemsInQueue.get(index);
+        while (pendingAmount > 0 && index < creditsSortedList.size()) {
+            var credit = creditsSortedList.get(index);
             if (credit == null) {
                 index++;
                 continue;
-            }
-            if (credit.amount <= 0) {
-                // expire this credit grant for hard resets for future runs
-                creditPriorityQueue.remove(credit);
             }
             if (timestamp >= credit.getStartTime() && timestamp <= credit.getExpiryTime()) {
                 // usable credit, debit this
@@ -186,12 +183,13 @@ public class GPUCreditCalculator {
                     pendingAmount -= credit.amount;
                     // optional if we want to keep soft-resets
                     credit.setAmount(0);
-                    // expire this credit grant for hard resets
-                    creditPriorityQueue.remove(credit);
                 }
             }
             index++;
         }
+
+        // O(n + k log k) here since we are re-shuffling k items where k < n assuming at least one credit ran out
+        creditsSortedList.removeIf(c -> c.amount <= 0);
     }
 
 
@@ -201,7 +199,7 @@ public class GPUCreditCalculator {
         // test case 1 - check balances for one entitlement / id
         gpuCreditCalculator.addCredit("microsoft", 10, 10, 30);
 
-        System.out.println(gpuCreditCalculator.creditPriorityQueue);
+        System.out.println(gpuCreditCalculator.creditsSortedList);
 
         System.out.println(gpuCreditCalculator.getBalance(0)); //   -> 0
         System.out.println(gpuCreditCalculator.getBalance(10)); //  -> 10
@@ -213,7 +211,7 @@ public class GPUCreditCalculator {
         gpuCreditCalculator = new GPUCreditCalculator();
         gpuCreditCalculator.addCredit("amazon", 40, 10, 50);
         gpuCreditCalculator.useCredit(30, 30);
-        System.out.println(gpuCreditCalculator.creditPriorityQueue);
+        System.out.println(gpuCreditCalculator.creditsSortedList);
         System.out.println(gpuCreditCalculator.getBalance(40)); //  -> 10
 
 
