@@ -125,6 +125,9 @@ public class AutoExpiringKeyValueStore {
         System.out.println(store.get("key4"));
         store.cleanup();
 
+        try (ScheduledExecutorService cleanup = Executors.newSingleThreadScheduledExecutor()) {
+            cleanup.schedule(store::cleanup, 1, TimeUnit.SECONDS);
+        }
         try (ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor()) {
             scheduler.schedule(() -> {
                 System.out.println("7s delayed execution, some expiries");
@@ -139,7 +142,6 @@ public class AutoExpiringKeyValueStore {
                 // Overwrite with new TTL
                 store.put("key1", "oops", 3L);
 
-                store.cleanup();
                 System.out.println(store.keyValuePairs);
                 System.out.println(store.orderedKeyValuePairs);
                 System.out.println(System.currentTimeMillis());
@@ -153,7 +155,6 @@ public class AutoExpiringKeyValueStore {
                 System.out.println(store.get("key3"));
                 System.out.println(store.get("key4"));
 
-                store.cleanup();
                 System.out.println(store.keyValuePairs);
                 System.out.println(store.orderedKeyValuePairs);
                 System.out.println(System.currentTimeMillis());
