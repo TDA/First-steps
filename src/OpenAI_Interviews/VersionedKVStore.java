@@ -58,7 +58,7 @@ record ValueRecord(String value, int timestamp) implements Comparable<ValueRecor
     }
 }
 
-public class TimedKVStore {
+public class VersionedKVStore {
 
     // My thought process here is that we have two vectors of filtering.
     // one is just a key value lookup which typically some form of map is needed.
@@ -132,7 +132,7 @@ public class TimedKVStore {
     }
 
     public static void main() {
-        TimedKVStore store = new TimedKVStore();
+        VersionedKVStore store = new VersionedKVStore();
         store.set("exchangeRate", "1.10", 2);   // -> returns void
         store.set("exchangeRate", "1.12", 5);   // -> returns void
         store.set("exchangeRate", "1.14", 7);   // -> returns void
