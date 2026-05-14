@@ -35,7 +35,8 @@ public class ExcelSheet {
     Map<String, CellRef> cellValues = new HashMap<>();
     HashSet<String> dirtyValues = new HashSet<>();
     // Assume simple math operations for now - minus needs escape
-    Pattern pattern = Pattern.compile("(.*)([+\\-*/])(.*)");
+    Pattern lowPrecedenceOperators = Pattern.compile("(.*)([+\\-])(.*)");
+    Pattern highPrecedenceOperators = Pattern.compile("(.*)([*/])(.*)");
 
     // The value here can be overloaded to be a direct numeric value encoded as a string or a formula starting with the equal to symbol.
     // Assumptions: int values for now, can move to float later
@@ -82,11 +83,15 @@ public class ExcelSheet {
             // this means we need to continue parsing.
         }
 
-        var matcher = pattern.matcher(value);
+        var matcher = lowPrecedenceOperators.matcher(value);
         if (!matcher.find()) {
-            // we did not find the operands and the operator - only unary found
-            // can build support later as extension, exit for now
-            return 0;
+            // We did not find any low precedence operators, so time to move on to the high precedence ones now.
+            // Since we are doing DFS - we reverse the low > high
+            matcher = highPrecedenceOperators.matcher(value);
+            if (!matcher.find()) {
+                // no more operators
+                return 0;
+            }
         }
         int operand1 = evaluate(matcher.group(1));
         String operator = matcher.group(2);
@@ -179,15 +184,15 @@ public class ExcelSheet {
         });
 
         // Need to figure this extension piece out
-//        runTest("PEMDAS ordering for operations in a single statement should be processed", () -> {
-//            ExcelSheet sheet = new ExcelSheet();
-//            sheet.set("A1", "5");
-//            sheet.set("B1", "12");
-//            sheet.set("C1", "=A1*B1+15"); // will work
-//            sheet.set("A2", "=A1+B1*15"); // PEMDAS not followed - execution is left to right like a calculator, not excel
-//            assertEquals(75, sheet.get("C1"), "Numbers do not match");
-//            assertEquals(185, sheet.get("A2"), "Numbers do not match");
-//        });
+        runTest("PEMDAS ordering for operations in a single statement should be processed", () -> {
+            ExcelSheet sheet = new ExcelSheet();
+            sheet.set("A1", "5");
+            sheet.set("B1", "12");
+            sheet.set("C1", "=A1*B1+15"); // will work
+            sheet.set("A2", "=A1+B1*15"); // PEMDAS not followed - execution is left to right like a calculator, not excel
+            assertEquals(75, sheet.get("C1"), "Numbers do not match");
+            assertEquals(185, sheet.get("A2"), "Numbers do not match");
+        });
 
         runTest("Invalidate values when overwrite happens", () -> {
             ExcelSheet sheet = new ExcelSheet();
