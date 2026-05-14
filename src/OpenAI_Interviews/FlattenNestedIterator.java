@@ -80,24 +80,25 @@ public class FlattenNestedIterator {
     }
 
     public boolean hasNext() {
-        return !stackholder.isEmpty();
-    }
-
-    public Integer next() {
         while (!stackholder.isEmpty()) {
-            var nestedInteger = stackholder.pop();
+            var nestedInteger = stackholder.peek();
             if (nestedInteger.isInteger()) {
-                return nestedInteger.getInteger();
+                return true;
             } else {
                 // need to push to stack
+                stackholder.pop();
                 var list = nestedInteger.getList();
                 for (int i = list.size() - 1; i >= 0; i--) {
                     stackholder.push(list.get(i));
                 }
-                System.out.println(stackholder);
             }
         }
-        return null;
+        return false;
+    }
+
+    public Integer next() {
+        if (!hasNext()) return null;
+        return stackholder.pop().getInteger();
     }
 
 
