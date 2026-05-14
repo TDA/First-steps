@@ -3,8 +3,6 @@ package OpenAI_Interviews;
 // Full Problem: Implement an iterator over a nested data structure with
 // next(),
 // hasNext(),
-// pause() (serialize state), and
-// resume() (deserialize state).
 // The question is very similar to the flattened nested iterator question. However, there are trade-offs between the two approaches.
 // In the approach we took for flattened nested iterator, we can do eager loading in the constructor and flatten it out, or lazy loading
 // if we need to support larger data sets by pushing things into a stack only when hasnext is called.
