@@ -72,6 +72,9 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 
+import static OpenAI_Interviews.TestHelpers.assertEquals;
+import static OpenAI_Interviews.TestHelpers.runTest;
+
 public class FlattenNestedIterator {
     Deque<NestedInteger> stackholder = new ArrayDeque<>();
 
@@ -102,13 +105,7 @@ public class FlattenNestedIterator {
     }
 
 
-    @FunctionalInterface
-    private interface TestCase {
-        void run();
-    }
 
-    private static int testsRun = 0;
-    private static int testsPassed = 0;
 
     public static void main(String[] args) {
         runTest("simple flat list", () -> {
@@ -191,28 +188,5 @@ public class FlattenNestedIterator {
             }
             assertEquals(List.of(1, 2, 3, 3), result, "complex nested mix");
         });
-
-        System.out.println("\nPassed " + testsPassed + " / " + testsRun + " tests.");
-    }
-
-    private static void runTest(String name, TestCase testCase) {
-        testsRun++;
-        try {
-            testCase.run();
-            testsPassed++;
-            System.out.println("[PASS] " + name);
-        } catch (AssertionError e) {
-            System.err.println("[FAIL] " + name + ": " + e.getMessage());
-        }
-    }
-
-    private static void assertTrue(boolean condition, String message) {
-        if (!condition) throw new AssertionError(message);
-    }
-
-    private static void assertEquals(Object expected, Object actual, String message) {
-        if (expected == null ? actual != null : !expected.equals(actual)) {
-            throw new AssertionError(message + " – expected: " + expected + ", actual: " + actual);
-        }
     }
 }
