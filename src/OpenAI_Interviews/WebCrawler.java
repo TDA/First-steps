@@ -23,6 +23,8 @@ import static OpenAI_Interviews.TestHelpers.runTest;
 //Add rate limiting (max N requests per second)
 //Respect robots.txt
 
+record UrlFrame(String url, int depth) {}
+
 public class WebCrawler {
     private static final Map<String, List<String>> LINK_GRAPH = Map.ofEntries(
             Map.entry("https://openai.com", List.of(
@@ -71,7 +73,7 @@ public class WebCrawler {
         Deque<String> linkQueue = new ArrayDeque<>();
         // crawl all pages within the **same** domain
         String domain = extractDomain(startUrl);
-        linkQueue.push(startUrl);
+        linkQueue.add(startUrl);
         while (!linkQueue.isEmpty()) {
             var link = linkQueue.poll();
             if (visitedLinks.contains(link)) continue;
@@ -82,6 +84,27 @@ public class WebCrawler {
             }
         }
         return visitedLinks.stream().toList();
+    }
+
+    public List<String> crawl(String startUrl, int maxDepth) {
+        Deque<UrlFrame> urlQueue = new ArrayDeque<>();
+        Set<String> visitedUrls = new LinkedHashSet<>();
+        // crawl all pages within the **same** domain
+        String domain = extractDomain(startUrl);
+        urlQueue.add(new UrlFrame(startUrl, 0));
+        while (!urlQueue.isEmpty()) {
+            var frame = urlQueue.poll();
+            if (visitedUrls.contains(frame.url())) continue;
+            visitedUrls.add(frame.url());
+            if (frame.depth() < maxDepth) {
+                for (var u : getLinks(frame.url())) {
+                    if (domain.equals(extractDomain(u))) {
+                        urlQueue.add(new UrlFrame(u, frame.depth() + 1));
+                    }
+                }
+            }
+        }
+        return visitedUrls.stream().toList();
     }
 
     private String extractDomain(String url) {
@@ -156,6 +179,49 @@ public class WebCrawler {
                     ),
                     crawler.crawl("https://example.com"),
                     "second crawl should not be affected by prior visited state"
+            );
+        });
+
+        runTest("depth-limited crawl with depth 0 returns only start url", () -> {
+            WebCrawler crawler = new WebCrawler();
+
+            assertEquals(
+                    List.of("https://openai.com"),
+                    crawler.crawl("https://openai.com", 0),
+                    "depth 0 should not fetch links beyond the start URL"
+            );
+        });
+
+        runTest("depth-limited crawl with depth 1 returns direct same-domain links", () -> {
+            WebCrawler crawler = new WebCrawler();
+
+            assertEquals(
+                    List.of(
+                            "https://openai.com",
+                            "https://openai.com/research",
+                            "https://openai.com/careers",
+                            "https://openai.com/blog"
+                    ),
+                    crawler.crawl("https://openai.com", 1),
+                    "depth 1 should include only direct same-domain links"
+            );
+        });
+
+        runTest("depth-limited crawl with depth 2 returns same-domain grandchildren", () -> {
+            WebCrawler crawler = new WebCrawler();
+
+            assertEquals(
+                    List.of(
+                            "https://openai.com",
+                            "https://openai.com/research",
+                            "https://openai.com/careers",
+                            "https://openai.com/blog",
+                            "https://openai.com/research/gpt-5",
+                            "https://openai.com/careers/software-engineer",
+                            "https://openai.com/blog/safety"
+                    ),
+                    crawler.crawl("https://openai.com", 2),
+                    "depth 2 should include grandchildren but still avoid duplicates and outside domains"
             );
         });
     }
