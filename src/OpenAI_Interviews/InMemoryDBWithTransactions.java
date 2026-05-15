@@ -53,6 +53,10 @@ package OpenAI_Interviews;
 
 import java.util.*;
 
+import static OpenAI_Interviews.TestHelpers.assertEquals;
+import static OpenAI_Interviews.TestHelpers.assertNull;
+import static OpenAI_Interviews.TestHelpers.runTest;
+
 public class InMemoryDBWithTransactions {
 
     public static final String DELETED_MARKER = "__DELETED__";
@@ -173,18 +177,6 @@ public class InMemoryDBWithTransactions {
         transactions.poll();
     }
 
-    // ------------------------------------------------------------------
-    // Test harness – mimics the style used in InMemorySQLDatabase
-    // ------------------------------------------------------------------
-
-    @FunctionalInterface
-    private interface TestCase {
-        void run();
-    }
-
-    private static int testsRun = 0;
-    private static int testsPassed = 0;
-
     public static void main(String[] args) {
         runTest("basic set/get", () -> {
             InMemoryDBWithTransactions db = new InMemoryDBWithTransactions();
@@ -222,15 +214,10 @@ public class InMemoryDBWithTransactions {
         runTest("nested transactions", () -> {
             InMemoryDBWithTransactions db = new InMemoryDBWithTransactions();
             db.set("z", "5");
-            System.out.println(db.transactions);
             db.begin();          // T1
             db.set("z", "6");
-            System.out.println(db.transactions);
             db.begin();          // T2
-            System.out.println(db.transactions);
             db.delete("z");
-            System.out.println(db.transactions);
-            System.out.println(db.get("z"));
             assertNull(db.get("z"), "inside nested delete");
             db.rollback();       // rollback T2
             assertEquals("6", db.get("z"), "after inner rollback");
@@ -292,33 +279,5 @@ public class InMemoryDBWithTransactions {
             List<String> expected = List.of("z");
             assertEquals(expected, db.keys(), "keys with duplicate key");
         });
-
-        System.out.println("\nPassed " + testsPassed + " / " + testsRun + " tests.");
-    }
-
-    private static void runTest(String name, TestCase testCase) {
-        testsRun++;
-        try {
-            testCase.run();
-            testsPassed++;
-            System.out.println("[PASS] " + name);
-        } catch (AssertionError e) {
-            System.err.println("[FAIL] " + name + ": " + e.getMessage());
-        }
-    }
-
-    private static void assertTrue(boolean condition, String message) {
-        if (!condition) throw new AssertionError(message);
-    }
-
-    private static void assertEquals(Object expected, Object actual, String message) {
-        if (expected == null ? actual != null : !expected.equals(actual)) {
-            throw new AssertionError(message + " – expected: "
-                    + expected + ", actual: " + actual);
-        }
-    }
-
-    private static void assertNull(Object obj, String message) {
-        if (obj != null) throw new AssertionError(message + " – expected null");
     }
 }

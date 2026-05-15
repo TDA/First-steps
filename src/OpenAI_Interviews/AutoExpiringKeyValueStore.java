@@ -20,9 +20,11 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.PriorityQueue;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+
+import static OpenAI_Interviews.TestHelpers.assertEquals;
+import static OpenAI_Interviews.TestHelpers.assertNull;
+import static OpenAI_Interviews.TestHelpers.assertTrue;
+import static OpenAI_Interviews.TestHelpers.runTest;
 
 public class AutoExpiringKeyValueStore {
     static final long TIME_IN_MILLIS = 1000;
@@ -106,62 +108,42 @@ public class AutoExpiringKeyValueStore {
         }
     }
 
-    static void main() {
-        AutoExpiringKeyValueStore store = new AutoExpiringKeyValueStore();
+    public static void main(String[] args) {
+        runTest("get returns values before expiry", () -> {
+            AutoExpiringKeyValueStore store = new AutoExpiringKeyValueStore();
+            store.put("key1", "no expiry");
+            store.put("key2", "expiry in 10s", 10L);
 
-        store.put("key1", "no expiry");
-        store.put("key2", "expiry in 10s", 10L);
-        store.put("key3", "no expiry ever");
-        store.put("key4", "expiry in 5s", 5L);
+            assertEquals("no expiry", store.get("key1"), "non-expiring value should be returned");
+            assertEquals("expiry in 10s", store.get("key2"), "unexpired value should be returned");
+        });
 
-        System.out.println(store.keyValuePairs);
-        System.out.println(store.orderedKeyValuePairs);
-        System.out.println(System.currentTimeMillis());
+        runTest("get removes expired values", () -> {
+            AutoExpiringKeyValueStore store = new AutoExpiringKeyValueStore();
+            store.put("key", "already expired", -1L);
 
-        System.out.println("Immediate execution, no expiries yet");
-        System.out.println(store.get("key1"));
-        System.out.println(store.get("key2"));
-        System.out.println(store.get("key3"));
-        System.out.println(store.get("key4"));
-        store.cleanup();
+            assertNull(store.get("key"), "expired value should not be returned");
+            assertTrue(!store.keyValuePairs.containsKey("key"), "expired value should be soft-deleted on get");
+        });
 
-        try (ScheduledExecutorService cleanup = Executors.newSingleThreadScheduledExecutor()) {
-            cleanup.schedule(store::cleanup, 1, TimeUnit.SECONDS);
-        }
-        try (ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor()) {
-            scheduler.schedule(() -> {
-                System.out.println("7s delayed execution, some expiries");
-                System.out.println(store.get("key1"));
-                System.out.println(store.get("key2"));
-                System.out.println(store.get("key3"));
-                System.out.println(store.get("key4"));
+        runTest("delete removes values", () -> {
+            AutoExpiringKeyValueStore store = new AutoExpiringKeyValueStore();
+            store.put("key", "value");
 
-                // Active Delete
-                store.delete("key3");
+            store.delete("key");
 
-                // Overwrite with new TTL
-                store.put("key1", "oops", 3L);
+            assertNull(store.get("key"), "deleted value should not be returned");
+        });
 
-                System.out.println(store.keyValuePairs);
-                System.out.println(store.orderedKeyValuePairs);
-                System.out.println(System.currentTimeMillis());
+        runTest("cleanup removes expired heap entries without removing overwritten values", () -> {
+            AutoExpiringKeyValueStore store = new AutoExpiringKeyValueStore();
+            store.put("key", "expired", -1L);
+            store.put("key", "fresh");
 
-            }, 7, TimeUnit.SECONDS);
+            store.cleanup();
 
-            scheduler.schedule(() -> {
-                System.out.println("12s delayed execution, many expiries");
-                System.out.println(store.get("key1"));
-                System.out.println(store.get("key2"));
-                System.out.println(store.get("key3"));
-                System.out.println(store.get("key4"));
-
-                System.out.println(store.keyValuePairs);
-                System.out.println(store.orderedKeyValuePairs);
-                System.out.println(System.currentTimeMillis());
-            }, 12, TimeUnit.SECONDS);
-
-            // Remember to shut down the scheduler when done to allow the JVM to exit
-            scheduler.shutdown();
-        }
+            assertEquals("fresh", store.get("key"), "cleanup should preserve overwritten fresh value");
+            assertTrue(store.orderedKeyValuePairs.isEmpty(), "cleanup should remove expired heap entry");
+        });
     }
 }

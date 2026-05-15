@@ -97,6 +97,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import static OpenAI_Interviews.TestHelpers.assertEquals;
+import static OpenAI_Interviews.TestHelpers.runTest;
+
 // Since we are stuck with Java, there is no better way to create a data class that also has setters in it. Alternative is to mark the fields as public but that's a very well known anti-pattern.
 class GPUCredit {
     String creditID;
@@ -193,41 +196,45 @@ public class GPUCreditCalculator {
     }
 
 
-    static void main() {
-        var gpuCreditCalculator = new GPUCreditCalculator();
+    public static void main(String[] args) {
+        runTest("balance respects inclusive credit window", () -> {
+            var gpuCreditCalculator = new GPUCreditCalculator();
+            gpuCreditCalculator.addCredit("microsoft", 10, 10, 30);
 
-        // test case 1 - check balances for one entitlement / id
-        gpuCreditCalculator.addCredit("microsoft", 10, 10, 30);
+            assertEquals(0, gpuCreditCalculator.getBalance(0), "credit should not be usable before start");
+            assertEquals(10, gpuCreditCalculator.getBalance(10), "credit should be usable at start");
+            assertEquals(10, gpuCreditCalculator.getBalance(40), "credit should be usable at inclusive expiry");
+            assertEquals(0, gpuCreditCalculator.getBalance(41), "credit should expire after inclusive window");
+        });
 
-        System.out.println(gpuCreditCalculator.creditsSortedList);
+        runTest("useCredit spends available balance", () -> {
+            var gpuCreditCalculator = new GPUCreditCalculator();
+            gpuCreditCalculator.addCredit("amazon", 40, 10, 50);
+            gpuCreditCalculator.useCredit(30, 30);
 
-        System.out.println(gpuCreditCalculator.getBalance(0)); //   -> 0
-        System.out.println(gpuCreditCalculator.getBalance(10)); //  -> 10
-        System.out.println(gpuCreditCalculator.getBalance(40)); //  -> 10
-        System.out.println(gpuCreditCalculator.getBalance(41)); //  -> 0
+            assertEquals(10, gpuCreditCalculator.getBalance(40), "spending should reduce balance");
+        });
 
+        runTest("multiple credits combine and expire independently", () -> {
+            var gpuCreditCalculator = new GPUCreditCalculator();
+            gpuCreditCalculator.addCredit("amazon", 40, 10, 50);
+            gpuCreditCalculator.useCredit(30, 30);
+            gpuCreditCalculator.addCredit("google", 20, 60, 10);
 
-        // test case 2  - use credit + check balances for one entitlement / id
-        gpuCreditCalculator = new GPUCreditCalculator();
-        gpuCreditCalculator.addCredit("amazon", 40, 10, 50);
-        gpuCreditCalculator.useCredit(30, 30);
-        System.out.println(gpuCreditCalculator.creditsSortedList);
-        System.out.println(gpuCreditCalculator.getBalance(40)); //  -> 10
+            assertEquals(30, gpuCreditCalculator.getBalance(60), "overlapping credits should combine");
+            assertEquals(20, gpuCreditCalculator.getBalance(61), "first credit should expire after time 60");
+            assertEquals(20, gpuCreditCalculator.getBalance(70), "second credit should remain through inclusive expiry");
+            assertEquals(0, gpuCreditCalculator.getBalance(71), "all credits should be expired");
+        });
 
+        runTest("overspend consumes all available active credits", () -> {
+            var gpuCreditCalculator = new GPUCreditCalculator();
+            gpuCreditCalculator.addCredit("microsoft", 10, 10, 30);
+            gpuCreditCalculator.addCredit("microsoft", 10, 20, 30);
+            gpuCreditCalculator.useCredit(100, 25);
 
-        // test case 3 - multiple credits to different entitlements and check balances (different from 1, here we already have amazon + google)
-        gpuCreditCalculator.addCredit("google", 20, 60, 10);
-        System.out.println(gpuCreditCalculator.getBalance(60)); //  -> 30
-        System.out.println(gpuCreditCalculator.getBalance(61)); //  -> 20
-        System.out.println(gpuCreditCalculator.getBalance(70)); //  -> 20
-        System.out.println(gpuCreditCalculator.getBalance(71)); //  -> 0
-
-
-        // test case 4 - complex case: Multiple credits available for a given ID with overlapping intervals. Balance is higher than all.
-        gpuCreditCalculator.addCredit("microsoft", 10, 10, 30); // [10, 40] -> 10 credits
-        gpuCreditCalculator.addCredit("microsoft", 10, 20, 30); // [20, 50] -> 10 credits
-        gpuCreditCalculator.useCredit(100, 25);
-        System.out.println(gpuCreditCalculator.getBalance(50)); //  -> 0
+            assertEquals(0, gpuCreditCalculator.getBalance(50), "overspend should leave no active balance");
+        });
     }
 
 }

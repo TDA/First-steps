@@ -18,6 +18,9 @@ import fb_recent.NestedInteger;
 
 import java.util.*;
 
+import static OpenAI_Interviews.TestHelpers.assertEquals;
+import static OpenAI_Interviews.TestHelpers.runTest;
+
 public class LazyLoadingFlattenNestedIterator implements Iterator<Integer> {
     Deque<Iterator<NestedInteger>> stackholder = new ArrayDeque<>();
     Integer peekedValue;
@@ -64,15 +67,7 @@ public class LazyLoadingFlattenNestedIterator implements Iterator<Integer> {
     }
 
 
-    @FunctionalInterface
-    private interface TestCase {
-        void run();
-    }
-
-    private static int testsRun = 0;
-    private static int testsPassed = 0;
-
-    static void main(String[] args) {
+    public static void main(String[] args) {
         runTest("simple flat list", () -> {
             List<NestedInteger> list = new ArrayList<>();
             list.add(new NestedInteger(1));
@@ -154,28 +149,5 @@ public class LazyLoadingFlattenNestedIterator implements Iterator<Integer> {
             }
             assertEquals(List.of(1, 2, 3, 3), result, "complex nested mix");
         });
-
-        System.out.println("\nPassed " + testsPassed + " / " + testsRun + " tests.");
-    }
-
-    private static void runTest(String name, TestCase testCase) {
-        testsRun++;
-        try {
-            testCase.run();
-            testsPassed++;
-            System.out.println("[PASS] " + name);
-        } catch (AssertionError e) {
-            System.err.println("[FAIL] " + name + ": " + e.getMessage());
-        }
-    }
-
-    private static void assertTrue(boolean condition, String message) {
-        if (!condition) throw new AssertionError(message);
-    }
-
-    private static void assertEquals(Object expected, Object actual, String message) {
-        if (expected == null ? actual != null : !expected.equals(actual)) {
-            throw new AssertionError(message + " – expected: " + expected + ", actual: " + actual);
-        }
     }
 }

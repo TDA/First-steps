@@ -53,6 +53,11 @@ package OpenAI_Interviews;
 import java.util.*;
 import java.util.regex.Pattern;
 
+import static OpenAI_Interviews.TestHelpers.assertEquals;
+import static OpenAI_Interviews.TestHelpers.assertRows;
+import static OpenAI_Interviews.TestHelpers.assertTrue;
+import static OpenAI_Interviews.TestHelpers.runTest;
+
 class Table {
     LinkedHashSet<String> columns;
     List<Map<String, String>> rows = new ArrayList<>();
@@ -182,14 +187,6 @@ public class InMemorySQLDatabase {
         } catch (NumberFormatException nfe) {
             throw new IllegalArgumentException("Relational operator cannot be applied to Strings");
         }
-    }
-
-    private static int testsRun = 0;
-    private static int testsPassed = 0;
-
-    @FunctionalInterface
-    private interface TestCase {
-        void run();
     }
 
     public static void main(String[] args) {
@@ -387,47 +384,5 @@ public class InMemorySQLDatabase {
                     db.select("companies", List.of("name"), "id = 1")
             );
         });
-
-        System.out.println("\nPassed " + testsPassed + " / " + testsRun + " tests.");
     }
-
-    private static void runTest(String name, TestCase testCase) {
-        testsRun++;
-        try {
-            testCase.run();
-            testsPassed++;
-            System.out.println("[PASS] " + name);
-        } catch (AssertionError error) {
-            System.out.println("[FAIL] " + name);
-            System.out.println("       " + error.getMessage());
-        } catch (Exception exception) {
-            System.out.println("[ERROR] " + name);
-            exception.printStackTrace(System.out);
-        }
-    }
-
-    private static void assertRows(List<List<String>> expected, List<List<String>> actual) {
-        if (!expected.equals(actual)) {
-            throw new AssertionError("Expected rows " + expected + " but got " + actual);
-        }
-    }
-
-    private static void assertTrue(boolean condition, String message) {
-        if (!condition) {
-            throw new AssertionError(message);
-        }
-    }
-
-    private static void assertEquals(String expected, String actual) {
-        if (expected != actual) {
-            throw new AssertionError("Expected " + expected + " but got " + actual);
-        }
-    }
-
-    private static void assertEquals(int expected, int actual) {
-        if (expected != actual) {
-            throw new AssertionError("Expected " + expected + " but got " + actual);
-        }
-    }
-
 }

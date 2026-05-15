@@ -50,6 +50,10 @@ package OpenAI_Interviews;
 
 import java.util.*;
 
+import static OpenAI_Interviews.TestHelpers.assertEquals;
+import static OpenAI_Interviews.TestHelpers.assertNull;
+import static OpenAI_Interviews.TestHelpers.runTest;
+
 record ValueRecord(String value, int timestamp) implements Comparable<ValueRecord> {
 
     @Override
@@ -77,7 +81,6 @@ public class VersionedKVStore {
         existingSet.add(new ValueRecord(value, timestamp));
         Collections.sort(existingSet);
         this.map.put(key, existingSet);
-        System.out.println(this.map);
     }
 
     // O (n)
@@ -131,28 +134,34 @@ public class VersionedKVStore {
         }
     }
 
-    public static void main() {
+    public static void main(String[] args) {
+        runTest("linear lookup returns latest value at or before timestamp", () -> {
+            VersionedKVStore store = populatedStore();
+
+            assertEquals("1.19", store.get("exchangeRate", 1), "out of order earliest value should be found");
+            assertEquals("1.10", store.get("exchangeRate", 4), "latest value before timestamp should be returned");
+            assertEquals("1.12", store.get("exchangeRate", 5), "exact timestamp should be returned");
+            assertEquals("1.14", store.get("exchangeRate", 9), "latest value should be returned");
+            assertNull(store.get("unknownKey", 3), "unknown key should return null");
+        });
+
+        runTest("binary search lookup matches linear lookup", () -> {
+            VersionedKVStore store = populatedStore();
+
+            assertEquals("1.19", store.getModifiedBS("exchangeRate", 1), "out of order earliest value should be found");
+            assertEquals("1.10", store.getModifiedBS("exchangeRate", 4), "latest value before timestamp should be returned");
+            assertEquals("1.12", store.getModifiedBS("exchangeRate", 5), "exact timestamp should be returned");
+            assertEquals("1.14", store.getModifiedBS("exchangeRate", 9), "latest value should be returned");
+            assertNull(store.getModifiedBS("unknownKey", 3), "unknown key should return null");
+        });
+    }
+
+    private static VersionedKVStore populatedStore() {
         VersionedKVStore store = new VersionedKVStore();
-        store.set("exchangeRate", "1.10", 2);   // -> returns void
-        store.set("exchangeRate", "1.12", 5);   // -> returns void
-        store.set("exchangeRate", "1.14", 7);   // -> returns void
-        // Updated test case - send an out of order item
-        store.set("exchangeRate", "1.19", 0);   // -> returns void
-        System.out.println("Testing O(n)");
-        System.out.println(store.get("exchangeRate", 1));           // -> returns 1.19
-        System.out.println(store.get("exchangeRate", 4));           // -> returns "1.10"
-        System.out.println(store.get("exchangeRate", 5));           // -> returns "1.12"
-        System.out.println(store.get("exchangeRate", 9));           // -> returns "1.12"
-        System.out.println(store.get("unknownKey", 3));            // -> returns null
-
-
-        System.out.println("------------------------");
-        System.out.println("Testing O(log n)");
-        System.out.println(store.getModifiedBS("exchangeRate", 1));           // -> returns 1.19
-        System.out.println(store.getModifiedBS("exchangeRate", 4));           // -> returns "1.10"
-        System.out.println(store.getModifiedBS("exchangeRate", 5));           // -> returns "1.12"
-        System.out.println(store.getModifiedBS("exchangeRate", 9));           // -> returns "1.12"
-        System.out.println(store.getModifiedBS("unknownKey", 3));            // -> returns null
-
+        store.set("exchangeRate", "1.10", 2);
+        store.set("exchangeRate", "1.12", 5);
+        store.set("exchangeRate", "1.14", 7);
+        store.set("exchangeRate", "1.19", 0);
+        return store;
     }
 }

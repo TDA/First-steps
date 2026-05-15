@@ -2,6 +2,14 @@ package OpenAI_Interviews;
 
 import java.util.*;
 
+import static OpenAI_Interviews.TestHelpers.assertEquals;
+import static OpenAI_Interviews.TestHelpers.assertFalse;
+import static OpenAI_Interviews.TestHelpers.assertKeys;
+import static OpenAI_Interviews.TestHelpers.assertNotNull;
+import static OpenAI_Interviews.TestHelpers.assertNull;
+import static OpenAI_Interviews.TestHelpers.assertTrue;
+import static OpenAI_Interviews.TestHelpers.runTest;
+
 // Problem Statement: Serializable Key-Value Store
 //Overview
 //
@@ -112,7 +120,6 @@ public class SerializedKVStore {
         boolean isKey = true;
         List<String> keys = new ArrayList<>();
         List<String> values = new ArrayList<>();
-        System.out.println("trimmed data: " + trimmedData);
         while (i < substringToParse.length()) {
             if (substringToParse.charAt(i) == '"') {
                 // if previous char was escapeChar, this should be skipped as well
@@ -157,23 +164,21 @@ public class SerializedKVStore {
     }
 
     public static void main(String[] args) {
-        testEmptyStore();
-        testPromptExample();
-        testSetGetOverwriteAndSortedKeys();
-        testDelete();
-        testSerializeProducesJsonForFullStore();
-        testDeserializeFromJson();
-        testDeserializeReplacesExistingData();
-        testEmptyStoreRoundTrip();
-        testValueContainingComma();
-        testValueContainingColon();
-        testValueContainingQuotes();
-        testKeyContainingSpecialCharacters();
-        testSingleEntry();
-        testEmptyStringValue();
-        testLargeRoundTrip();
-
-        System.out.println("All SerializedKVStore tests passed!");
+        runTest("empty store", SerializedKVStore::testEmptyStore);
+        runTest("prompt example", SerializedKVStore::testPromptExample);
+        runTest("set/get overwrite and sorted keys", SerializedKVStore::testSetGetOverwriteAndSortedKeys);
+        runTest("delete", SerializedKVStore::testDelete);
+        runTest("serialize produces json for full store", SerializedKVStore::testSerializeProducesJsonForFullStore);
+        runTest("deserialize from json", SerializedKVStore::testDeserializeFromJson);
+        runTest("deserialize replaces existing data", SerializedKVStore::testDeserializeReplacesExistingData);
+        runTest("empty store round trip", SerializedKVStore::testEmptyStoreRoundTrip);
+        runTest("value containing comma", SerializedKVStore::testValueContainingComma);
+        runTest("value containing colon", SerializedKVStore::testValueContainingColon);
+        runTest("value containing quotes", SerializedKVStore::testValueContainingQuotes);
+        runTest("key containing special characters", SerializedKVStore::testKeyContainingSpecialCharacters);
+        runTest("single entry", SerializedKVStore::testSingleEntry);
+        runTest("empty string value", SerializedKVStore::testEmptyStringValue);
+        runTest("large round trip", SerializedKVStore::testLargeRoundTrip);
     }
 
     // === Edge Case Tests ===
@@ -347,9 +352,7 @@ public class SerializedKVStore {
         store.set("region", "eu");
 
         String serialized = store.serialize();
-        System.out.println(serialized);
         Map<String, String> parsed = parseJsonObject(serialized);
-        System.out.println(parsed);
 
         assertEquals(2, parsed.size(), "serialize should include the full current store");
         assertEquals("dark", parsed.get("theme"), "serialize should include theme");
@@ -360,7 +363,6 @@ public class SerializedKVStore {
         SerializedKVStore store = new SerializedKVStore();
 
         store.deserialize("{\"theme\":\"dark\",\"region\":\"eu\"}");
-        System.out.println(store.sortedMap);
 
         assertEquals("dark", store.get("theme"), "deserialize should restore theme");
         assertEquals("eu", store.get("region"), "deserialize should restore region");
@@ -378,47 +380,10 @@ public class SerializedKVStore {
         assertKeys(store.keys(), List.of("fresh"), "keys should match the deserialized data only");
     }
 
-    private static void assertKeys(List<String> actual, List<String> expected, String message) {
-        if (actual == null) {
-            throw new AssertionError(message);
-        }
-        assertEquals(expected, actual, message);
-    }
-
     private static Map<String, String> parseJsonObject(String json) {
         assertNotNull(json, "serialize should not return null");
         JsonObjectParser parser = new JsonObjectParser(json);
         return parser.parse();
-    }
-
-    private static void assertEquals(Object expected, Object actual, String message) {
-        if (!Objects.equals(expected, actual)) {
-            throw new AssertionError(message + " - expected <" + expected + "> but got <" + actual + ">");
-        }
-    }
-
-    private static void assertNull(Object actual, String message) {
-        if (actual != null) {
-            throw new AssertionError(message + " - expected <null> but got <" + actual + ">");
-        }
-    }
-
-    private static void assertNotNull(Object actual, String message) {
-        if (actual == null) {
-            throw new AssertionError(message + " - expected non-null value");
-        }
-    }
-
-    private static void assertTrue(boolean actual, String message) {
-        if (!actual) {
-            throw new AssertionError(message + " - expected <true> but got <false>");
-        }
-    }
-
-    private static void assertFalse(boolean actual, String message) {
-        if (actual) {
-            throw new AssertionError(message + " - expected <false> but got <true>");
-        }
     }
 
     private static class JsonObjectParser {

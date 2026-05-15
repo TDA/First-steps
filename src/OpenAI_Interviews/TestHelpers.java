@@ -1,5 +1,7 @@
 package OpenAI_Interviews;
 
+import java.util.List;
+
 public class TestHelpers {
     @FunctionalInterface
     public interface TestCase {
@@ -24,9 +26,38 @@ public class TestHelpers {
         if (!condition) throw new AssertionError(message);
     }
 
+    public static void assertFalse(boolean condition, String message) {
+        if (condition) throw new AssertionError(message);
+    }
+
+    public static void assertEquals(Object expected, Object actual) {
+        assertEquals(expected, actual, "Values do not match");
+    }
+
     public static void assertEquals(Object expected, Object actual, String message) {
         if (expected == null ? actual != null : !expected.equals(actual)) {
             throw new AssertionError(message + " – expected: " + expected + ", actual: " + actual);
         }
+    }
+
+    public static void assertNull(Object actual, String message) {
+        if (actual != null) {
+            throw new AssertionError(message + " – expected null, actual: " + actual);
+        }
+    }
+
+    public static void assertNotNull(Object actual, String message) {
+        if (actual == null) {
+            throw new AssertionError(message + " – expected non-null value");
+        }
+    }
+
+    public static void assertRows(List<List<String>> expected, List<List<String>> actual) {
+        assertEquals(expected, actual, "Rows do not match");
+    }
+
+    public static void assertKeys(List<String> actual, List<String> expected, String message) {
+        assertNotNull(actual, message);
+        assertEquals(expected, actual, message);
     }
 }

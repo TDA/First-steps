@@ -18,6 +18,10 @@ import fb_recent.NestedInteger;
 
 import java.util.*;
 
+import static OpenAI_Interviews.TestHelpers.assertEquals;
+import static OpenAI_Interviews.TestHelpers.assertTrue;
+import static OpenAI_Interviews.TestHelpers.runTest;
+
 record ListSnapshot(List<NestedInteger> nestedIntegerList, int index) {
 }
 
@@ -90,15 +94,7 @@ public class SerializedFlattenNestedIterator implements Iterator<Integer> {
         }
     }
 
-    @FunctionalInterface
-    private interface TestCase {
-        void run();
-    }
-
-    private static int testsRun = 0;
-    private static int testsPassed = 0;
-
-    static void main(String[] args) {
+    public static void main(String[] args) {
         runTest("simple flat list", () -> {
             List<NestedInteger> list = new ArrayList<>();
             list.add(new NestedInteger(1));
@@ -197,19 +193,13 @@ public class SerializedFlattenNestedIterator implements Iterator<Integer> {
             int first = it.next();
             assertEquals(1, first, "first element");
 
-            // Pause the iterator
-            System.out.println("----Before pausing------");
-            System.out.println(it.stackholder);
             List<Integer> positions = it.pause();
-            System.out.println(positions);
 
             // After pausing, stack is cleared, so no possible iterations
             assertTrue(!it.hasNext(), "should not have next after pause");
 
             // Resume and finish
             it.resume(positions);
-            System.out.println("----After resuming------");
-            System.out.println(it.stackholder);
 
             assertTrue(it.hasNext(), "has next after resume");
             int second = it.next();
@@ -234,42 +224,13 @@ public class SerializedFlattenNestedIterator implements Iterator<Integer> {
             assertEquals(1, it.next(), "first");
             assertEquals(2, it.next(), "second");
 
-            System.out.println("----Before pausing------");
-            System.out.println(it.stackholder);
-            // Pause now
             List<Integer> positions = it.pause();
-            System.out.println(it.stackholder);
 
             // Resume and consume the rest
             it.resume(positions);
-            System.out.println("----After resuming------");
-            System.out.println(it.stackholder);
             assertTrue(it.hasNext(), "has elements after resume");
             assertEquals(3, it.next(), "third after resume");
             assertTrue(!it.hasNext(), "no more elements after resume");
         });
-
-        System.out.println("\nPassed " + testsPassed + " / " + testsRun + " tests.");
-    }
-
-    private static void runTest(String name, TestCase testCase) {
-        testsRun++;
-        try {
-            testCase.run();
-            testsPassed++;
-            System.out.println("[PASS] " + name);
-        } catch (AssertionError e) {
-            System.err.println("[FAIL] " + name + ": " + e.getMessage());
-        }
-    }
-
-    private static void assertTrue(boolean condition, String message) {
-        if (!condition) throw new AssertionError(message);
-    }
-
-    private static void assertEquals(Object expected, Object actual, String message) {
-        if (expected == null ? actual != null : !expected.equals(actual)) {
-            throw new AssertionError(message + " – expected: " + expected + ", actual: " + actual);
-        }
     }
 }
