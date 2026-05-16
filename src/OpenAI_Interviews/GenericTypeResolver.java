@@ -63,50 +63,112 @@ package OpenAI_Interviews;
 //    A generic variable must resolve consistently everywhere it appears in the same call.
 //    Type resolution must distinguish between primitive types and tuple structure.
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static OpenAI_Interviews.TestHelpers.assertEquals;
 import static OpenAI_Interviews.TestHelpers.assertTrue;
 import static OpenAI_Interviews.TestHelpers.runTest;
 
+
+interface Type {
+    List<Type> getItems();
+}
+record PrimitiveType (String name) implements Type {
+    @Override
+    public String toString() {
+        return name;
+    }
+
+    @Override
+    public List<Type> getItems() {
+        return null;
+    }
+}
+record GenericType (String name) implements Type {
+    @Override
+    public String toString() {
+        return name;
+    }
+    @Override
+    public List<Type> getItems() {
+        return null;
+    }
+}
+record TupleType (List<Type> items) implements Type {
+    @Override
+    public String toString() {
+        return items.toString();
+    }
+    @Override
+    public List<Type> getItems() {
+        return items;
+    }
+}
+
+record FunctionSignature(List<Type> parameterTypes, Type returnType) {}
+
 public class GenericTypeResolver {
-    // Helper methods, not the point of the interview - skip these.
-    Type primitive(String name) {
-        switch (name) {
-            case "int":
-                // fall through
-            case "float":
-                // fall through
-            case "str":
-                // fall through
-            case "bool":
-                return new PrimitiveType(name);
-            default:
-                throw new IllegalArgumentException("Not a primitive");
-        }
+    Map<String, Type> resolvedTypes = new HashMap<>();
+
+    public GenericTypeResolver() {
+        this.resolvedTypes.put("int", new PrimitiveType("int"));
+        this.resolvedTypes.put("float", new PrimitiveType("float"));
+        this.resolvedTypes.put("str", new PrimitiveType("str"));
+        this.resolvedTypes.put("bool", new PrimitiveType("bool"));
     }
 
-    // Helper methods, not the point of the interview - skip these.
-    Type generic(String name) {
-        try {
-            primitive(name);
-            return null;
-        } catch (IllegalArgumentException iae) {
-            return new GenericType(name);
-        }
-    }
 
-    // Helper methods, not the point of the interview - skip these.
-    Type tuple(List<Type> elements) {
-        return new TupleType(elements);
-    }
-
-    FunctionSignature function(List<Type> parameterTypes, Type returnType) {
-        return null;
-    }
-
+    // This is the actual method to implement
     Type resolveReturnType(FunctionSignature signature, List<Type> argumentTypes) {
-        return null;
+        var declaredTypes = signature.parameterTypes();
+        if (declaredTypes.size() != argumentTypes.size()) throw new IllegalArgumentException("Argument lengths do not match");
+        // Build map first, everything else is just string comparison
+
+        var flattenedDeclaredTypes = flattenTypes(declaredTypes);
+        var flattenedActualTypes = flattenTypes(argumentTypes);
+
+        if (flattenedDeclaredTypes.size() != flattenedActualTypes.size()) throw new IllegalArgumentException("Different number of types passed in");
+
+        for (int i = 0; i < flattenedActualTypes.size(); i++) {
+            var declaredType = flattenedDeclaredTypes.get(i);
+            var declaredTypeString = declaredType.toString();
+            var actualType = flattenedActualTypes.get(i);
+
+            //  resolve actual and store this for future rounds
+            resolvedTypes.putIfAbsent(declaredTypeString, actualType);
+
+            // for both Primitive and Generic, these need to match
+            if (!actualType.equals(resolvedTypes.get(declaredTypeString))) throw new  IllegalArgumentException("Conflicting Generic type assignments");
+        }
+
+        if (signature.returnType().getItems() == null) {
+            return resolvedTypes.get(signature.returnType().toString());
+        } else {
+            // Tuple, needs to construct return type
+            List<Type> finalTypes = new ArrayList<>();
+            for (var t : signature.returnType().getItems()) {
+                finalTypes.add(resolvedTypes.get(t.toString()));
+            }
+            return new TupleType(finalTypes);
+        }
+
+
+    }
+
+    List<Type> flattenTypes(List<Type> inputTypes) {
+        List<Type> types = new ArrayList<>();
+        for (var type : inputTypes) {
+            if (type.getItems() == null) {
+                types.add(type);
+            } else {
+                // recursively build types
+                types.addAll(flattenTypes(type.getItems()));
+            }
+        }
+        return types;
     }
 
     public static void main(String[] args) {
@@ -229,14 +291,30 @@ public class GenericTypeResolver {
         }
         assertTrue(threw, "Expected IllegalArgumentException");
     }
-}
+    // Helper methods, not the point of the interview - skip these.
+    private Type primitive(String name) {
+        return switch (name) {
+            case "int", "float", "str", "bool" -> new PrimitiveType(name);
+            default -> null;
+        };
+    }
 
-interface Type {
-}
+    // Helper methods, not the point of the interview - skip these.
+    private Type generic(String name) {
+        if (primitive(name) == null) {
+            return new GenericType(name);
+        } else {
+            return null;
+        }
+    }
 
-record PrimitiveType (String name) implements Type {}
-record GenericType (String name) implements Type {}
-record TupleType (List<Type> items) implements Type {}
+    // Helper methods, not the point of the interview - skip these.
+    private Type tuple(Type... elements) {
+        List<Type> items = List.of(elements);
+        return new TupleType(items);
+    }
 
-record FunctionSignature(List<Type> parameterTypes, Type returnType) {
+    private FunctionSignature function(List<Type> parameterTypes, Type returnType) {
+        return new FunctionSignature(parameterTypes, returnType);
+    }
 }
