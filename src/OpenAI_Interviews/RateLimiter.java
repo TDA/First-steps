@@ -20,7 +20,7 @@ import static OpenAI_Interviews.TestHelpers.assertFalse;
 import static OpenAI_Interviews.TestHelpers.assertTrue;
 import static OpenAI_Interviews.TestHelpers.runTest;
 
-record Limit (Integer requestsAllowed, Integer interval) {}
+record Limit (Integer requestsAllowed, Integer interval, Integer allowedCost) {}
 public class RateLimiter {
     private static final Integer SECONDS_TO_MILLIS = 1000;
     // Assume this is statically passed in or is available from a config service to inject into our class.
@@ -58,7 +58,7 @@ public class RateLimiter {
     public static void main(String[] args) {
         runTest("allows requests below the client limit", () -> {
             RateLimiter limiter = new RateLimiter(Map.of(
-                    "client-a", new Limit(3, 10)
+                    "client-a", new Limit(3, 10, 3)
             ));
 
             assertTrue(limiter.allowRequest("client-a", 0), "first request should be allowed");
@@ -68,7 +68,7 @@ public class RateLimiter {
 
         runTest("blocks requests over the client limit within the window", () -> {
             RateLimiter limiter = new RateLimiter(Map.of(
-                    "client-a", new Limit(3, 10)
+                    "client-a", new Limit(3, 10, 3)
             ));
 
             assertTrue(limiter.allowRequest("client-a", 0), "first request should be allowed");
@@ -79,7 +79,7 @@ public class RateLimiter {
 
         runTest("allows requests again after old timestamps leave the sliding window", () -> {
             RateLimiter limiter = new RateLimiter(Map.of(
-                    "client-a", new Limit(3, 10)
+                    "client-a", new Limit(3, 10, 3)
             ));
 
             assertTrue(limiter.allowRequest("client-a", 0), "first request should be allowed");
@@ -91,8 +91,8 @@ public class RateLimiter {
 
         runTest("tracks clients independently", () -> {
             RateLimiter limiter = new RateLimiter(Map.of(
-                    "client-a", new Limit(2, 10),
-                    "client-b", new Limit(2, 10)
+                    "client-a", new Limit(2, 10, 2),
+                    "client-b", new Limit(2, 10, 2)
             ));
 
             assertTrue(limiter.allowRequest("client-a", 0), "client-a first request should be allowed");
@@ -106,8 +106,8 @@ public class RateLimiter {
 
         runTest("supports different limits per client", () -> {
             RateLimiter limiter = new RateLimiter(Map.of(
-                    "free-client", new Limit(1, 10),
-                    "paid-client", new Limit(3, 10)
+                    "free-client", new Limit(1, 10, 1),
+                    "paid-client", new Limit(3, 10, 3)
             ));
 
             assertTrue(limiter.allowRequest("free-client", 0), "free client first request should be allowed");
@@ -121,7 +121,7 @@ public class RateLimiter {
 
         runTest("blocks unknown clients", () -> {
             RateLimiter limiter = new RateLimiter(Map.of(
-                    "client-a", new Limit(3, 10)
+                    "client-a", new Limit(3, 10, 3)
             ));
 
             assertFalse(limiter.allowRequest("missing-client", 0), "unknown clients should be blocked");

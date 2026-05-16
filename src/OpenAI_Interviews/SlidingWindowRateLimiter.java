@@ -12,16 +12,13 @@ package OpenAI_Interviews;
 //Distributed rate limiter (Redis-like, mention Lua scripting for atomicity)
 //Weighted requests (different endpoints cost different tokens)
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static OpenAI_Interviews.TestHelpers.assertFalse;
 import static OpenAI_Interviews.TestHelpers.assertTrue;
 import static OpenAI_Interviews.TestHelpers.runTest;
 
-record Request(int timestamp) {}
+record Request(int timestamp, int cost) {}
 
 public class SlidingWindowRateLimiter {
     private static final Integer SECONDS_IN_MILLIS = 1000;
@@ -51,7 +48,35 @@ public class SlidingWindowRateLimiter {
             return false;
         }
         // below capacity: add the new request and return true
-        requests.add(new Request(timestampMs));
+        requests.add(new Request(timestampMs, 1));
+        clientRequests.put(clientId, requests);
+        return true;
+    }
+
+    boolean allowRequest(String clientId, int timestampMs, int cost) {
+        var config = clientConfigs.get(clientId);
+        // Reject unknown clients
+        if (config == null) return false;
+        var requestsAllowed = config.requestsAllowed();
+        var interval = config.interval() * SECONDS_IN_MILLIS;
+        var allowedCost = config.allowedCost();
+
+        var requests = clientRequests.getOrDefault(clientId, new ArrayDeque<>());
+
+        while (!requests.isEmpty()) {
+            var earliest = requests.peek();
+            if (earliest == null) break;
+            if ((timestampMs - earliest.timestamp()) >= interval) {
+                requests.poll();
+            } else {
+                break;
+            }
+        }
+        Integer totalCost = requests.stream().map(Request::cost).reduce(Integer::sum).orElse(0);
+        if (requests.size() >= requestsAllowed || (totalCost + cost) > allowedCost) {
+            return false;
+        }
+        requests.add(new Request(timestampMs, cost));
         clientRequests.put(clientId, requests);
         return true;
     }
@@ -59,7 +84,7 @@ public class SlidingWindowRateLimiter {
     public static void main(String[] args) {
         runTest("allows requests below the client limit", () -> {
             SlidingWindowRateLimiter limiter = new SlidingWindowRateLimiter(Map.of(
-                    "client-a", new Limit(3, 10)
+                    "client-a", new Limit(3, 10, 3)
             ));
 
             assertTrue(limiter.allowRequest("client-a", 0), "first request should be allowed");
@@ -69,7 +94,7 @@ public class SlidingWindowRateLimiter {
 
         runTest("counts multiple requests in the same second independently", () -> {
             SlidingWindowRateLimiter limiter = new SlidingWindowRateLimiter(Map.of(
-                    "client-a", new Limit(3, 10)
+                    "client-a", new Limit(3, 10, 3)
             ));
 
             assertTrue(limiter.allowRequest("client-a", 5_000), "first request at same timestamp should be allowed");
@@ -80,7 +105,7 @@ public class SlidingWindowRateLimiter {
 
         runTest("uses exact millisecond timestamps instead of rounded second buckets", () -> {
             SlidingWindowRateLimiter limiter = new SlidingWindowRateLimiter(Map.of(
-                    "client-a", new Limit(1, 1)
+                    "client-a", new Limit(1, 1, 1)
             ));
 
             assertTrue(limiter.allowRequest("client-a", 999), "first request should be allowed");
@@ -90,7 +115,7 @@ public class SlidingWindowRateLimiter {
 
         runTest("allows requests again when old timestamps leave the sliding window", () -> {
             SlidingWindowRateLimiter limiter = new SlidingWindowRateLimiter(Map.of(
-                    "client-a", new Limit(3, 10)
+                    "client-a", new Limit(3, 10, 3)
             ));
 
             assertTrue(limiter.allowRequest("client-a", 0), "first request should be allowed");
@@ -102,7 +127,7 @@ public class SlidingWindowRateLimiter {
 
         runTest("rejected requests do not consume future capacity", () -> {
             SlidingWindowRateLimiter limiter = new SlidingWindowRateLimiter(Map.of(
-                    "client-a", new Limit(2, 10)
+                    "client-a", new Limit(2, 10, 2)
             ));
 
             assertTrue(limiter.allowRequest("client-a", 0), "first request should be allowed");
@@ -114,8 +139,8 @@ public class SlidingWindowRateLimiter {
 
         runTest("tracks clients independently", () -> {
             SlidingWindowRateLimiter limiter = new SlidingWindowRateLimiter(Map.of(
-                    "client-a", new Limit(2, 10),
-                    "client-b", new Limit(2, 10)
+                    "client-a", new Limit(2, 10, 2),
+                    "client-b", new Limit(2, 10, 2)
             ));
 
             assertTrue(limiter.allowRequest("client-a", 0), "client-a first request should be allowed");
@@ -129,10 +154,50 @@ public class SlidingWindowRateLimiter {
 
         runTest("blocks unknown clients", () -> {
             SlidingWindowRateLimiter limiter = new SlidingWindowRateLimiter(Map.of(
-                    "client-a", new Limit(3, 10)
+                    "client-a", new Limit(3, 10, 3)
             ));
 
             assertFalse(limiter.allowRequest("missing-client", 0), "unknown clients should be blocked");
+        });
+
+        runTest("weighted requests allow cost up to the configured budget", () -> {
+            SlidingWindowRateLimiter limiter = new SlidingWindowRateLimiter(Map.of(
+                    "client-a", new Limit(10, 10, 5)
+            ));
+
+            assertTrue(limiter.allowRequest("client-a", 0, 2), "cost 2 should be allowed");
+            assertTrue(limiter.allowRequest("client-a", 1_000, 3), "cost 3 should fill the budget exactly");
+            assertFalse(limiter.allowRequest("client-a", 2_000, 1), "additional cost should be blocked when budget is full");
+        });
+
+        runTest("weighted requests block when incoming cost exceeds remaining budget", () -> {
+            SlidingWindowRateLimiter limiter = new SlidingWindowRateLimiter(Map.of(
+                    "client-a", new Limit(10, 10, 5)
+            ));
+
+            assertTrue(limiter.allowRequest("client-a", 0, 4), "cost 4 should be allowed");
+            assertFalse(limiter.allowRequest("client-a", 1_000, 2), "cost 2 should be blocked because only 1 budget remains");
+            assertTrue(limiter.allowRequest("client-a", 2_000, 1), "cost 1 should still fit remaining budget");
+        });
+
+        runTest("weighted requests expire old costs from the budget", () -> {
+            SlidingWindowRateLimiter limiter = new SlidingWindowRateLimiter(Map.of(
+                    "client-a", new Limit(10, 10, 5)
+            ));
+
+            assertTrue(limiter.allowRequest("client-a", 0, 5), "initial full-budget request should be allowed");
+            assertFalse(limiter.allowRequest("client-a", 9_999, 1), "new cost should be blocked before old cost expires");
+            assertTrue(limiter.allowRequest("client-a", 10_000, 5), "full budget should be available after old cost expires");
+        });
+
+        runTest("rejected weighted requests do not consume budget", () -> {
+            SlidingWindowRateLimiter limiter = new SlidingWindowRateLimiter(Map.of(
+                    "client-a", new Limit(10, 10, 5)
+            ));
+
+            assertTrue(limiter.allowRequest("client-a", 0, 4), "cost 4 should be allowed");
+            assertFalse(limiter.allowRequest("client-a", 1_000, 2), "cost 2 should be rejected");
+            assertTrue(limiter.allowRequest("client-a", 2_000, 1), "rejected request should not consume the final budget unit");
         });
     }
 }
