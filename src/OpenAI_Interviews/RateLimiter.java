@@ -1,7 +1,7 @@
 package OpenAI_Interviews;
 
 
-// Full Problem: Implement a rate limiter that allows at most N requests per T seconds per client.
+// Full Problem: Implement a rate limiter that allows at most N requests per T interval per client.
 //
 //Interface:
 //
@@ -20,7 +20,7 @@ import static OpenAI_Interviews.TestHelpers.assertFalse;
 import static OpenAI_Interviews.TestHelpers.assertTrue;
 import static OpenAI_Interviews.TestHelpers.runTest;
 
-record Limit (Integer requestsAllowed, Integer seconds) {}
+record Limit (Integer requestsAllowed, Integer interval) {}
 public class RateLimiter {
     private static final Integer SECONDS_TO_MILLIS = 1000;
     // Assume this is statically passed in or is available from a config service to inject into our class.
@@ -31,14 +31,14 @@ public class RateLimiter {
         this.clientConfigs = configs;
     }
 
-    // A major assumption here is that timestamp seconds is discrete integer numbers. if instead we went to milliseconds
-    // or floating point for timestamp seconds this particular implementation of sliding window will stop working.
+    // A major assumption here is that timestamp interval is discrete integer numbers. if instead we went to milliseconds
+    // or floating point for timestamp interval this particular implementation of sliding window will stop working.
     boolean allowRequest(String clientId, int timestampSeconds) {
         var clientConfig = clientConfigs.get(clientId);
         if (clientConfig == null) return false;
         // Sliding window checks
         var limit = clientConfig.requestsAllowed();
-        var interval = clientConfig.seconds();
+        var interval = clientConfig.interval();
 
         int counter = 0;
         for (int i = (timestampSeconds - interval + 1); i <= timestampSeconds; i++) {

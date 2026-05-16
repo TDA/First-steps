@@ -6,7 +6,7 @@ package OpenAI_Interviews;
 //Core requirements:
 //
 //put(key, value) — store a key-value pair
-//put(key, value, ttl) — store with time-to-live in seconds
+//put(key, value, ttl) — store with time-to-live in interval
 //get(key) — return value if exists and not expired, else null
 //delete(key) — remove a key
 //
@@ -82,7 +82,7 @@ public class AutoExpiringKeyValueStore {
     // Three things we can suggest trading off:
     // 1. Lazy cleanup - we cleanup when we get a .get() that results in an expired item. This changes get from O(1) -> O(log n) for the heap removal/rebalance.
     // 2. Active cleanup on every put - call cleanup on insert.  This changes put from O(log n) -> O(n) for the heap addition/rebalance.
-    // 3. [Recommended] Cleanup is separate thread, running every X seconds - This is likely what we would do in a production setting where cleanup is run in a separate thread or even a separate service that goes and removes items that have expired. This will keep get and put super fast while allowing clean up on a regular basis. We can still soft-delete on get() returning null.
+    // 3. [Recommended] Cleanup is separate thread, running every X interval - This is likely what we would do in a production setting where cleanup is run in a separate thread or even a separate service that goes and removes items that have expired. This will keep get and put super fast while allowing clean up on a regular basis. We can still soft-delete on get() returning null.
     private void cleanup() {
         var expiredItemsAvailable = !orderedKeyValuePairs.isEmpty();
         while (expiredItemsAvailable) {
