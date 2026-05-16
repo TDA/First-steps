@@ -38,7 +38,9 @@ package OpenAI_Interviews;
 //Collaborative editing (operational transform — discussion only)
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
+import java.util.List;
 
 import static OpenAI_Interviews.TestHelpers.assertEquals;
 import static OpenAI_Interviews.TestHelpers.runTest;
@@ -98,10 +100,12 @@ public class TextEditorWithUndoRedo {
         doAction("redo");
     }
 
-    void beginBatch() {
+    void beginBatch(String batchName) {
+        undoStack.push(new Command("batch-begin", batchName, 0, 0));
     }
 
-    void endBatch() {
+    void endBatch(String batchName) {
+        undoStack.push(new Command("batch-end", batchName, 0, 0));
     }
 
     void doAction(String action) {
@@ -136,9 +140,42 @@ public class TextEditorWithUndoRedo {
                 applyDelete(startPosition, endPosition);
                 stackToPush.push(new Command("insert", text, startPosition, endPosition));
                 break;
+            case "batch-end":
+                // implement batch undo or redo logic
+                performBatchOperation(popped.text(), stackToPop, stackToPush);
+                break;
             default:
                 throw new IllegalArgumentException("Invalid command name found");
         }
+    }
+
+    private void performBatchOperation(String batchName, Deque<Command> stackToPop, Deque<Command> stackToPush) {
+        // collect all actions in this batch and then undo / redo them
+        List<Command> commandsToPerform = new ArrayList<>();
+        if (stackToPop.isEmpty()) return;
+        Command nextCommand = stackToPop.pop();
+        while (nextCommand != null && !(nextCommand.command().equals("batch-begin") && nextCommand.text().equals(batchName))) {
+            // pop till we find the batch-begin
+            switch (nextCommand.command()) {
+                case "insert":
+                    applyInsert(nextCommand.startIndex(), nextCommand.text());
+                    commandsToPerform.add(new Command("delete", nextCommand.text(), nextCommand.startIndex(), nextCommand.endIndex()));
+                    break;
+                case "delete":
+                    applyDelete(nextCommand.startIndex(), nextCommand.endIndex());
+                    commandsToPerform.add(new Command("insert", nextCommand.text(), nextCommand.startIndex(), nextCommand.endIndex()));
+                    break;
+                default:
+                    throw new IllegalArgumentException("Invalid command name found");
+            }
+            nextCommand = stackToPop.pop();
+        }
+        // Collected all items.
+        stackToPush.push(nextCommand);
+        for (var c : commandsToPerform) {
+            stackToPush.push(c);
+        }
+        stackToPush.push(new Command("batch-end", batchName, 0, 0));
     }
 
 
@@ -247,11 +284,11 @@ public class TextEditorWithUndoRedo {
         runTest("batch undo reverses grouped edits as one operation", () -> {
             TextEditorWithUndoRedo editor = new TextEditorWithUndoRedo();
 
-            editor.beginBatch();
+            editor.beginBatch("batch-A");
             editor.insert("hello");
             editor.insert(" ");
             editor.insert("world");
-            editor.endBatch();
+            editor.endBatch("batch-A");
 
             assertEquals("hello world", editor.getText());
             editor.undo();
@@ -261,15 +298,15 @@ public class TextEditorWithUndoRedo {
         runTest("batch redo reapplies grouped edits as one operation", () -> {
             TextEditorWithUndoRedo editor = new TextEditorWithUndoRedo();
 
-            editor.beginBatch();
+            editor.beginBatch("batch-A");
             editor.insert("hello");
             editor.insert(" ");
             editor.insert("world");
-            editor.endBatch();
+            editor.endBatch("batch-A");
             editor.undo();
 
+            assertEquals("", editor.getText());
             editor.redo();
-
             assertEquals("hello world", editor.getText());
         });
 
@@ -277,11 +314,11 @@ public class TextEditorWithUndoRedo {
             TextEditorWithUndoRedo editor = new TextEditorWithUndoRedo();
             editor.insert("prefix ");
 
-            editor.beginBatch();
+            editor.beginBatch("batch-A");
             editor.insert("hello");
             editor.insert(" ");
             editor.insert("world");
-            editor.endBatch();
+            editor.endBatch("batch-A");
 
             editor.undo();
 
