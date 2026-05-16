@@ -20,11 +20,10 @@ class CacheObject {
     CacheObject previous;
     CacheObject next;
 
-    public CacheObject(String key, String value, long lastUsed, CacheObject previous) {
+    public CacheObject(String key, String value, long lastUsed) {
         this.key = key;
         this.value = value;
         this.lastUsed = lastUsed;
-        this.previous = previous;
     }
 
     public String getKey() {
@@ -33,10 +32,6 @@ class CacheObject {
 
     String getValue() {
         return this.value;
-    }
-
-    long getLastUsed() {
-        return this.lastUsed;
     }
 
     public void setLastUsed(long l) {
@@ -51,9 +46,22 @@ class CacheObject {
     public void setValue(String value) {
         this.value = value;
     }
+    // These are going to be helpful methods to simplify the edge case's handling.
+    public void remove() {
+        this.previous.next = this.next;
+        this.next.previous = this.previous;
+    }
+
+    public void addToEnd(CacheObject TAIL) {
+        var prev = TAIL.previous;
+
+        prev.next = this;
+        this.previous = prev;
+        this.next = TAIL;
+        TAIL.previous = this;
+    }
 }
 
-// Starting optimal soln at 8.28
 // The idea is that we keep a linear record of every put insertion and get operation.
 // whenever there is a new insertion or a get operation, we bump the lastUsed of that object
 // and put it in the linear record. the list will keep expanding building till capacity is hit.
@@ -61,13 +69,19 @@ class CacheObject {
 // monotonically increasing in terms of operations.
 public class LRUCache {
     Map<String, CacheObject> cacheEntries = new HashMap<>();
-    CacheObject mostRecentlyUsed;
-    CacheObject leastRecentlyUsed;
+    CacheObject DUMMY_HEAD;
+    CacheObject DUMMY_TAIL;
     int capacity;
     long internalClock;
 
     public LRUCache(int capacity) {
         this.capacity = capacity;
+         DUMMY_HEAD = new CacheObject("DUMMY_HEAD", null, 0);
+         DUMMY_TAIL = new CacheObject("DUMMY_TAIL", null, 0);
+         DUMMY_TAIL.previous = DUMMY_HEAD;
+         DUMMY_TAIL.next = null;
+         DUMMY_HEAD.next = DUMMY_TAIL;
+         DUMMY_HEAD.previous = null;
     }
 
     String get (String key) {
@@ -76,70 +90,32 @@ public class LRUCache {
         // refresh lastUsed
         cacheObject.setLastUsed(internalClock++);
 
-        if (cacheObject.next != null)
-            cacheObject.next.previous = cacheObject.previous;
-        if (cacheObject.previous != null)
-            cacheObject.previous.next = cacheObject.next;
-
-        if (leastRecentlyUsed == cacheObject && cacheObject.next != null) {
-            leastRecentlyUsed = cacheObject.next;
-        }
-        // insert at the tail of the list
-        if (mostRecentlyUsed != cacheObject) {
-            cacheObject.previous = mostRecentlyUsed;
-            cacheObject.next = null;
-            mostRecentlyUsed.next = cacheObject;
-            mostRecentlyUsed = cacheObject;
-        }
+        // Refresh - remove from current spot and move to end
+        cacheObject.remove();
+        cacheObject.addToEnd(DUMMY_TAIL);
 
         cacheEntries.put(cacheObject.getKey(), cacheObject);
         return cacheObject.getValue();
     }
 
     void put (String key, String value) {
-        CacheObject c;
-        if (cacheEntries.get(key) != null) {
-            c = cacheEntries.get(key);
-
-            if (leastRecentlyUsed == c && c.next != null) {
-                leastRecentlyUsed = c.next;
-            }
-            // Need to update these two to know the next items
-            // All of these are O(1) ops individually
-            if (c.next != null)
-                c.next.previous = c.previous;
-            if (c.previous != null)
-                c.previous.next = c.next;
-
-            // update recency
-            c.setLastUsed(internalClock++);
-            // update links
-            c.next = null;
-            c.previous = mostRecentlyUsed;
-            mostRecentlyUsed.next = c;
-
-            // update this to be most recent
-            mostRecentlyUsed = c;
-            c.setValue(value);
-        } else {
+        CacheObject c = cacheEntries.get(key);
+        if (c == null) {
             // new object
-            c = new CacheObject(key, value, internalClock++, mostRecentlyUsed);
-            if (mostRecentlyUsed != null) {
-                mostRecentlyUsed.next = c;
-                mostRecentlyUsed = c;
-            }
+            c = new CacheObject(key, value, internalClock++);
+        } else {
+            // existing item, just update values and remove from list - we will add it back
+            c.setValue(value);
+            c.setLastUsed(internalClock++);
+            c.remove();
         }
+        c.addToEnd(DUMMY_TAIL);
         cacheEntries.put(key, c);
-        if (cacheEntries.size() == 1) {
-            leastRecentlyUsed = c;
-            mostRecentlyUsed = c;
-        }
+
         if (cacheEntries.size() > capacity) {
             // update links
-            cacheEntries.remove(leastRecentlyUsed.getKey());
-            var newLeastRecentlyUsed = leastRecentlyUsed.next;
-            newLeastRecentlyUsed.previous = null;
-            leastRecentlyUsed = newLeastRecentlyUsed;
+            cacheEntries.remove(DUMMY_HEAD.next.getKey());
+            DUMMY_HEAD.next.remove();
         }
     }
 
