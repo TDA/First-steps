@@ -63,6 +63,7 @@ package OpenAI_Interviews;
 //    A generic variable must resolve consistently everywhere it appears in the same call.
 //    Type resolution must distinguish between primitive types and tuple structure.
 
+import javax.lang.model.element.TypeElement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -111,64 +112,72 @@ record TupleType (List<Type> items) implements Type {
 record FunctionSignature(List<Type> parameterTypes, Type returnType) {}
 
 public class GenericTypeResolver {
-    Map<String, Type> resolvedTypes = new HashMap<>();
-
-    public GenericTypeResolver() {
-        this.resolvedTypes.put("int", new PrimitiveType("int"));
-        this.resolvedTypes.put("float", new PrimitiveType("float"));
-        this.resolvedTypes.put("str", new PrimitiveType("str"));
-        this.resolvedTypes.put("bool", new PrimitiveType("bool"));
-    }
-
 
     // This is the actual method to implement
     Type resolveReturnType(FunctionSignature signature, List<Type> argumentTypes) {
+        Map<String, Type> resolvedTypes = new HashMap<>();
         var declaredTypes = signature.parameterTypes();
         if (declaredTypes.size() != argumentTypes.size()) throw new IllegalArgumentException("Argument lengths do not match");
-        // Build map first, everything else is just string comparison
 
-        var flattenedDeclaredTypes = flattenTypes(declaredTypes);
-        var flattenedActualTypes = flattenTypes(argumentTypes);
+        for (int i = 0; i < declaredTypes.size(); i++) {
+            var declaredType = declaredTypes.get(i);
+            var actualType = argumentTypes.get(i);
 
-        if (flattenedDeclaredTypes.size() != flattenedActualTypes.size()) throw new IllegalArgumentException("Different number of types passed in");
-
-        for (int i = 0; i < flattenedActualTypes.size(); i++) {
-            var declaredType = flattenedDeclaredTypes.get(i);
-            var declaredTypeString = declaredType.toString();
-            var actualType = flattenedActualTypes.get(i);
-
-            //  resolve actual and store this for future rounds
-            resolvedTypes.putIfAbsent(declaredTypeString, actualType);
-
-            // for both Primitive and Generic, these need to match
-            if (!actualType.equals(resolvedTypes.get(declaredTypeString))) throw new  IllegalArgumentException("Conflicting Generic type assignments");
+            if (!match(declaredType, actualType, resolvedTypes)) {
+                throw new IllegalArgumentException("Conflicting Generic type assignments");
+            }
         }
 
-        if (signature.returnType().getItems() == null) {
-            return resolvedTypes.get(signature.returnType().toString());
+        return getReturnType(signature.returnType(), resolvedTypes);
+    }
+
+    private Type getReturnType(Type type, Map<String, Type> resolvedTypes) {
+        if (type instanceof PrimitiveType) return type;
+        if (type instanceof GenericType) {
+            return resolvedTypes.get(type.toString());
         } else {
-            // Tuple, needs to construct return type
+            // Tuple types, can be nested
             List<Type> finalTypes = new ArrayList<>();
-            for (var t : signature.returnType().getItems()) {
-                finalTypes.add(resolvedTypes.get(t.toString()));
+            for (var t : type.getItems()) {
+                finalTypes.add(getReturnType(t, resolvedTypes));
             }
             return new TupleType(finalTypes);
         }
-
-
     }
 
-    List<Type> flattenTypes(List<Type> inputTypes) {
-        List<Type> types = new ArrayList<>();
-        for (var type : inputTypes) {
-            if (type.getItems() == null) {
-                types.add(type);
-            } else {
-                // recursively build types
-                types.addAll(flattenTypes(type.getItems()));
-            }
+    boolean match (Type declaredType, Type actualType, Map<String, Type> resolvedTypes) {
+        if (declaredType instanceof PrimitiveType) {
+            // primitive type, should be exact match
+            return declaredType.equals(actualType);
         }
-        return types;
+
+        if (declaredType instanceof TupleType) {
+            var subtypes = declaredType.getItems();
+            var actualSubtypes = actualType.getItems();
+            if (subtypes != null) {
+                // the actual type needs to be a tuple as well
+                if (actualSubtypes == null) return false;
+                // tuple type, check for length first before recursing
+                if (subtypes.size() != actualType.getItems().size()) {
+                    return false;
+                }
+                for (int i = 0; i < subtypes.size(); i++) {
+                    if (!match(subtypes.get(i), actualSubtypes.get(i), resolvedTypes)) {
+                        return false;
+                    }
+                }
+            }
+        } else if (declaredType instanceof GenericType) {
+            // Generic types, need to check map
+            // check if we have seen and stored this before, if so, check for mismatch
+            Type resolvedType = resolvedTypes.get(declaredType.toString());
+            if (resolvedType != null)
+                return resolvedType.equals(actualType);
+            //  resolve actual and store this for future rounds
+            resolvedTypes.put(declaredType.toString(), actualType);
+            return true;
+        }
+        return true;
     }
 
     public static void main(String[] args) {
@@ -207,6 +216,20 @@ public class GenericTypeResolver {
                     resolver.primitive("int"),
                     resolver.resolveReturnType(identity, List.of(resolver.primitive("int"))),
                     "T should resolve to int"
+            );
+        });
+
+        runTest("resolves concrete primitive return type", () -> {
+            GenericTypeResolver resolver = new GenericTypeResolver();
+            FunctionSignature signature = resolver.function(
+                    List.of(resolver.primitive("int")),
+                    resolver.primitive("bool")
+            );
+
+            assertEquals(
+                    resolver.primitive("bool"),
+                    resolver.resolveReturnType(signature, List.of(resolver.primitive("int"))),
+                    "primitive return types should return themselves"
             );
         });
 
@@ -301,11 +324,7 @@ public class GenericTypeResolver {
 
     // Helper methods, not the point of the interview - skip these.
     private Type generic(String name) {
-        if (primitive(name) == null) {
-            return new GenericType(name);
-        } else {
-            return null;
-        }
+        return new GenericType(name);
     }
 
     // Helper methods, not the point of the interview - skip these.
