@@ -1,6 +1,7 @@
 package OpenAI_Interviews;
 
 import java.util.List;
+import java.util.Objects;
 
 public class TestHelpers {
     @FunctionalInterface
@@ -35,7 +36,7 @@ public class TestHelpers {
     }
 
     public static void assertEquals(Object expected, Object actual, String message) {
-        if (expected == null ? actual != null : !expected.equals(actual)) {
+        if (!Objects.equals(expected, actual)) {
             throw new AssertionError(message + " – expected: " + expected + ", actual: " + actual);
         }
     }
