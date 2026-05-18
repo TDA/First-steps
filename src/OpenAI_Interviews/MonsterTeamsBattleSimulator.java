@@ -1,5 +1,11 @@
 package OpenAI_Interviews;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static OpenAI_Interviews.TestHelpers.assertEquals;
+import static OpenAI_Interviews.TestHelpers.runTest;
+
 // Monster Teams Battle Simulator: Problem Statement
 //
 //Two teams of monsters fight until one team is fully defeated. You will design types to represent teams, monsters, and the battle outcome, and implement a battle(team1, team2) function that simulates the fight and returns a winner plus a battle log.
@@ -115,4 +121,187 @@ package OpenAI_Interviews;
 
 
 public class MonsterTeamsBattleSimulator {
+    record Monster(String name, int lifePoints, int attack, String type, String weakness) {
+        Monster(String name, int lifePoints, int attack) {
+            this(name, lifePoints, attack, null, null);
+        }
+
+        Monster withLifePoints(int newLifePoints) {
+            return new Monster(name, Math.max(0, newLifePoints), attack, type, weakness);
+        }
+    }
+
+    record Team(String name, List<Monster> monsters) {
+    }
+
+    record Outcome(String winningTeamName, List<String> log) {
+    }
+
+    Outcome battle(Team team1, Team team2) {
+        List<Monster> team1Monsters = new ArrayList<>(team1.monsters());
+        List<Monster> team2Monsters = new ArrayList<>(team2.monsters());
+        List<String> log = new ArrayList<>();
+
+        int team1Index = firstAliveIndex(team1Monsters, 0);
+        int team2Index = firstAliveIndex(team2Monsters, 0);
+        boolean team1Turn = true;
+
+        while (team1Index < team1Monsters.size() && team2Index < team2Monsters.size()) {
+            if (team1Turn) {
+                log.add(team1.name() + " turn");
+                team2Index = attack(team1Monsters, team1Index, team2Monsters, team2Index, log);
+            } else {
+                log.add(team2.name() + " turn");
+                team1Index = attack(team2Monsters, team2Index, team1Monsters, team1Index, log);
+            }
+
+            team1Turn = !team1Turn;
+        }
+
+        String winningTeam = team1Index < team1Monsters.size() ? team1.name() : team2.name();
+        log.add(winningTeam + " wins");
+        return new Outcome(winningTeam, log);
+    }
+
+    private int attack(
+            List<Monster> attackers,
+            int attackerIndex,
+            List<Monster> defenders,
+            int defenderIndex,
+            List<String> log
+    ) {
+        Monster attacker = attackers.get(attackerIndex);
+        Monster defender = defenders.get(defenderIndex);
+        Damage damage = calculateDamage(attacker, defender);
+
+        log.add(formatAttack(attacker, defender, damage));
+
+        Monster updatedDefender = defender.withLifePoints(defender.lifePoints() - damage.amount());
+        defenders.set(defenderIndex, updatedDefender);
+
+        if (updatedDefender.lifePoints() == 0) {
+            log.add(updatedDefender.name() + " is defeated");
+            return firstAliveIndex(defenders, defenderIndex + 1);
+        }
+
+        return defenderIndex;
+    }
+
+    private int firstAliveIndex(List<Monster> monsters, int startIndex) {
+        int index = startIndex;
+        while (index < monsters.size() && monsters.get(index).lifePoints() == 0) {
+            index++;
+        }
+        return index;
+    }
+
+    private Damage calculateDamage(Monster attacker, Monster defender) {
+        int damage = attacker.attack();
+        String modifier = "";
+
+        if (attacker.type() != null && attacker.type().equals(defender.weakness())) {
+            damage *= 2;
+            modifier = " (super effective)";
+        } else if (defender.type() != null && defender.type().equals(attacker.weakness())) {
+            damage /= 2;
+            modifier = " (not very effective)";
+        }
+
+        return new Damage(damage, modifier);
+    }
+
+    private String formatAttack(Monster attacker, Monster defender, Damage damage) {
+        String attackerName = formatMonsterName(attacker);
+        String defenderName = formatMonsterName(defender);
+        return attackerName + " attacks " + defenderName + " for " + damage.amount() + " damage" + damage.modifier();
+    }
+
+    private String formatMonsterName(Monster monster) {
+        if (monster.type() == null || monster.type().isEmpty()) return monster.name();
+        return monster.name() + " (" + monster.type() + ")";
+    }
+
+    record Damage(int amount, String modifier) {
+    }
+
+    public static void main(String[] args) {
+        runTest("simulates sample battle", () -> {
+            MonsterTeamsBattleSimulator simulator = new MonsterTeamsBattleSimulator();
+            Team blue = new Team("Team Blue", List.of(
+                    new Monster("Dog", 3, 2),
+                    new Monster("Wolf", 4, 1)
+            ));
+            Team red = new Team("Team Red", List.of(
+                    new Monster("Cat", 3, 3),
+                    new Monster("Tiger", 4, 5)
+            ));
+
+            Outcome outcome = simulator.battle(blue, red);
+
+            assertEquals("Team Red", outcome.winningTeamName());
+            assertEquals(List.of(
+                    "Team Blue turn",
+                    "Dog attacks Cat for 2 damage",
+                    "Team Red turn",
+                    "Cat attacks Dog for 3 damage",
+                    "Dog is defeated",
+                    "Team Blue turn",
+                    "Wolf attacks Cat for 1 damage",
+                    "Cat is defeated",
+                    "Team Red turn",
+                    "Tiger attacks Wolf for 5 damage",
+                    "Wolf is defeated",
+                    "Team Red wins"
+            ), outcome.log());
+        });
+
+        runTest("defeated monster is replaced by next monster immediately", () -> {
+            MonsterTeamsBattleSimulator simulator = new MonsterTeamsBattleSimulator();
+            Team first = new Team("First", List.of(
+                    new Monster("A", 1, 10),
+                    new Monster("B", 5, 1)
+            ));
+            Team second = new Team("Second", List.of(
+                    new Monster("C", 2, 1),
+                    new Monster("D", 2, 1)
+            ));
+
+            Outcome outcome = simulator.battle(first, second);
+
+            assertEquals("First", outcome.winningTeamName());
+            assertEquals(true, outcome.log().contains("C is defeated"));
+            assertEquals(true, outcome.log().contains("D is defeated"));
+        });
+
+        runTest("applies type advantage and weakness modifiers", () -> {
+            MonsterTeamsBattleSimulator simulator = new MonsterTeamsBattleSimulator();
+            Team fire = new Team("Fire Team", List.of(
+                    new Monster("Dragon", 10, 5, "Fire", "Water")
+            ));
+            Team earth = new Team("Earth Team", List.of(
+                    new Monster("Troll", 10, 5, "Earth", "Fire")
+            ));
+
+            Outcome outcome = simulator.battle(fire, earth);
+
+            assertEquals("Fire Team", outcome.winningTeamName());
+            assertEquals("Dragon (Fire) attacks Troll (Earth) for 10 damage (super effective)", outcome.log().get(1));
+            assertEquals("Troll is defeated", outcome.log().get(2));
+        });
+
+        runTest("applies not very effective modifier with rounded down damage", () -> {
+            MonsterTeamsBattleSimulator simulator = new MonsterTeamsBattleSimulator();
+            Team earth = new Team("Earth Team", List.of(
+                    new Monster("Troll", 10, 5, "Earth", "Fire")
+            ));
+            Team fire = new Team("Fire Team", List.of(
+                    new Monster("Dragon", 10, 5, "Fire", "Water")
+            ));
+
+            Outcome outcome = simulator.battle(earth, fire);
+
+            assertEquals("Fire Team", outcome.winningTeamName());
+            assertEquals("Troll (Earth) attacks Dragon (Fire) for 2 damage (not very effective)", outcome.log().get(1));
+        });
+    }
 }

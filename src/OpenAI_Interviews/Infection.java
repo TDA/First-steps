@@ -43,4 +43,8 @@ package OpenAI_Interviews;
 //    Empty cells remain unchanged.
 
 public class Infection {
+
+    // NOTE: this has a tighter / tougher version @src/OpenAI_Interviews/Contagion.java
+    // Contagion covers Infection plus extra timing complexity
+    // Refer to that and remove the #recoverytime logic to get the solution for this
 }
